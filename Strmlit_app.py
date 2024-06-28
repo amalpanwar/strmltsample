@@ -62,6 +62,7 @@ row = pivot_df.loc[player_selected]
 values = row.tolist()
 values += values[:1]
 
+# Create the radar chart
 ax.plot(angles, values, linewidth=1, linestyle='solid', label=player_selected)
 ax.fill(angles, values, alpha=0.1)
 
@@ -69,15 +70,17 @@ ax.fill(angles, values, alpha=0.1)
 ax.set_xticks(angles[:-1])
 ax.set_xticklabels(categories)
 
-# Add custom y-axis labels
+# Add custom y-axis labels for each attribute
 for i, category in enumerate(categories):
     angle_rad = angles[i]
     max_val = pivot_df[category].max()
-    for label in np.linspace(0, max_val, num=5):
-        label_angle = angle_rad - (pi / num_vars)
-        ax.text(angle_rad, label / max_val, f"{label:.1f}", ha='center', va='bottom', fontsize=10, color='gray')
+    min_val = pivot_df[category].min()
+    for j, label in enumerate(np.linspace(min_val, max_val, num=5)):
+        y = label / max_val  # Scale to the plotting range
+        if i == 0:  # Only print the values on the first axis
+            ax.text(angle_rad, y, f"{label:.1f}", ha='center', va='center', fontsize=8, color='gray', transform=ax.get_yaxis_transform(True))
 
-# Set y-limits to the maximum value
+# Set y-limits to the maximum value of all attributes for scaling purposes
 max_value = pivot_df.max().max()
 ax.set_ylim(0, max_value)
 
