@@ -74,10 +74,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     if title is not None:
         plt.suptitle(title)
     
-    tmpfile = 'tmp.png'
-    plt.savefig(tmpfile)
-    st.image(tmpfile)
-    plt.close()
+    st.pyplot(fig)
 # Streamlit app
 st.title('Player Performance Radar Chart')
 
