@@ -85,7 +85,7 @@ players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 #selected_data = pivot_df.loc[[player_selected]]
 st.subheader('Radar Chart for Selected Player and League Average')
 # Create radar chart for selected player
-create_radar_chart(pivot_df, [players, 'League Two Average'], id_column='Player', title='Radar Chart for Selected Players and League Average')
+create_radar_chart(pivot_df, [players, 'League Two Average'], id_column='Player', title=f'Radar Chart for {players} and League Average')
 
 
 
