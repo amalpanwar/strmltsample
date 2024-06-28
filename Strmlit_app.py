@@ -29,7 +29,7 @@ import streamlit as st
 data = {
     'Player': ['Player 1', 'Player 1', 'Player 1', 'Player 2', 'Player 2', 'Player 2', 'Player 3', 'Player 3', 'Player 3'],
     'Attribute': ['Speed', 'Strength', 'Agility', 'Speed', 'Strength', 'Agility', 'Speed', 'Strength', 'Agility'],
-    'Value': [7, 5, 6, 8, 6, 7, 9, 7, 8]
+    'Value': [15, 7, 10, 18, 10, 7, 12, 18, 9]
 }
 
 
