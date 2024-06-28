@@ -13,7 +13,7 @@ import pandas as pd
 # In[3]:
 
 
-pip install streamlit
+#pip install streamlit
 
 
 # In[4]:
