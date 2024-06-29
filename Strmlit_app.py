@@ -79,7 +79,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
 st.title('Player Performance Radar Chart')
 
 # Dropdown menu for player selection
-players = st.multiselect('Select players:', options=pivot_df.index.tolist(), default=['League Two Average'])
+players = st.sidebar.multiselect('Select players:', options=pivot_df.index.tolist(), default=['League Two Average'])
 
 # Create radar chart for selected players and fixed player
 st.subheader('Radar Chart for Selected Players and Fixed Player')
