@@ -82,8 +82,8 @@ st.title('Player Performance Radar Chart')
 players = st.sidebar.multiselect('Select players:', options=pivot_df.index.tolist(), default=['League Two Average'])
 
 # Create radar chart for selected players and fixed player
-st.subheader('Radar Chart for Selected Players and Fixed Player')
-create_radar_chart(pivot_df, players, id_column='Player', title='Radar Chart for Selected Players and Fixed Player')
+st.subheader('Radar Chart for Selected Players and League Two Average')
+create_radar_chart(pivot_df, players, id_column='Player', title='Radar Chart for Selected Players and League Two Average')
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
 # # Filter data for selected player
