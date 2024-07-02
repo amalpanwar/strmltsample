@@ -99,7 +99,7 @@ if df_position is not None:
     players = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=default_players)
 
     # Create radar chart for selected players
-    create_radar_chart(df_position, players, title=f'Radar Chart for Selected {position} Players and League Average')
+    create_radar_chart(df_position, [players_CM, 'League Two Average'], id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
 # # Filter data for selected player
