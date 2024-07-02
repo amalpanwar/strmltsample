@@ -80,16 +80,26 @@ st.title('Player Performance Radar Chart')
 default_position_index = ["GK","FB","CB","CM","CAM","Winger","CF"].index('CM')
 position = st.sidebar.selectbox('Select position:', options=["GK","FB","CB","CM","CAM","Winger","CF"],index=default_position_index)
 
+# Initialize df_position and default player list
+df_position = None
+default_players = ['League Two Average']
+
+# Determine the dataframe to use based on selected position
 if position == 'CM':
-    # Dropdown menu for player selection
-    players_CM = st.sidebar.multiselect('Select players:', options=pivot_df.index.tolist(), default=['League Two Average'])
+    df_position = pivot_df
+    default_players = ['League Two Average']
+# elif position == 'GK':
+#     df_position = df_GK
+#     default_players = ['League Two Average']
+# Add other positions here with elif statements
 
-# Filter data for selected player
-#selected_data = pivot_df.loc[[player_selected]]
+# Ensure df_position is selected
+if df_position is not None:
+    # Dropdown menu for player selection based on position
+    players = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=default_players)
 
-# Create radar chart for selected player
-    create_radar_chart(pivot_df, [players_CM, 'League Two Average'], id_column='Player', title='Radar Chart for Selected Players and League Average')
-
+    # Create radar chart for selected players
+    create_radar_chart(df_position, players, title=f'Radar Chart for Selected {position} Players and League Average')
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
 # # Filter data for selected player
