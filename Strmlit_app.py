@@ -97,8 +97,8 @@ if df_position is not None:
     players = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     
     # Ensure 'League Two Average' is included in the list of selected players
-    if 'League Two Average' not in players:
-        players.append('League Two Average')
+    # if 'League Two Average' not in players:
+    #     players.append('League Two Average')
 
     # Create radar chart for selected players
     create_radar_chart(df_position, players, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
