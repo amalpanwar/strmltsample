@@ -78,26 +78,18 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     st.pyplot(fig)
 
 def create_pizza_plot(df, players, categories, title):
-    fig, ax = plt.subplots(1, len(players), subplot_kw=dict(polar=True), figsize=(10, 5))
-    if len(players) == 1:
-        ax = [ax]
-    
-    for i, player in enumerate(players):
-        player_data = df.loc[player, categories]
-        values = player_data.tolist()
-        values += values[:1]
-        angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False).tolist()
-        angles += angles[:1]
+    fig, ax = plt.subplots(figsize=(8, 8))
 
-        ax[i].plot(angles, values, label=player)
-        ax[i].fill(angles, values, alpha=0.25)
-        ax[i].set_yticklabels([])
-        ax[i].set_xticks(angles[:-1])
-        ax[i].set_xticklabels(categories)
-        ax[i].set_title(player)
-    
-    fig.suptitle(title, y=1.05)
-    plt.tight_layout()
+    for player in players:
+        player_data = df.loc[player, categories]
+        labels = categories
+        sizes = player_data.tolist()
+
+        ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, wedgeprops=dict(width=0.3, edgecolor='w'), labeldistance=1.1)
+
+    ax.set_title(title)
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    plt.legend(players, loc='upper right', bbox_to_anchor=(1.1, 1.0))
     st.pyplot(fig)
 # Streamlit app
 st.title('Player Performance Dashboard')
