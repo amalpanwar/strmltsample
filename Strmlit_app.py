@@ -101,7 +101,7 @@ if df_position is not None:
     # Create point facet graph
     fig = px.scatter(df_filtered, x='Passes per 90', y=['Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
                      color='Player',text='Player', title=f'Passes vs  Progressive Passes and Final Third for {position} Players')
-     fig.update_layout(
+    fig.update_layout(
         autosize=False,
         width=1000,
         height=600,
