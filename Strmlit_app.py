@@ -78,19 +78,25 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     st.pyplot(fig)
 
 def create_pizza_plot(df, players, categories, title):
-    fig, ax = plt.subplots(figsize=(8, 8))
-
+    fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+    
+    angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False).tolist()
+    angles += angles[:1]
+    
     for player in players:
-        player_data = df.loc[player, categories]
-        labels = categories
-        sizes = player_data.tolist()
-
-        ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, wedgeprops=dict(width=0.3, edgecolor='w'), labeldistance=1.1)
-
+        values = df.loc[player, categories].tolist()
+        values += values[:1]
+        ax.plot(angles, values, linewidth=2, linestyle='solid', label=player)
+        ax.fill(angles, values, alpha=0.25)
+    
+    ax.set_yticklabels([])
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(categories)
     ax.set_title(title)
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    plt.legend(players, loc='upper right', bbox_to_anchor=(1.1, 1.0))
+    ax.legend(loc='upper right', bbox_to_anchor=(1.1, 1.1))
+    
     st.pyplot(fig)
+
 # Streamlit app
 st.title('Player Performance Dashboard')
 default_position_index = ["GK","FB","CB","CM","CAM","Winger","CF"].index('CM')
