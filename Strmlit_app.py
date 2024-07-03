@@ -102,7 +102,7 @@ if df_position is not None:
     fig = px.scatter(df_filtered, x='Passes per 90', y=['Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
                      color='Player',text='Player', title=f'Passes vs  Progressive Passes and Final Third for {position} Players')
     fig.update_layout(
-        autosize=False,
+        autosize=True,
         width=1000,
         height=600,
         margin=dict(l=50, r=50, b=100, t=100, pad=4),
