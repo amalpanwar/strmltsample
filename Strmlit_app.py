@@ -68,6 +68,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='gray')
             
     ax.fill(angles, np.ones(num_vars + 1), alpha=0.05)
+    
     ax.set_yticklabels([])
     ax.set_xticks(angles)
     ax.set_xticklabels(ticks)
@@ -86,6 +87,8 @@ def create_pizza_plot(df, players, categories, title):
     for player in players:
         values = df.loc[player, categories].tolist()
         values += values[:1]
+        ax.set_theta_offset(pi / 2)
+        ax.set_theta_direction(-1)
         ax.plot(angles, values, linewidth=2, linestyle='solid', label=player)
         ax.fill(angles, values, alpha=0.25)
     
