@@ -76,6 +76,29 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         plt.suptitle(title)
     
     st.pyplot(fig)
+
+def create_pizza_plot(df, players, categories, title):
+    fig, ax = plt.subplots(1, len(players), subplot_kw=dict(polar=True), figsize=(10, 5))
+    if len(players) == 1:
+        ax = [ax]
+    
+    for i, player in enumerate(players):
+        player_data = df.loc[player, categories]
+        values = player_data.tolist()
+        values += values[:1]
+        angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False).tolist()
+        angles += angles[:1]
+
+        ax[i].plot(angles, values, label=player)
+        ax[i].fill(angles, values, alpha=0.25)
+        ax[i].set_yticklabels([])
+        ax[i].set_xticks(angles[:-1])
+        ax[i].set_xticklabels(categories)
+        ax[i].set_title(player)
+    
+    fig.suptitle(title, y=1.05)
+    plt.tight_layout()
+    st.pyplot(fig)
 # Streamlit app
 st.title('Player Performance Dashboard')
 default_position_index = ["GK","FB","CB","CM","CAM","Winger","CF"].index('CM')
@@ -114,6 +137,9 @@ if df_position is not None:
     # Ensure 'League Two Average' is included in the list of selected players
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
+
+    create_pizza_plot(df_position, players, categories=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
+                        'Accurate progressive passes, %','Aerial duels won, %',], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
     create_radar_chart(df_position, players, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
