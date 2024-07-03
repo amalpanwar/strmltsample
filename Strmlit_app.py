@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import pi
 import pandas as pd
+import plotly.express as px
 
 
 # In[3]:
@@ -95,7 +96,13 @@ if position == 'CM':
 if df_position is not None:
     # Dropdown menu for player selection based on position
     players = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    df_filtered = df_position.loc[players].reset_index()
+
+    # Create point facet graph
+    fig = px.scatter(df_filtered, x='Passes per 90', y=['Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
+                     color='Player',text='Player', title=f'Passes vs  Progressive Passes and Final Third for {position} Players')
     
+    st.plotly_chart(fig)
     # Ensure 'League Two Average' is included in the list of selected players
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
