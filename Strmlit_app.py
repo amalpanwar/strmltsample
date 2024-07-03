@@ -77,7 +77,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     
     st.pyplot(fig)
 # Streamlit app
-st.title('Player Performance Radar Chart')
+st.title('Player Performance Dashboard')
 default_position_index = ["GK","FB","CB","CM","CAM","Winger","CF"].index('CM')
 position = st.sidebar.selectbox('Select position:', options=["GK","FB","CB","CM","CAM","Winger","CF"],index=default_position_index)
 
