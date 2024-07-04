@@ -135,11 +135,11 @@ def create_pizza_plot(df, players, categories, title):
     fig = plt.figure(figsize=(8, 8))
     ax = plt.subplot(111, polar=True)
     fig.patch.set_facecolor('black')  # Set figure background to black
-    ax.set_facecolor('white') 
+    ax.set_facecolor('grey') 
     ax.set_theta_offset(pi / 2)
     ax.set_theta_direction(-1)
     ax.set_xticks(angles_mids)
-    ax.set_xticklabels(categories,color='red')
+    ax.set_xticklabels(categories,color='white')
     ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
 
     # Draw ylabels
