@@ -145,16 +145,22 @@ if df_position is not None:
     )
     fig.update_traces(textposition='top center')
     
-    st.plotly_chart(fig)
+    #st.plotly_chart(fig)
     # Ensure 'League Two Average' is included in the list of selected players
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
 
-    create_pizza_plot(df_position, players, categories=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
+    pizza_fig=create_pizza_plot(df_position, players, categories=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
                         'Accurate progressive passes, %','Aerial duels won, %',], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
     create_radar_chart(df_position, players, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+
+col1, col2 = st.columns(2)
+    with col1:
+        st.plotly_chart(fig)
+    with col2:
+        st.pyplot(pizza_fig)
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
 # # Filter data for selected player
