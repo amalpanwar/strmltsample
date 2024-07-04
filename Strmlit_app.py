@@ -178,7 +178,7 @@ if df_position is not None:
     fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', title=f'{position} Aerial Duels and Aerial Duels Won % (Stacked)')
     
 
-    col1, col2 = st.columns([2, 1])
+    col1, col2 = st.columns([1.5, 1])
     with col1:
         st.plotly_chart(fig2)
     with col2:
