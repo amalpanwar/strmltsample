@@ -180,7 +180,7 @@ def create_pizza_plot(df, players, categories, title):
         title=title
        )
     
-   return fig
+    return fig
 
 
 # Streamlit app
