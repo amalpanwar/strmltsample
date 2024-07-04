@@ -139,7 +139,7 @@ def create_pizza_plot(df, players, categories, title):
     ax.set_theta_offset(pi / 2)
     ax.set_theta_direction(-1)
     ax.set_xticks(angles_mids)
-    ax.set_xticklabels(categories)
+    ax.set_xticklabels(categories,color='red')
     ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
 
     # Draw ylabels
@@ -157,8 +157,8 @@ def create_pizza_plot(df, players, categories, title):
     ax.grid(True, axis='x', which='minor')
     ax.grid(False, axis='x', which='major')
     ax.grid(True, axis='y', which='major')
-    ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1))
-    plt.title(title)
+    ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1),facecolor='black', edgecolor='white', labelcolor='white')
+    plt.title(title,color='white')
 
     return fig
 
