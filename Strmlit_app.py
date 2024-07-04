@@ -157,30 +157,30 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
 
 #     return fig
 
-# def create_pizza_plot(df, players, categories, title):
-#     fig = go.Figure()
+def create_pizza_plot(df, players, categories, title):
+    fig = go.Figure()
 
-#     for player in players:
-#         values = df.loc[player, categories].values.flatten().tolist()
-#         fig.add_trace(go.Barpolar(
-#             r=values,
-#             theta=categories,
-#             width=[360 / len(categories)] * len(categories),
-#             name=player,
-#             opacity=0.5
-#         ))
+    for player in players:
+        values = df.loc[player, categories].values.flatten().tolist()
+        fig.add_trace(go.Barpolar(
+            r=values,
+            theta=categories,
+            width=[360 / len(categories)] * len(categories),
+            name=player,
+            opacity=0.5
+        ))
 
-#     fig.update_layout(
-#         polar=dict(
-#             radialaxis=dict(
-#                 visible=True,
-#                 range=[0, 100]
-#             )),
-#         showlegend=True,
-#         title=title
-#        )
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 100]
+            )),
+        showlegend=True,
+        title=title
+       )
     
-#     return fig
+   return fig
 
 
 # Streamlit app
@@ -223,8 +223,8 @@ if df_position is not None:
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
 
-    # pizza_fig=create_pizza_plot(df_position, players, categories=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
-                        # 'Accurate progressive passes, %','Aerial duels won, %',], title='Pizza Plot for Selected Players')
+    pizza_fig=create_pizza_plot(df_position, players, categories=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
+                        'Accurate progressive passes, %','Aerial duels won, %',], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
     radar_fig =create_radar_chart(df_position, players, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
@@ -232,8 +232,8 @@ if df_position is not None:
     col1, col2 = st.columns(2)
     with col1:
         st.plotly_chart(radar_fig)
-    # with col2:
-    #     st.plotly_chart(pizza_fig)
+    with col2:
+        st.plotly_chart(pizza_fig)
 
     fig2 = px.scatter(df_filtered, x='Successful defensive actions per 90', y='Fouls per 90',
                      color='Player',text='Player', title=f'{position} Defensive ability')
