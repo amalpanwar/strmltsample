@@ -169,9 +169,15 @@ if df_position is not None:
     fig2.update_traces(textposition='top center')
     st.plotly_chart(fig2)
 
-    fig3 = px.bar(df_filtered, x='Player', y=['Aerial duels per 90', 'Aerial duels won, %'], barmode='group',
-                 title=f'{position} Aerial Duels and Aerial Duels Won %')
+    df_filtered2 = df_filtered.sort_values(by='Aerial duels won, %', ascending=False)
+
+    # Melt the dataframe to long format for stacking
+    df_melted = df_filtered2.melt(id_vars='Player', value_vars=['Aerial duels per 90', 'Aerial duels won, %'], var_name='Metric', value_name='Value')
+
+    # Create stacked bar chart
+    fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', title=f'{position} Aerial Duels and Aerial Duels Won % (Stacked)')
     st.plotly_chart(fig3)
+
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
 # # Filter data for selected player
