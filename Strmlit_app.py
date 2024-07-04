@@ -168,6 +168,10 @@ if df_position is not None:
   
     fig2.update_traces(textposition='top center')
     st.plotly_chart(fig2)
+
+    fig3 = px.bar(df_filtered, x='Player', y=['Aerial duels per 90', 'Aerial duels won, %'], barmode='group',
+                 title=f'{position} Aerial Duels and Aerial Duels Won %')
+    st.plotly_chart(fig3)
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
 # # Filter data for selected player
