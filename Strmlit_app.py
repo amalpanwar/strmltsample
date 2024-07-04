@@ -158,7 +158,7 @@ def create_pizza_plot(df, players, categories, title):
     ax.grid(False, axis='x', which='major')
     ax.grid(True, axis='y', which='major')
     ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1),facecolor='black', edgecolor='white', labelcolor='white')
-    plt.title(title,color='white',size=12)
+    plt.title(title,color='white',fontsize=14)
 
     return fig
 
