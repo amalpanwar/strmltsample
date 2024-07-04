@@ -127,63 +127,65 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     
 #     return fig
 
-# def create_pizza_plot(df, players, categories, title):
-#     N = len(categories)
-#     angles = np.linspace(0, 2 * pi, N, endpoint=False).tolist()
-#     angles_mids = np.linspace(0, 2 * pi, N, endpoint=False) + (angles[1] / 2)
-
-#     fig = plt.figure(figsize=(8, 8))
-#     ax = plt.subplot(111, polar=True)
-#     ax.set_theta_offset(pi / 2)
-#     ax.set_theta_direction(-1)
-#     ax.set_xticks(angles_mids)
-#     ax.set_xticklabels(categories)
-#     ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
-
-#     # Draw ylabels
-#     ax.set_rlabel_position(0)
-#     ax.set_yticks([20, 40, 60, 80, 100])
-#     ax.set_yticklabels(["20", "40", "60", "80", "100"], color="black", size=8)
-#     ax.set_ylim(0, 100)
-
-#     width = angles[1] - angles[0]
-
-#     for player in players:
-#         values = df.loc[player, categories].values.flatten().tolist()
-#         ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1, label=player)
-
-#     ax.grid(True, axis='x', which='minor')
-#     ax.grid(False, axis='x', which='major')
-#     ax.grid(True, axis='y', which='major')
-#     ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1))
-#     plt.title(title)
-
-#     return fig
-
 def create_pizza_plot(df, players, categories, title):
-    fig = go.Figure()
+    N = len(categories)
+    angles = np.linspace(0, 2 * pi, N, endpoint=False).tolist()
+    angles_mids = np.linspace(0, 2 * pi, N, endpoint=False) + (angles[1] / 2)
+
+    fig = plt.figure(figsize=(8, 8))
+    ax = plt.subplot(111, polar=True)
+    fig.patch.set_facecolor('black')  # Set figure background to black
+    ax.set_facecolor('white') 
+    ax.set_theta_offset(pi / 2)
+    ax.set_theta_direction(-1)
+    ax.set_xticks(angles_mids)
+    ax.set_xticklabels(categories)
+    ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
+
+    # Draw ylabels
+    ax.set_rlabel_position(0)
+    ax.set_yticks([20, 40, 60, 80, 100])
+    ax.set_yticklabels(["20", "40", "60", "80", "100"], color="black", size=8)
+    ax.set_ylim(0, 100)
+
+    width = angles[1] - angles[0]
 
     for player in players:
         values = df.loc[player, categories].values.flatten().tolist()
-        fig.add_trace(go.Barpolar(
-            r=values,
-            theta=categories,
-            width=[360 / len(categories)] * len(categories),
-            name=player,
-            opacity=0.5
-        ))
+        ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1, label=player)
 
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(
-                visible=True,
-                range=[0, 100]
-            )),
-        showlegend=True,
-        title=title
-       )
-    
+    ax.grid(True, axis='x', which='minor')
+    ax.grid(False, axis='x', which='major')
+    ax.grid(True, axis='y', which='major')
+    ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1))
+    plt.title(title)
+
     return fig
+
+# def create_pizza_plot(df, players, categories, title):
+#     fig = go.Figure()
+
+#     for player in players:
+#         values = df.loc[player, categories].values.flatten().tolist()
+#         fig.add_trace(go.Barpolar(
+#             r=values,
+#             theta=categories,
+#             width=[360 / len(categories)] * len(categories),
+#             name=player,
+#             opacity=0.5
+#         ))
+
+#     fig.update_layout(
+#         polar=dict(
+#             radialaxis=dict(
+#                 visible=True,
+#                 range=[0, 100]
+#             )),
+#         showlegend=True,
+#         title=title
+#        )
+    
+#     return fig
 
 
 # Streamlit app
