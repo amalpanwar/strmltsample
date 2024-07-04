@@ -76,7 +76,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     if title is not None:
         plt.suptitle(title)
     
-    st.pyplot(fig)
+    return fig
 
 def create_pizza_plot(df, players, categories, title):
     N = len(categories)
@@ -144,6 +144,7 @@ if df_position is not None:
         font=dict(size=8)
     )
     fig.update_traces(textposition='top center')
+    st.plotly_chart(fig)
     
     #st.plotly_chart(fig)
     # Ensure 'League Two Average' is included in the list of selected players
@@ -154,11 +155,11 @@ if df_position is not None:
                         'Accurate progressive passes, %','Aerial duels won, %',], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
-    create_radar_chart(df_position, players, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+    radar_fig =create_radar_chart(df_position, players, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
 
     col1, col2 = st.columns(2)
     with col1:
-        st.plotly_chart(fig)
+        st.pyplot(radar_fig)
     with col2:
         st.pyplot(pizza_fig)
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
