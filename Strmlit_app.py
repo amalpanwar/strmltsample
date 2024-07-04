@@ -109,7 +109,7 @@ def create_pizza_plot(df, players, categories, title):
     ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1))
     plt.title(title)
 
-    st.pyplot(fig)
+    return fig
 
 # Streamlit app
 st.title('Player Performance Dashboard')
