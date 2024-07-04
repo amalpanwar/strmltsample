@@ -246,7 +246,7 @@ if df_position is not None:
     fig2.update_traces(textposition='top center')
     
 
-    df_filtered['Aerial duels won per 90'] = df_filtered['Aerial duels per 90'] * (df_filtered['Aerial duels won %'] / 100)
+    df_filtered['Aerial duels won per 90'] = df_filtered['Aerial duels per 90'] * (df_filtered['Aerial duels won, %'] / 100)
 
     df_filtered2 = df_filtered.sort_values(by='Aerial duels won per 90', ascending=False)
 
