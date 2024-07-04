@@ -167,7 +167,7 @@ if df_position is not None:
                      color='Player',text='Player', title=f'{position} Defensive ability')
   
     fig2.update_traces(textposition='top center')
-    st.plotly_chart(fig2)
+    
 
     df_filtered2 = df_filtered.sort_values(by='Aerial duels won, %', ascending=False)
 
@@ -176,7 +176,13 @@ if df_position is not None:
 
     # Create stacked bar chart
     fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', title=f'{position} Aerial Duels and Aerial Duels Won % (Stacked)')
-    st.plotly_chart(fig3)
+    
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.plotly_chart(fig2)
+    with col2:
+        st.plotly_chart(fig3)
 
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
