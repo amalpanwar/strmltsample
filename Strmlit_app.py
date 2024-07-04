@@ -68,7 +68,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         ax.plot(angles, values, label=model_name)
         ax.fill(angles, values, alpha=0.15)
         for angle, value, actual_value in zip(angles, values, actual_values):
-            ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
+            ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='white')
             
     ax.fill(angles, np.ones(num_vars + 1), alpha=0.05)
     
