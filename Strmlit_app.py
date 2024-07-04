@@ -59,8 +59,8 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     
     # Plotting radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
-    fig.patch.set_facecolor('white')  # Set figure background to black
-    ax.set_facecolor('black') 
+    fig.patch.set_facecolor('black')  # Set figure background to black
+    ax.set_facecolor('white') 
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
         actual_values = [data[key][i] for key in data.keys()]
