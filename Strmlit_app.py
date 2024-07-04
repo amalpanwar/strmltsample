@@ -74,8 +74,8 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     
     ax.set_yticklabels([])
     ax.set_xticks(angles)
-    ax.set_xticklabels(ticks, color='black')
-    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='black', edgecolor='white', labelcolor='white')
+    ax.set_xticklabels(ticks, color='white')
+    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='black', edgecolor='white', labelcolor='black')
 
     if title is not None:
         plt.suptitle(title)
