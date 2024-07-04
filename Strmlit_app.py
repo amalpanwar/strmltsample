@@ -252,7 +252,7 @@ if df_position is not None:
     df_melted = df_filtered2.melt(id_vars='Player', value_vars=['Aerial duels per 90', 'Aerial duels won, %'], var_name='Metric', value_name='Value')
 
     # Create stacked bar chart
-    fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', title=f'{position} Aerial Duels and Aerial Duels Won % (Stacked)')
+    fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', title=f'{position} Aerial ability (Stacked)')
     
 
     col1, col2 = st.columns([1.5, 1])
