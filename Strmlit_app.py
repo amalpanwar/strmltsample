@@ -78,7 +78,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='black', edgecolor='white', labelcolor='white')
 
     if title is not None:
-        plt.suptitle(title,color='white')
+        plt.suptitle(title,color='white',fontsize=12)
     
     return fig
 
@@ -158,7 +158,7 @@ def create_pizza_plot(df, players, categories, title):
     ax.grid(False, axis='x', which='major')
     ax.grid(True, axis='y', which='major')
     ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1),facecolor='black', edgecolor='white', labelcolor='white')
-    plt.title(title,color='white')
+    plt.title(title,color='white',fontsize=12))
 
     return fig
 
