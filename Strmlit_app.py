@@ -246,10 +246,12 @@ if df_position is not None:
     fig2.update_traces(textposition='top center')
     
 
-    df_filtered2 = df_filtered.sort_values(by='Aerial duels won, %', ascending=False)
+    df_filtered['Aerial duels won per 90'] = df_filtered['Aerial duels per 90'] * (df_filtered['Aerial duels won %'] / 100)
+
+    df_filtered2 = df_filtered.sort_values(by='Aerial duels won per 90', ascending=False)
 
     # Melt the dataframe to long format for stacking
-    df_melted = df_filtered2.melt(id_vars='Player', value_vars=['Aerial duels per 90', 'Aerial duels won, %'], var_name='Metric', value_name='Value')
+    df_melted = df_filtered2.melt(id_vars='Player', value_vars=['Aerial duels per 90', 'Aerial duels won per 90'], var_name='Metric', value_name='Value')
 
     # Create stacked bar chart
     fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', title=f'{position} Aerial ability (Stacked)')
