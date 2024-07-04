@@ -78,7 +78,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='black', edgecolor='white', labelcolor='white')
 
     if title is not None:
-        plt.suptitle(title,color='white',size=12)
+        plt.suptitle(title,color='white',fontsize=14)
     
     return fig
 
