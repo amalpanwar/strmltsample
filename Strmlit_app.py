@@ -159,9 +159,9 @@ if df_position is not None:
 
     col1, col2 = st.columns(2)
     with col1:
-        st.pyplot(radar_fig)
+        st.plotly_chart(radar_fig)
     with col2:
-        st.pyplot(pizza_fig)
+        st.plotly_chart(pizza_fig)
 
     fig2 = px.scatter(df_filtered, x='Successful defensive actions per 90', y='Fouls per 90',
                      color='Player',text='Player', title=f'{position} Defensive ability')
