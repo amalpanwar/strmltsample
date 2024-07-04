@@ -29,13 +29,61 @@ df = pd.read_excel("CM_Elgin.xlsx")
 pivot_df = df.pivot(index='Player', columns='Attribute', values='Value')
 
 
+# def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
+#     df_selected = df.loc[players]
+#     categories = df_selected.columns.tolist()
+#     data = df_selected.to_dict(orient='list')
+#     ids = df_selected.index.tolist()
+    
+#     # Check and handle zero division or NaNs in max_values
+#     if max_values is None:
+#         max_values = {key: padding * max(value) for key, value in data.items()}
+#     else:
+#         for key, max_val in max_values.items():
+#             if max_val == 0 or np.isnan(max_val):
+#                 max_values[key] = padding * max(data[key])
+                
+#     # Normalize the data
+#     normalized_data = {}
+#     for key, value in data.items():
+#         if max_values[key] != 0:  # Avoid division by zero
+#             normalized_data[key] = np.array(value) / max_values[key]
+#         else:
+#             normalized_data[key] = np.zeros(len(value))  # Handle zero division case
+    
+#     num_vars = len(data.keys())
+#     ticks = list(data.keys())
+#     ticks += ticks[:1]
+#     angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist() + [0]
+    
+#     # Plotting radar chart
+#     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+#     for i, model_name in enumerate(ids):
+#         values = [normalized_data[key][i] for key in data.keys()]
+#         actual_values = [data[key][i] for key in data.keys()]
+#         values += values[:1]  # Close the plot for a better look
+#         ax.plot(angles, values, label=model_name)
+#         ax.fill(angles, values, alpha=0.15)
+#         for angle, value, actual_value in zip(angles, values, actual_values):
+#             ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='gray')
+            
+#     ax.fill(angles, np.ones(num_vars + 1), alpha=0.05)
+    
+#     ax.set_yticklabels([])
+#     ax.set_xticks(angles)
+#     ax.set_xticklabels(ticks)
+#     ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1))
+#     if title is not None:
+#         plt.suptitle(title)
+    
+#     return fig
+
 def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
     df_selected = df.loc[players]
     categories = df_selected.columns.tolist()
     data = df_selected.to_dict(orient='list')
     ids = df_selected.index.tolist()
     
-    # Check and handle zero division or NaNs in max_values
     if max_values is None:
         max_values = {key: padding * max(value) for key, value in data.items()}
     else:
@@ -43,73 +91,96 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             if max_val == 0 or np.isnan(max_val):
                 max_values[key] = padding * max(data[key])
                 
-    # Normalize the data
     normalized_data = {}
     for key, value in data.items():
-        if max_values[key] != 0:  # Avoid division by zero
+        if max_values[key] != 0:
             normalized_data[key] = np.array(value) / max_values[key]
         else:
-            normalized_data[key] = np.zeros(len(value))  # Handle zero division case
+            normalized_data[key] = np.zeros(len(value))
     
-    num_vars = len(data.keys())
-    ticks = list(data.keys())
-    ticks += ticks[:1]
-    angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist() + [0]
-    
-    # Plotting radar chart
-    fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+    fig = go.Figure()
+
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
         actual_values = [data[key][i] for key in data.keys()]
-        values += values[:1]  # Close the plot for a better look
-        ax.plot(angles, values, label=model_name)
-        ax.fill(angles, values, alpha=0.15)
-        for angle, value, actual_value in zip(angles, values, actual_values):
-            ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='gray')
-            
-    ax.fill(angles, np.ones(num_vars + 1), alpha=0.05)
-    
-    ax.set_yticklabels([])
-    ax.set_xticks(angles)
-    ax.set_xticklabels(ticks)
-    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1))
-    if title is not None:
-        plt.suptitle(title)
+        values += values[:1]
+        fig.add_trace(go.Scatterpolar(
+            r=values,
+            theta=categories + [categories[0]],
+            fill='toself',
+            name=model_name
+        ))
+
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 1]
+            )),
+        showlegend=True,
+        title=title
+       )
     
     return fig
 
+# def create_pizza_plot(df, players, categories, title):
+#     N = len(categories)
+#     angles = np.linspace(0, 2 * pi, N, endpoint=False).tolist()
+#     angles_mids = np.linspace(0, 2 * pi, N, endpoint=False) + (angles[1] / 2)
+
+#     fig = plt.figure(figsize=(8, 8))
+#     ax = plt.subplot(111, polar=True)
+#     ax.set_theta_offset(pi / 2)
+#     ax.set_theta_direction(-1)
+#     ax.set_xticks(angles_mids)
+#     ax.set_xticklabels(categories)
+#     ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
+
+#     # Draw ylabels
+#     ax.set_rlabel_position(0)
+#     ax.set_yticks([20, 40, 60, 80, 100])
+#     ax.set_yticklabels(["20", "40", "60", "80", "100"], color="black", size=8)
+#     ax.set_ylim(0, 100)
+
+#     width = angles[1] - angles[0]
+
+#     for player in players:
+#         values = df.loc[player, categories].values.flatten().tolist()
+#         ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1, label=player)
+
+#     ax.grid(True, axis='x', which='minor')
+#     ax.grid(False, axis='x', which='major')
+#     ax.grid(True, axis='y', which='major')
+#     ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1))
+#     plt.title(title)
+
+#     return fig
+
 def create_pizza_plot(df, players, categories, title):
-    N = len(categories)
-    angles = np.linspace(0, 2 * pi, N, endpoint=False).tolist()
-    angles_mids = np.linspace(0, 2 * pi, N, endpoint=False) + (angles[1] / 2)
-
-    fig = plt.figure(figsize=(8, 8))
-    ax = plt.subplot(111, polar=True)
-    ax.set_theta_offset(pi / 2)
-    ax.set_theta_direction(-1)
-    ax.set_xticks(angles_mids)
-    ax.set_xticklabels(categories)
-    ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
-
-    # Draw ylabels
-    ax.set_rlabel_position(0)
-    ax.set_yticks([20, 40, 60, 80, 100])
-    ax.set_yticklabels(["20", "40", "60", "80", "100"], color="black", size=8)
-    ax.set_ylim(0, 100)
-
-    width = angles[1] - angles[0]
+    fig = go.Figure()
 
     for player in players:
         values = df.loc[player, categories].values.flatten().tolist()
-        ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1, label=player)
+        fig.add_trace(go.Barpolar(
+            r=values,
+            theta=categories,
+            width=[360 / len(categories)] * len(categories),
+            name=player,
+            opacity=0.5
+        ))
 
-    ax.grid(True, axis='x', which='minor')
-    ax.grid(False, axis='x', which='major')
-    ax.grid(True, axis='y', which='major')
-    ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1))
-    plt.title(title)
-
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 100]
+            )),
+        showlegend=True,
+        title=title
+    )
+    
     return fig
+
 
 # Streamlit app
 st.title('Player Performance Dashboard')
