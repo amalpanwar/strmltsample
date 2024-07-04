@@ -59,7 +59,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     
     # Plotting radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
-    fig.patch.set_facecolor('black')  # Set figure background to black
+    fig.patch.set_facecolor('white')  # Set figure background to black
     ax.set_facecolor('black') 
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
@@ -75,7 +75,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     ax.set_yticklabels([])
     ax.set_xticks(angles)
     ax.set_xticklabels(ticks, color='white')
-    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='white', edgecolor='white', labelcolor='white')
+    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='black', edgecolor='white', labelcolor='white')
 
     if title is not None:
         plt.suptitle(title)
