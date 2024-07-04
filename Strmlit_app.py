@@ -60,7 +60,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     # Plotting radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
     fig.patch.set_facecolor('black')  # Set figure background to black
-    ax.set_facecolor('white') 
+    ax.set_facecolor('grey') 
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
         actual_values = [data[key][i] for key in data.keys()]
@@ -74,7 +74,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     
     ax.set_yticklabels([])
     ax.set_xticks(angles)
-    ax.set_xticklabels(ticks, color='red')
+    ax.set_xticklabels(ticks, color='white',fontsize=16)
     ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='black', edgecolor='white', labelcolor='white')
 
     if title is not None:
@@ -139,7 +139,7 @@ def create_pizza_plot(df, players, categories, title):
     ax.set_theta_offset(pi / 2)
     ax.set_theta_direction(-1)
     ax.set_xticks(angles_mids)
-    ax.set_xticklabels(categories,color='white')
+    ax.set_xticklabels(categories,color='white',fontsize=16)
     ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
 
     # Draw ylabels
