@@ -68,14 +68,14 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         ax.plot(angles, values, label=model_name)
         ax.fill(angles, values, alpha=0.15)
         for angle, value, actual_value in zip(angles, values, actual_values):
-            ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='white')
+            ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
             
     ax.fill(angles, np.ones(num_vars + 1), alpha=0.05)
     
     ax.set_yticklabels([])
     ax.set_xticks(angles)
     ax.set_xticklabels(ticks, color='white')
-    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='black', edgecolor='white', labelcolor='black')
+    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='black', edgecolor='white', labelcolor='white')
 
     if title is not None:
         plt.suptitle(title)
