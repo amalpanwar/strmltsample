@@ -15,4 +15,4 @@ unstructured
 numpy==1.23.0
 chromadb
 huggingface-hub==0.10.1
-streamlit==1.10.0
+
