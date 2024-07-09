@@ -10,7 +10,7 @@ from math import pi
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from langchain_openai import ChatOpenAI
+#from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, AIMessage
 import getpass
 import os
