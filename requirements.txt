@@ -4,3 +4,14 @@ pandas
 numpy
 openpyxl
 plotly
+langchain 
+langchain-community
+langchainhub
+langchain-chroma
+bs4
+langchain_openai
+getpass
+os
+langchain_core
+json
+unstructured
