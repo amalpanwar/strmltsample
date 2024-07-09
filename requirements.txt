@@ -13,6 +13,5 @@ langchain_mistralai
 langchain_core
 unstructured
 numpy==1.23.0
-chromadb
 huggingface-hub
 
