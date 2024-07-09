@@ -13,6 +13,6 @@ langchain_mistralai
 langchain_core
 unstructured
 numpy==1.23.0
-chromadb==latest
+chromadb
 huggingface-hub==0.10.1
 streamlit==1.10.0
