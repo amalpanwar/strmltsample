@@ -312,12 +312,7 @@ if df_position is not None:
     with col2:
         st.plotly_chart(fig3)
     # Input field for user prompt
-    user_prompt = st.sidebar.text_input("Enter your query:")
-
-    if user_prompt:
-    # Get response from RAG chain
-         response = rag_chain.invoke({"input": user_prompt})
-         st.write(response["answer"])
+    
 
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
