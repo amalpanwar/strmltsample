@@ -24,6 +24,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceHubEmbeddings
 from langchain_mistralai import ChatMistralAI
+from unstructured.partition.xlsx import partition_xlsx
 #import pandas as pd
 import json
 import bs4
