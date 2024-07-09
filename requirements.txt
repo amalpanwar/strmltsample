@@ -14,4 +14,4 @@ langchain_core
 unstructured
 numpy==1.23.0
 huggingface-hub
-
+networkx
