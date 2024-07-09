@@ -182,30 +182,59 @@ def create_pizza_plot(df, players, categories, title):
 
     return fig
 
-# def create_pizza_plot(df, players, categories, title):
-#     fig = go.Figure()
 
-#     for player in players:
-#         values = df.loc[player, categories].values.flatten().tolist()
-#         fig.add_trace(go.Barpolar(
-#             r=values,
-#             theta=categories,
-#             width=[360 / len(categories)] * len(categories),
-#             name=player,
-#             opacity=0.5
-#         ))
+# RAG Pipeline for Chatting
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
+os.environ["MISTRAL_API_KEY"] = getpass.getpass()
+llm = ChatMistralAI(model="mistral-large-latest")
 
-#     fig.update_layout(
-#         polar=dict(
-#             radialaxis=dict(
-#                 visible=True,
-#                 range=[0, 100]
-#             )),
-#         showlegend=True,
-#         title=title
-#        )
-    
-#     return fig
+# Loading document through loader
+loader = UnstructuredFileLoader(file_path="CM_ElginFC.xlsx")
+data = loader.load()
+
+#formatting data to ready for LLM model
+combined_text = '\n\n\n'.join(doc.page_content.strip() for doc in data)
+player_data_blocks = combined_text.split('\n\n\n')
+header = player_data_blocks[0]
+
+class Document:
+    def __init__(self, metadata, page_content):
+        self.metadata = metadata
+        self.page_content = page_content
+
+# Create a list of Document objects
+# Create a list of Document objects, ensuring the header is included in each block's content
+documents = [
+    Document(metadata={'source': 'CM_ElginFC.xlsx', 'header': header}, page_content=block)
+    for block in player_data_blocks[1:]  # Skip the first block as it's the header
+]
+
+vectorstore = Chroma.from_documents(documents=documents,embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token='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'))
+retriever = vectorstore.as_retriever(search_type="mmr",
+    search_kwargs={'k': 20, 'fetch_k':50})
+
+# Preparing Prompt for Q/A
+system_prompt = (
+    "You are an assistant for question-answering tasks. "
+    "Use the following pieces of retrieved context to answer "
+    "the question. If you don't know the answer, say that you "
+    "don't know. Use three sentences maximum and keep the "
+    "answer concise."
+    "\n\n"
+    "{context}"
+)
+
+prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", system_prompt),
+        ("human", "{input}"),
+    ]
+)
+
+question_answer_chain = create_stuff_documents_chain(llm, prompt)
+rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+
 
 
 # Streamlit app
@@ -282,6 +311,13 @@ if df_position is not None:
         st.plotly_chart(fig2)
     with col2:
         st.plotly_chart(fig3)
+    # Input field for user prompt
+    user_prompt = st.sidebar.text_input("Enter your query:")
+
+    if user_prompt:
+    # Get response from RAG chain
+         response = rag_chain.invoke({"input": user_prompt})
+         st.write(response["answer"])
 
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
