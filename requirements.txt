@@ -12,3 +12,7 @@ bs4
 langchain_mistralai
 langchain_core
 unstructured
+numpy==1.23.0
+chromadb==latest
+huggingface-hub==0.10.1
+streamlit==1.10.0
