@@ -10,7 +10,6 @@ langchainhub
 langchain-chroma
 bs4
 langchain_mistralai
-os
 langchain_core
 json
 unstructured
