@@ -185,8 +185,8 @@ def create_pizza_plot(df, players, categories, title):
 
 # RAG Pipeline for Chatting
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_API_KEY"] = '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'
-os.environ["MISTRAL_API_KEY"] = 'Eercwo3eC59ZehvjZXf3GSs57vR8B8sE'
+# os.environ["LANGCHAIN_API_KEY"] = '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'
+# os.environ["MISTRAL_API_KEY"] = 'Eercwo3eC59ZehvjZXf3GSs57vR8B8sE'
 llm = ChatMistralAI(model="mistral-large-latest")
 
 # Loading document through loader
