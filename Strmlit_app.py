@@ -239,6 +239,11 @@ rag_chain = create_retrieval_chain(retriever, question_answer_chain)
 
 # Streamlit app
 st.title('Player Performance Dashboard')
+user_prompt = st.sidebar.text_input("Enter your query:")
+if user_prompt:
+    # Get response from RAG chain
+    response = rag_chain.invoke({"input": user_prompt})
+    st.write(response["answer"])
 default_position_index = ["GK","FB","CB","CM","CAM","Winger","CF"].index('CM')
 position = st.sidebar.selectbox('Select position:', options=["GK","FB","CB","CM","CAM","Winger","CF"],index=default_position_index)
 
