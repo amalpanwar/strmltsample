@@ -11,5 +11,4 @@ langchain-chroma
 bs4
 langchain_mistralai
 langchain_core
-json
 unstructured
