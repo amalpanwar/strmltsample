@@ -9,7 +9,7 @@ langchain-community
 langchainhub
 langchain-chroma
 bs4
-langchain_openai
+langchain_mistralai
 getpass
 os
 langchain_core
