@@ -14,7 +14,7 @@ import plotly.graph_objects as go
 from langchain_core.messages import HumanMessage, AIMessage
 import getpass
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from langchain import hub
 from langchain.vectorstores import Chroma
 #from langchain_chroma import Chroma
@@ -217,7 +217,7 @@ documents = loader.load()
 #     for block in player_data_blocks[1:]  # Skip the first block as it's the header
 # ]
 # Retrieve the GitHub Secret or environment variable locally
-api_token = os.getenv('API_TOKENS')
+api_token = os.environ('API_TOKEN')
 
 if api_token is None:
     raise ValueError("HUGGINGFACEHUB_API_TOKEN environment variable not set.")
