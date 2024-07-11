@@ -214,8 +214,8 @@ documents = loader.load()
 #     Document(metadata={'source': 'CM_ElginFC.xlsx', 'header': header}, page_content=block)
 #     for block in player_data_blocks[1:]  # Skip the first block as it's the header
 # ]
-
-vectorstore = Chroma.from_documents(documents=documents,embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token='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'))
+api_token = os.getenv('API_TOKENS')
+vectorstore = Chroma.from_documents(documents=documents,embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token))
 retriever = vectorstore.as_retriever(search_type="mmr",
     search_kwargs={'k': 20, 'fetch_k':50})
 
