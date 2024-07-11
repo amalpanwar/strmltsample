@@ -221,7 +221,8 @@ documents = loader.load()
 api_token = os.getenv('HUGGINGFACEHUB_API_TOKEN')
 
 if api_token is None:
-    raise ValueError("HUGGINGFACEHUB_API_TOKEN environment variable not set.")
+    st.error("HUGGINGFACEHUB_API_TOKEN environment variable not set.")
+    st.stop() 
 
 #api_token = os.getenv('API_TOKENS')
 #vectorstore = Chroma.from_documents(documents=documents,embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token))
