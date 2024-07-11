@@ -34,7 +34,7 @@ from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.document_loaders import CSVLoader
-#from chromadb.auth.token_authn import TokenTransportHeader
+
 
 
 # In[3]:
