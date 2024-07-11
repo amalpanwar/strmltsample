@@ -14,6 +14,7 @@ import plotly.graph_objects as go
 from langchain_core.messages import HumanMessage, AIMessage
 import getpass
 import os
+from dotenv import load_dotenv
 from langchain import hub
 from langchain.vectorstores import Chroma
 #from langchain_chroma import Chroma
