@@ -15,3 +15,4 @@ unstructured
 numpy==1.23.0
 huggingface-hub
 networkx
+protobuf==3.20.0
