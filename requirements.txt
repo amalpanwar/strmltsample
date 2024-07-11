@@ -13,6 +13,6 @@ langchain_mistralai
 langchain_core
 unstructured
 numpy==1.23.0
-huggingface-hub
+huggingface_hub
 networkx
 protobuf==3.20.0
