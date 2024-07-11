@@ -215,8 +215,13 @@ documents = loader.load()
 #     Document(metadata={'source': 'CM_ElginFC.xlsx', 'header': header}, page_content=block)
 #     for block in player_data_blocks[1:]  # Skip the first block as it's the header
 # ]
-
+# Retrieve the GitHub Secret or environment variable locally
 api_token = os.getenv('API_TOKENS')
+
+if api_token is None:
+    raise ValueError("HUGGINGFACEHUB_API_TOKEN environment variable not set.")
+
+#api_token = os.getenv('API_TOKENS')
 #vectorstore = Chroma.from_documents(documents=documents,embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token))
 try:
     # Initialize Chroma with documents and HuggingFaceHubEmbeddings
