@@ -34,6 +34,7 @@ from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.document_loaders import CSVLoader
+from chromadb.auth.token_authn import TokenTransportHeader
 
 
 # In[3]:
@@ -215,7 +216,7 @@ documents = loader.load()
 #     for block in player_data_blocks[1:]  # Skip the first block as it's the header
 # ]
 
-api_token = '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'
+api_token = os.getenv('API_TOKENS')
 vectorstore = Chroma.from_documents(documents=documents,embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token))
 retriever = vectorstore.as_retriever(search_type="mmr",
     search_kwargs={'k': 20, 'fetch_k':50})
