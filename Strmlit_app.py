@@ -33,6 +33,7 @@ from langchain_community.document_loaders.unstructured import UnstructuredFileLo
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
+from langchain.document_loaders import CSVLoader
 
 
 # In[3]:
@@ -190,28 +191,28 @@ def create_pizza_plot(df, players, categories, title):
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = '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'
 # os.environ["MISTRAL_API_KEY"] = 'Eercwo3eC59ZehvjZXf3GSs57vR8B8sE'
-llm = ChatMistralAI(model="mistral-large-latest")
+llm = ChatMistralAI(model="mistral-large-latest",temperature=0)
 
 # Loading document through loader
-loader = UnstructuredFileLoader(file_path="CM_ElginFC.xlsx")
-data = loader.load()
+loader = CSVLoader("CM_ElginFC.csv", encoding="windows-1252")
+documents = loader.load()
 
-#formatting data to ready for LLM model
-combined_text = '\n\n\n'.join(doc.page_content.strip() for doc in data)
-player_data_blocks = combined_text.split('\n\n\n')
-header = player_data_blocks[0]
+# #formatting data to ready for LLM model
+# combined_text = '\n\n\n'.join(doc.page_content.strip() for doc in data)
+# player_data_blocks = combined_text.split('\n\n\n')
+# header = player_data_blocks[0]
 
-class Document:
-    def __init__(self, metadata, page_content):
-        self.metadata = metadata
-        self.page_content = page_content
+# class Document:
+#     def __init__(self, metadata, page_content):
+#         self.metadata = metadata
+#         self.page_content = page_content
 
-# Create a list of Document objects
-# Create a list of Document objects, ensuring the header is included in each block's content
-documents = [
-    Document(metadata={'source': 'CM_ElginFC.xlsx', 'header': header}, page_content=block)
-    for block in player_data_blocks[1:]  # Skip the first block as it's the header
-]
+# # Create a list of Document objects
+# # Create a list of Document objects, ensuring the header is included in each block's content
+# documents = [
+#     Document(metadata={'source': 'CM_ElginFC.xlsx', 'header': header}, page_content=block)
+#     for block in player_data_blocks[1:]  # Skip the first block as it's the header
+# ]
 
 vectorstore = Chroma.from_documents(documents=documents,embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token='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'))
 retriever = vectorstore.as_retriever(search_type="mmr",
