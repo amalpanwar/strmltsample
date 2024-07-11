@@ -17,19 +17,19 @@ import os
 from langchain import hub
 from langchain.vectorstores import Chroma
 #from langchain_chroma import Chroma
-from langchain_community.document_loaders import WebBaseLoader
+#from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 #from langchain_openai import OpenAIEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+#from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceHubEmbeddings
 from langchain_mistralai import ChatMistralAI
-from unstructured.partition.xlsx import partition_xlsx
+#from unstructured.partition.xlsx import partition_xlsx
 import networkx as nx
 #import pandas as pd
 import json
 import bs4
-from langchain_community.document_loaders.unstructured import UnstructuredFileLoader
+#from langchain_community.document_loaders.unstructured import UnstructuredFileLoader
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
@@ -190,8 +190,9 @@ def create_pizza_plot(df, players, categories, title):
 # RAG Pipeline for Chatting
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = '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'
-# os.environ["MISTRAL_API_KEY"] = 'Eercwo3eC59ZehvjZXf3GSs57vR8B8sE'
-llm = ChatMistralAI(model="mistral-large-latest",temperature=0)
+os.environ["MISTRAL_API_KEY"]='n6sNV9FdMOJD1dD71tDEx37X7XKk8RCi'
+api_key = os.environ["MISTRAL_API_KEY"]
+llm = ChatMistralAI(model="mistral-large-latest",temperature=0,api_key=api_key)
 
 # Loading document through loader
 loader = CSVLoader("CM_ElginFC.csv", encoding="windows-1252")
