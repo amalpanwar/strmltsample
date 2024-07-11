@@ -222,7 +222,7 @@ try:
     # Initialize Chroma with documents and HuggingFaceHubEmbeddings
     vectorstore = Chroma.from_documents(
         documents=documents,
-        embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token)
+        embedding=HuggingFaceHubEmbeddings(HUGGINGFACEHUB_API_TOKEN=api_token)
     )
 
     # Continue with your application logic
