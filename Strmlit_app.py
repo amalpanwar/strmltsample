@@ -217,7 +217,22 @@ documents = loader.load()
 # ]
 
 api_token = os.getenv('API_TOKENS')
-vectorstore = Chroma.from_documents(documents=documents,embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token))
+#vectorstore = Chroma.from_documents(documents=documents,embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token))
+try:
+    # Initialize Chroma with documents and HuggingFaceHubEmbeddings
+    vectorstore = Chroma.from_documents(
+        documents=documents,
+        embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token)
+    )
+
+    # Continue with your application logic
+    st.success("Chroma vector store initialized successfully.")
+
+except Exception as e:
+    st.error(f"Error initializing Chroma vector store: {str(e)}")
+    logging.error(f"Error initializing Chroma vector store: {str(e)}")
+    raise  # Re-raise the exception to halt execution and get full traceback
+
 retriever = vectorstore.as_retriever(search_type="mmr",
     search_kwargs={'k': 20, 'fetch_k':50})
 
