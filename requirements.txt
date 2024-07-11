@@ -17,3 +17,4 @@ huggingface_hub
 networkx
 protobuf==3.20.0
 langchain-huggingface
+dotenv
