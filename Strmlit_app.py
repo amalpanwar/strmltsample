@@ -38,10 +38,10 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.document_loaders import CSVLoader
 # from langchain.document_loaders import CSVLoader
-# import logging
+import logging
 # import chromadb
-# logging.basicConfig(level=logging.DEBUG)
-import sqlite3
+logging.basicConfig(level=logging.DEBUG)
+#import sqlite3
 
 
 
@@ -221,9 +221,13 @@ else:
         st.write("HuggingFaceHubEmbeddings initialized successfully.")
 
         # Initialize Chroma vector store
-        vectorstore = Chroma.from_documents(documents=docs, embedding=embedding)
-        retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 20, 'fetch_k': 50})
-
+        try:
+            vectorstore = Chroma.from_documents(documents=docs, embedding=embedding)
+            retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 20, 'fetch_k': 50})
+            st.success("Chroma vector store initialized successfully.")
+        except Exception as e:
+            logging.error(f"Error initializing Chroma vector store: {str(e)}")
+            st.error(f"Error initializing Chroma vector store: {str(e)}")
         # Preparing Prompt for Q/A
         system_prompt = (
              "You are an assistant for question-answering tasks. "
@@ -249,8 +253,8 @@ else:
 
         st.success("Chroma vector store initialized successfully.")
     except Exception as e:
-        logging.error(f"Error initializing Chroma vector store: {str(e)}")
-        st.error(f"Error initializing Chroma vector store: {str(e)}")
+        logging.error(f"Error: {str(e)}")
+        st.error(f"Error: {str(e)}")
 
 # llm = ChatMistralAI(model="mistral-large-latest",temperature=0,api_key=mistral_api_key)
 
@@ -287,25 +291,25 @@ else:
 #     search_kwargs={'k': 20, 'fetch_k':50})
 
 # Preparing Prompt for Q/A
-system_prompt = (
-    "You are an assistant for question-answering tasks. "
-    "Use the following pieces of retrieved context to answer "
-    "the question. If you don't know the answer, say that you "
-    "don't know. Use three sentences maximum and keep the "
-    "answer concise."
-    "\n\n"
-    "{context}"
-)
+# system_prompt = (
+#     "You are an assistant for question-answering tasks. "
+#     "Use the following pieces of retrieved context to answer "
+#     "the question. If you don't know the answer, say that you "
+#     "don't know. Use three sentences maximum and keep the "
+#     "answer concise."
+#     "\n\n"
+#     "{context}"
+# )
 
-prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system_prompt),
-        ("human", "{input}"),
-    ]
-)
+# prompt = ChatPromptTemplate.from_messages(
+#     [
+#         ("system", system_prompt),
+#         ("human", "{input}"),
+#     ]
+# )
 
-question_answer_chain = create_stuff_documents_chain(llm, prompt)
-rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+# question_answer_chain = create_stuff_documents_chain(llm, prompt)
+# rag_chain = create_retrieval_chain(retriever, question_answer_chain)
 
 
 
