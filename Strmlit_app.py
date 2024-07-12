@@ -42,14 +42,9 @@ __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import logging
-try:
-   import chromadb
-   import chromadb.config
-except ImportError:
-        raise ValueError(
-            "Could not import chromadb python package. "
-            "Please install it with `pip install chromadb`."
-        )
+import chromadb
+import chromadb.config
+
 logging.basicConfig(level=logging.DEBUG)
 #import sqlite3
 
