@@ -38,6 +38,9 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.document_loaders import CSVLoader
 # from langchain.document_loaders import CSVLoader
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import logging
 # import chromadb
 logging.basicConfig(level=logging.DEBUG)
