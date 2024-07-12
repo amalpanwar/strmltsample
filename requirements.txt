@@ -18,4 +18,4 @@ networkx
 protobuf==3.20.0
 langchain-huggingface
 python-dotenv
-sqlite3 >= 3.35.0
+sqlite3
