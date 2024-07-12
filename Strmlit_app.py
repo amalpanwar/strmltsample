@@ -220,28 +220,31 @@ documents = loader.load()
 # ]
 # Retrieve the GitHub Secret or environment variable locally
 #api_token = os.environ['API_TOKEN']
-api_token = os.getenv('HUGGINGFACEHUB_API_TOKEN')
+#api_token = os.getenv('HUGGINGFACEHUB_API_TOKEN')
 
-if api_token is None:
-    st.error("HUGGINGFACEHUB_API_TOKEN environment variable not set.")
-    st.stop() 
+api_token = st.sidebar.text_input('API Key', type='password')
 
-#api_token = os.getenv('API_TOKENS')
-#vectorstore = Chroma.from_documents(documents=documents,embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token))
-try:
-    # Initialize Chroma with documents and HuggingFaceHubEmbeddings
-    vectorstore = Chroma.from_documents(
-        documents=documents,
-        embedding=HuggingFaceHubEmbeddings(HUGGINGFACEHUB_API_TOKEN=api_token)
-    )
+if api_token:
+    # Example documents, replace with your actual data
+    
+    try:
+        logging.info("Initializing HuggingFaceHubEmbeddings with API token.")
+        # Initialize HuggingFaceHubEmbeddings with the provided API token
+        embedding = HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token)
+        
+        logging.info("Initializing Chroma vector store.")
+        # Initialize Chroma with documents and HuggingFaceHubEmbeddings
+        vectorstore = Chroma.from_documents(documents=documents, embedding=embedding)
 
-    # Continue with your application logic
-    st.success("Chroma vector store initialized successfully.")
+        # Inform the user that the vector store has been initialized
+        st.success("Chroma vector store initialized successfully.")
 
-except Exception as e:
-    st.error(f"Error initializing Chroma vector store: {str(e)}")
-    logging.error(f"Error initializing Chroma vector store: {str(e)}")
-    raise  # Re-raise the exception to halt execution and get full traceback
+    except Exception as e:
+        logging.error(f"Error initializing Chroma vector store: {str(e)}")
+        st.error(f"Error initializing Chroma vector store: {str(e)}")
+
+else:
+    st.info("Please enter your API Key in the sidebar to initialize the Chroma vector store.")
 
 retriever = vectorstore.as_retriever(search_type="mmr",
     search_kwargs={'k': 20, 'fetch_k':50})
