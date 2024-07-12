@@ -4,7 +4,6 @@ pandas
 numpy
 openpyxl
 plotly
-langchain 
 langchain-community
 langchainhub
 langchain-chroma
@@ -18,4 +17,5 @@ protobuf==3.20.0
 langchain-huggingface
 python-dotenv
 pysqlite3-binary 
-chromadb >= 0.4.0
+langchain = ">=0.0.353,<0.2"
+chromadb = ">=0.4.14"
