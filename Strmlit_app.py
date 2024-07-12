@@ -37,9 +37,9 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.document_loaders import CSVLoader
 # from langchain.document_loaders import CSVLoader
-import logging
-import chromadb
-logging.basicConfig(level=logging.DEBUG)
+# import logging
+# import chromadb
+# logging.basicConfig(level=logging.DEBUG)
 
 
 
