@@ -220,20 +220,20 @@ else:
         # Loading document through loader
         loader = CSVLoader("CM_ElginFC.csv", encoding="windows-1252")
         docs = loader.load()
-        st.write("Documents loaded successfully.")
+        # st.write("Documents loaded successfully.")
 
         # Initialize HuggingFaceHubEmbeddings with the provided API token
         embedding = HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token)
-        st.write("HuggingFaceHubEmbeddings initialized successfully.")
+        # st.write("HuggingFaceHubEmbeddings initialized successfully.")
 
         # Initialize Chroma vector store
         try:
             vectorstore = FAISS.from_documents(documents=docs, embedding=embedding)
             retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 20, 'fetch_k': 50})
-            st.success("Chroma vector store initialized successfully.")
+            # st.success("Chroma vector store initialized successfully.")
         except Exception as e:
             logging.error(f"Error initializing Chroma vector store: {str(e)}")
-            st.error(f"Error initializing Chroma vector store: {str(e)}")
+            # st.error(f"Error initializing Chroma vector store: {str(e)}")
         # Preparing Prompt for Q/A
         system_prompt = (
              "You are an assistant for question-answering tasks. "
@@ -257,10 +257,10 @@ else:
 
 
 
-        st.success("Chroma vector store initialized successfully.")
+        # st.success("Chroma vector store initialized successfully.")
     except Exception as e:
         logging.error(f"Error: {str(e)}")
-        st.error(f"Error: {str(e)}")
+        # st.error(f"Error: {str(e)}")
 
 # llm = ChatMistralAI(model="mistral-large-latest",temperature=0,api_key=mistral_api_key)
 
@@ -321,11 +321,7 @@ else:
 
 # Streamlit app
 st.title('Player Performance Dashboard')
-user_prompt = st.sidebar.text_input("Enter your query:")
-if user_prompt:
-    # Get response from RAG chain
-    response = rag_chain.invoke({"input": user_prompt})
-    st.write(response["answer"])
+
 default_position_index = ["GK","FB","CB","CM","CAM","Winger","CF"].index('CM')
 position = st.sidebar.selectbox('Select position:', options=["GK","FB","CB","CM","CAM","Winger","CF"],index=default_position_index)
 
@@ -399,6 +395,11 @@ if df_position is not None:
     with col2:
         st.plotly_chart(fig3)
     # Input field for user prompt
+    user_prompt = st.sidebar.text_input("Enter your query:")
+    if user_prompt:
+    # Get response from RAG chain
+        response = rag_chain.invoke({"input": user_prompt})
+        st.write(response["answer"])
     
 
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
