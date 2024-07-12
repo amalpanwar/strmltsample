@@ -16,10 +16,10 @@ import getpass
 import os
 # from dotenv import load_dotenv
 from langchain import hub
-# from langchain.vectorstores import Chroma
+from langchain.vectorstores import Chroma
 # from langchain_community.vectorstores import Chroma
 #from chromadb import Chroma
-from langchain_chroma import Chroma
+# from langchain_chroma import Chroma
 #from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
@@ -42,8 +42,14 @@ __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import logging
-import chromadb
-import chromadb.config
+try:
+        import chromadb
+        import chromadb.config
+    except ImportError:
+        raise ValueError(
+            "Could not import chromadb python package. "
+            "Please install it with `pip install chromadb`."
+        )
 logging.basicConfig(level=logging.DEBUG)
 #import sqlite3
 
