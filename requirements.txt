@@ -19,3 +19,4 @@ protobuf==3.20.0
 langchain-huggingface
 python-dotenv
 chromadb
+python==3.10
