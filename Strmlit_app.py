@@ -204,11 +204,59 @@ def create_pizza_plot(df, players, categories, title):
 mistral_api_key = st.sidebar.text_input('MISTRAL API Key')
 api_token = st.sidebar.text_input('API Key', type='password')
 
-llm = ChatMistralAI(model="mistral-large-latest",temperature=0,api_key=mistral_api_key)
+if not mistral_api_key or not api_token:
+    st.error("Please provide both the MISTRAL API Key and the API Key.")
+else:
+    try:
+        # Initialize the LLM model
+        llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key=mistral_api_key)
 
-# Loading document through loader
-loader = CSVLoader("CM_ElginFC.csv", encoding="windows-1252")
-docs = loader.load()
+        # Loading document through loader
+        loader = CSVLoader("CM_ElginFC.csv", encoding="windows-1252")
+        docs = loader.load()
+        st.write("Documents loaded successfully.")
+
+        # Initialize HuggingFaceHubEmbeddings with the provided API token
+        embedding = HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token)
+        st.write("HuggingFaceHubEmbeddings initialized successfully.")
+
+        # Initialize Chroma vector store
+        vectorstore = Chroma.from_documents(documents=docs, embedding=embedding)
+        retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 20, 'fetch_k': 50})
+
+        # Preparing Prompt for Q/A
+        system_prompt = (
+             "You are an assistant for question-answering tasks. "
+             "Use the following pieces of retrieved context to answer "
+             "the question. If you don't know the answer, say that you "
+             "don't know. Use three sentences maximum and keep the "
+             "answer concise."
+             "\n\n"
+             "{context}"
+              )
+
+        prompt = ChatPromptTemplate.from_messages(
+          [
+        ("system", system_prompt),
+        ("human", "{input}"),
+          ]
+         )
+
+       question_answer_chain = create_stuff_documents_chain(llm, prompt)
+       rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+
+
+
+        st.success("Chroma vector store initialized successfully.")
+    except Exception as e:
+        logging.error(f"Error initializing Chroma vector store: {str(e)}")
+        st.error(f"Error initializing Chroma vector store: {str(e)}")
+
+# llm = ChatMistralAI(model="mistral-large-latest",temperature=0,api_key=mistral_api_key)
+
+# # Loading document through loader
+# loader = CSVLoader("CM_ElginFC.csv", encoding="windows-1252")
+# docs = loader.load()
 
 # #formatting data to ready for LLM model
 # combined_text = '\n\n\n'.join(doc.page_content.strip() for doc in data)
@@ -233,10 +281,10 @@ docs = loader.load()
 # api_token=os.environ['API_TOKEN']
 
 
-vectorstore = Chroma.from_documents(documents=docs,  
-                                    embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token))
-retriever = vectorstore.as_retriever(search_type="mmr",
-    search_kwargs={'k': 20, 'fetch_k':50})
+# vectorstore = Chroma.from_documents(documents=docs,  
+#                                     embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token))
+# retriever = vectorstore.as_retriever(search_type="mmr",
+#     search_kwargs={'k': 20, 'fetch_k':50})
 
 # Preparing Prompt for Q/A
 system_prompt = (
