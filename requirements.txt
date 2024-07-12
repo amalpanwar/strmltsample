@@ -18,4 +18,4 @@ networkx
 protobuf==3.20.0
 langchain-huggingface
 python-dotenv
-pysqlite3
+pysqlite3-binary 
