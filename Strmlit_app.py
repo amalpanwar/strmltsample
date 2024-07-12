@@ -222,7 +222,7 @@ documents = loader.load()
 #api_token = os.environ['API_TOKEN']
 #api_token = os.getenv('HUGGINGFACEHUB_API_TOKEN')
 
-api_token = st.sidebar.text_input('API Key', type='password')
+# api_token = st.sidebar.text_input('API Key', type='password')
 
 if api_token:
     # Example documents, replace with your actual data
@@ -230,7 +230,7 @@ if api_token:
     try:
         logging.info("Initializing HuggingFaceHubEmbeddings with API token.")
         # Initialize HuggingFaceHubEmbeddings with the provided API token
-        embedding = HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token)
+        embedding = HuggingFaceHubEmbeddings(huggingfacehub_api_token='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')
         
         logging.info("Initializing Chroma vector store.")
         # Initialize Chroma with documents and HuggingFaceHubEmbeddings
