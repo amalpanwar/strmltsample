@@ -364,9 +364,9 @@ if df_position is not None:
                         'Accurate progressive passes, %','Aerial duels won, %',], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
-    df_position2=df_position[['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
+    df_position2=df_position.drop(columns=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
                         'Accurate progressive passes, %','Aerial duels won, %','Passes per 90','Progressive passes per 90', 
-                              'Passes to final third per 90','Successful defensive actions per 90','Fouls per 90']].drop()
+                              'Passes to final third per 90','Successful defensive actions per 90','Fouls per 90'],inplace=True,axis=1)
                               
     radar_fig =create_radar_chart(df_position2, players, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
 
