@@ -40,6 +40,7 @@ from langchain_community.document_loaders import CSVLoader
 # import logging
 # import chromadb
 # logging.basicConfig(level=logging.DEBUG)
+import sqlite3
 
 
 
