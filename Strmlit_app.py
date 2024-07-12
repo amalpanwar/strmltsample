@@ -227,7 +227,7 @@ documents = loader.load()
 # api_token = st.sidebar.text_input('API Key', type='password')
 
 vectorstore = Chroma.from_documents(documents=documents,  
-                                    embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=os.environ['API_TOKEN']))
+                                    embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=os.getenv('API_TOKEN')))
 retriever = vectorstore.as_retriever(search_type="mmr",
     search_kwargs={'k': 20, 'fetch_k':50})
 
