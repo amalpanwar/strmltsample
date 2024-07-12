@@ -237,8 +237,8 @@ else:
 
         prompt = ChatPromptTemplate.from_messages(
           [
-        ("system", system_prompt),
-        ("human", "{input}"),
+         ("system", system_prompt),
+         ("human", "{input}"),
           ]
          )
 
