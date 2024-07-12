@@ -17,7 +17,8 @@ import os
 # from dotenv import load_dotenv
 from langchain import hub
 # from langchain.vectorstores import Chroma
-from langchain_community.vectorstores import Chroma
+# from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 # from chromadb import Chroma
 # from langchain_chroma import Chroma
 #from langchain_community.document_loaders import WebBaseLoader
@@ -42,8 +43,8 @@ __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import logging
-import chromadb
-import chromadb.config
+# import chromadb
+# import chromadb.config
 
 logging.basicConfig(level=logging.DEBUG)
 #import sqlite3
@@ -227,7 +228,7 @@ else:
 
         # Initialize Chroma vector store
         try:
-            vectorstore = Chroma.from_documents(documents=docs, embedding=embedding)
+            vectorstore = FAISS.from_documents(documents=docs, embedding=embedding)
             retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 20, 'fetch_k': 50})
             st.success("Chroma vector store initialized successfully.")
         except Exception as e:
