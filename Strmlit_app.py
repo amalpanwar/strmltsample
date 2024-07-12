@@ -16,7 +16,8 @@ import getpass
 import os
 # from dotenv import load_dotenv
 from langchain import hub
-from langchain.vectorstores import Chroma
+#from langchain.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma
 #from langchain_chroma import Chroma
 #from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.output_parsers import StrOutputParser
@@ -34,7 +35,8 @@ import bs4
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
-from langchain.document_loaders import CSVLoader
+from langchain_community.document_loaders import CSVLoader
+# from langchain.document_loaders import CSVLoader
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
