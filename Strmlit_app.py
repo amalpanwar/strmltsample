@@ -207,7 +207,7 @@ llm = ChatMistralAI(model="mistral-large-latest",temperature=0,api_key=mistral_a
 
 # Loading document through loader
 loader = CSVLoader("CM_ElginFC.csv", encoding="windows-1252")
-documents = loader.load()
+docs = loader.load()
 
 # #formatting data to ready for LLM model
 # combined_text = '\n\n\n'.join(doc.page_content.strip() for doc in data)
@@ -232,7 +232,7 @@ documents = loader.load()
 # api_token=os.environ['API_TOKEN']
 
 
-vectorstore = Chroma.from_documents(documents=documents,  
+vectorstore = Chroma.from_documents(documents=docs,  
                                     embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token))
 retriever = vectorstore.as_retriever(search_type="mmr",
     search_kwargs={'k': 20, 'fetch_k':50})
