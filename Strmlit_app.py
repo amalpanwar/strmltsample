@@ -36,6 +36,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.document_loaders import CSVLoader
 import logging
+logging.basicConfig(level=logging.DEBUG)
 
 
 
