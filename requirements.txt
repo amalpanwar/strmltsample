@@ -11,7 +11,6 @@ langchain-chroma
 bs4
 langchain_mistralai
 langchain_core
-unstructured
 numpy==1.23.0
 huggingface_hub
 networkx
@@ -19,3 +18,4 @@ protobuf==3.20.0
 langchain-huggingface
 python-dotenv
 pysqlite3-binary 
+chromadb
