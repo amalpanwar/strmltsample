@@ -224,28 +224,8 @@ documents = loader.load()
 
 # api_token = st.sidebar.text_input('API Key', type='password')
 
-if api_token:
-    # Example documents, replace with your actual data
-    
-    try:
-        logging.info("Initializing HuggingFaceHubEmbeddings with API token.")
-        # Initialize HuggingFaceHubEmbeddings with the provided API token
-        embedding = HuggingFaceHubEmbeddings(huggingfacehub_api_token='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')
-        
-        logging.info("Initializing Chroma vector store.")
-        # Initialize Chroma with documents and HuggingFaceHubEmbeddings
-        vectorstore = Chroma.from_documents(documents=documents, embedding=embedding)
-
-        # Inform the user that the vector store has been initialized
-        st.success("Chroma vector store initialized successfully.")
-
-    except Exception as e:
-        logging.error(f"Error initializing Chroma vector store: {str(e)}")
-        st.error(f"Error initializing Chroma vector store: {str(e)}")
-
-else:
-    st.info("Please enter your API Key in the sidebar to initialize the Chroma vector store.")
-
+vectorstore = Chroma.from_documents(documents=documents,  
+                                    embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token='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'))
 retriever = vectorstore.as_retriever(search_type="mmr",
     search_kwargs={'k': 20, 'fetch_k':50})
 
