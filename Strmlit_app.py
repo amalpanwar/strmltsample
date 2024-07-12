@@ -224,8 +224,9 @@ documents = loader.load()
 # Retrieve the GitHub Secret or environment variable locally
 #api_token = os.environ['API_TOKEN']
 #api_token = os.getenv('HUGGINGFACEHUB_API_TOKEN')
-
-api_token = st.sidebar.text_input('API Key', type='password')
+os.environ['API_TOKEN']='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'
+api_token=os.environ['API_TOKEN']
+# api_token = st.sidebar.text_input('API Key', type='password')
 
 vectorstore = Chroma.from_documents(documents=documents,  
                                     embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token))
