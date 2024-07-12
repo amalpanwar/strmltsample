@@ -42,7 +42,8 @@ __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 import logging
-# import chromadb
+import chromadb
+import chromadb.config
 logging.basicConfig(level=logging.DEBUG)
 #import sqlite3
 
