@@ -196,11 +196,14 @@ def create_pizza_plot(df, players, categories, title):
 
 
 # RAG Pipeline for Chatting
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
+# os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = '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'
-os.environ["MISTRAL_API_KEY"]='n6sNV9FdMOJD1dD71tDEx37X7XKk8RCi'
-api_key = os.environ["MISTRAL_API_KEY"]
-llm = ChatMistralAI(model="mistral-large-latest",temperature=0,api_key=api_key)
+# os.environ["MISTRAL_API_KEY"]='n6sNV9FdMOJD1dD71tDEx37X7XKk8RCi'
+# api_key = os.environ["MISTRAL_API_KEY"]
+mistral_api_key = st.sidebar.text_input('MISTRAL API Key')
+api_token = st.sidebar.text_input('API Key', type='password')
+
+llm = ChatMistralAI(model="mistral-large-latest",temperature=0,api_key=mistral_api_key)
 
 # Loading document through loader
 loader = CSVLoader("CM_ElginFC.csv", encoding="windows-1252")
@@ -225,9 +228,9 @@ documents = loader.load()
 # Retrieve the GitHub Secret or environment variable locally
 #api_token = os.environ['API_TOKEN']
 #api_token = os.getenv('HUGGINGFACEHUB_API_TOKEN')
-os.environ['API_TOKEN']='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'
-api_token=os.environ['API_TOKEN']
-# api_token = st.sidebar.text_input('API Key', type='password')
+# os.environ['API_TOKEN']='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'
+# api_token=os.environ['API_TOKEN']
+
 
 vectorstore = Chroma.from_documents(documents=documents,  
                                     embedding=HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token))
