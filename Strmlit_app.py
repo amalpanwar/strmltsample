@@ -562,17 +562,17 @@ elif position == 'CB':
              "{context}"
               )
 
-             prompt = ChatPromptTemplate.from_messages(
+            prompt = ChatPromptTemplate.from_messages(
                   [
                    ("system", system_prompt),
                     ("human", "{input}"),
                      ]
                     )
 
-             question_answer_chain = create_stuff_documents_chain(llm, prompt)
-             rag_chain = create_retrieval_chain(retriever, question_answer_chain)
-             user_prompt = st.text_input("Enter your query:")
-             if user_prompt:
+            question_answer_chain = create_stuff_documents_chain(llm, prompt)
+            rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+            user_prompt = st.text_input("Enter your query:")
+            if user_prompt:
     # Get response from RAG chain
                    response = rag_chain.invoke({"input": user_prompt})
                    st.write(response["answer"])
