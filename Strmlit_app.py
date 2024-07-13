@@ -407,8 +407,75 @@ if position == 'CM':
     # Get response from RAG chain
         response = rag_chain.invoke({"input": user_prompt})
         st.write(response["answer"])
+######################################################Center Back#############################################    
+elif position == 'CB':
+    df_position = pvt_df_CB
+    # Dropdown menu for player selection based on position
+    players = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    df_filtered = df_position.loc[players].reset_index()
+
+    # Create point facet graph
+    fig = px.scatter(df_filtered, x=['Interceptions per 90','PAdj Interceptions','PAdj Sliding tackles'], y=['Fouls per 90'], facet_col='variable',
+                     color='Player',text='Player', title=f'{position} Defensive Clearance against Foul committed ')
+    fig.update_layout(
+        autosize=True,
+        width=1000,
+        height=600,
+        margin=dict(l=50, r=50, b=100, t=100, pad=4),
+        font=dict(size=8)
+    )
+    fig.update_traces(textposition='top center')
+    st.plotly_chart(fig)
     
-# elif
+    #st.plotly_chart(fig)
+    # Ensure 'League Two Average' is included in the list of selected players
+    # if 'League Two Average' not in players:
+    #     players.append('League Two Average')
+
+    pizza_fig=create_pizza_plot(df_position, players, categories=['Defensive duels won, %', 'Accurate passes to final third, %',
+                        'Accurate progressive passes, %','Aerial duels won, %',], title='Pizza Plot for Selected Players')
+
+    # Create radar chart for selected players
+    df_position2=df_position.drop(columns=[ 'Accurate passes to final third, %',
+                        'Accurate progressive passes, %','Aerial duels won, %','Interceptions per 90','Successful defensive actions per 90','Fouls per 90'])
+                              
+    radar_fig =create_radar_chart(df_position2, players, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(radar_fig)
+    with col2:
+        st.pyplot(pizza_fig)
+
+    fig2 = px.scatter(df_filtered, x='Successful defensive actions per 90', y='Fouls per 90',
+                     color='Player',text='Player', title=f'{position} Defensive ability')
+  
+    fig2.update_traces(textposition='top center')
+    
+
+    df_filtered['Aerial duels won per 90'] = df_filtered['Aerial duels per 90'] * (df_filtered['Aerial duels won, %'] / 100)
+
+    df_filtered2 = df_filtered.sort_values(by='Aerial duels won per 90', ascending=False)
+
+    # Melt the dataframe to long format for stacking
+    df_melted = df_filtered2.melt(id_vars='Player', value_vars=['Aerial duels per 90', 'Aerial duels won per 90'], var_name='Metric', value_name='Value')
+
+    # Create stacked bar chart
+    fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', title=f'{position} Aerial ability (Stacked)')
+    
+
+    col1, col2 = st.columns([1.5, 1])
+    with col1:
+        st.plotly_chart(fig2)
+    with col2:
+        st.plotly_chart(fig3)
+    # Input field for user prompt
+    user_prompt = st.text_input("Enter your query:")
+    if user_prompt:
+    # Get response from RAG chain
+        response = rag_chain.invoke({"input": user_prompt})
+        st.write(response["answer"])
+    
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
 # # Filter data for selected player
