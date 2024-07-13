@@ -64,6 +64,7 @@ import streamlit as st
 
 
 df = pd.read_excel("CM_Elgin.xlsx")
+df_CB = pd.read_csv("CB_ElginFC.csv")
 
 # Pivot the dataframe
 pivot_df = df.pivot(index='Player', columns='Attribute', values='Value')
