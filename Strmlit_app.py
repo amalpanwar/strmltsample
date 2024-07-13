@@ -526,7 +526,7 @@ elif position == 'CB':
     with col2:
         st.plotly_chart(fig3)
     # Input field for user prompt
-    user_prompt = st.text_input("Enter your query:")
+    # user_prompt = st.text_input("Enter your query:")
     if not mistral_api_key or not api_token:
         st.error("Please provide both the MISTRAL API Key and the API Key.")
     else:
