@@ -65,6 +65,7 @@ import streamlit as st
 
 df = pd.read_excel("CM_Elgin.xlsx")
 df_CB = pd.read_csv("CB_ElginFC.csv")
+pvt_df_CB = pd.DataFrame(df_CB).set_index('Player')
 
 # Pivot the dataframe
 pivot_df = df.pivot(index='Player', columns='Attribute', values='Value')
@@ -331,14 +332,15 @@ position = st.sidebar.selectbox('Select position:', options=["GK","FB","CB","CM"
 df_position = None
 
 # Determine the dataframe to use based on selected position
-if position == 'CM':
-    df_position = pivot_df
-# elif position == 'GK':
-#     df_position = df_GK
-# Add other positions here with elif statements
+# if position == 'CM':
+#     df_position = pivot_df
+# elif position == 'CB':
+#     df_position_CB = pvt_df_CB
+# # Add other positions here with elif statements
 
 # Ensure df_position is selected
-if df_position is not None:
+if position == 'CM':
+    df_position = pivot_df
     # Dropdown menu for player selection based on position
     players = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     df_filtered = df_position.loc[players].reset_index()
@@ -406,7 +408,7 @@ if df_position is not None:
         response = rag_chain.invoke({"input": user_prompt})
         st.write(response["answer"])
     
-
+# elif
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
 # # Filter data for selected player
