@@ -414,9 +414,14 @@ elif position == 'CB':
     players = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     df_filtered = df_position.loc[players].reset_index()
 
+    df_long = df_filtered.melt(id_vars=['Player', 'Fouls per 90'], 
+                           value_vars=['Interceptions per 90', 'PAdj Interceptions', 'PAdj Sliding tackles'], 
+                           var_name='variable', value_name='value')
+
     # Create point facet graph
-    fig = px.scatter(df_filtered, x=['Interceptions per 90','PAdj Interceptions','PAdj Sliding tackles'], y=['Fouls per 90'], facet_col='variable',
-                     color='Player',text='Player', title=f'{position} Defensive Clearance against Foul committed ')
+    fig = px.scatter(df_long, x='value', y='Fouls per 90', facet_col='variable',
+                 color='Player', text='Player', title='Defensive Clearance against Foul Committed')
+
     fig.update_layout(
         autosize=True,
         width=1000,
