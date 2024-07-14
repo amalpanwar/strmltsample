@@ -503,7 +503,7 @@ elif position == 'CB':
   
     fig2.update_traces(textposition='top center')
 
-    df_filtered2=df_filtered.reset_index(),
+    df_filtered2=df_filtered.reset_index()
     
 
     df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
