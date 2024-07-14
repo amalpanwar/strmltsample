@@ -562,7 +562,7 @@ elif position == 'CB':
 
     df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
 
-    df_filtered2 = df_filtered2.sort_values(by='Aerial duels won per 90', ascending=False)
+    df_filtered2 = df_filtered2.sort_values(by='Aerial duels won, %', ascending=False)
 
     # Melt the dataframe to long format for stacking
     df_melted = df_filtered2.melt(id_vars='Player', value_vars=['Aerial duels per 90', 'Aerial duels won per 90'], var_name='Metric', value_name='Value')
