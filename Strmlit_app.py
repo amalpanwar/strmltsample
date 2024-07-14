@@ -189,7 +189,7 @@ def create_pizza_plot(df, players, categories, title):
     ax.set_ylim(0, 100)
 
     for player in players:
-        values = df.loc[df['Player'] == player, categories].values.flatten().tolist()
+        values = df.loc[player, categories].values.flatten().tolist()
         values += values[:1]  # Complete the loop
         ax.plot(angles, values, linewidth=1, linestyle='solid', label=player)
         ax.fill(angles, values, alpha=0.25)
