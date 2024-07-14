@@ -340,8 +340,13 @@ if position == 'CM':
     players_CM = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     df_filtered = df_position.loc[players_CM]
     # Create point facet graph
-    fig = px.scatter(df_filtered, x='Passes per 90', y=['Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
-                     color='Player',text='Player', title=f'{position} passing threats')
+    # Create point facet graph
+    df_long = df_filtered.reset_index().melt(id_vars=['Player'], 
+                                         value_vars=['Passes per 90', 'Progressive passes per 90', 'Passes to final third per 90'], 
+                                         var_name='variable', value_name='value')
+
+    fig = px.scatter(df_long, x='value', y='Player', facet_col='variable',
+                                color='Player', text='Player', title='Passing threats')
     fig.update_layout(
         autosize=True,
         width=1000,
