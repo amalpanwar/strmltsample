@@ -342,8 +342,8 @@ position = st.sidebar.selectbox('Select position:', options=["GK","FB","CB","CM"
 if position == 'CM':
     df_position = pivot_df
     # Dropdown menu for player selection based on position
-    players = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-    df_filtered = df_position.loc[players].reset_index()
+    players_CM = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    df_filtered = df_position.loc[players_CM].reset_index()
 
     # Create point facet graph
     fig = px.scatter(df_filtered, x='Passes per 90', y=['Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
@@ -363,7 +363,7 @@ if position == 'CM':
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
 
-    pizza_fig=create_pizza_plot(df_filtered, players, categories=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
+    pizza_fig=create_pizza_plot(df_filtered, players_CM, categories=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
                         'Accurate progressive passes, %','Aerial duels won, %',], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
@@ -371,7 +371,7 @@ if position == 'CM':
                         'Accurate progressive passes, %','Aerial duels won, %','Passes per 90','Progressive passes per 90', 
                               'Passes to final third per 90','Successful defensive actions per 90','Fouls per 90'])
                               
-    radar_fig =create_radar_chart(df_position2, players, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+    radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
 
     col1, col2 = st.columns(2)
     with col1:
@@ -462,8 +462,8 @@ if position == 'CM':
 elif position == 'CB':
     df_position = pvt_df_CB
     # Dropdown menu for player selection based on position
-    players = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-    df_filtered = df_position.loc[players].reset_index()
+    players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    df_filtered = df_position.loc[players_CB].reset_index()
 
     df_long = df_filtered.melt(id_vars=['Player', 'Fouls per 90'], 
                            value_vars=['Interceptions per 90', 'PAdj Interceptions', 'PAdj Sliding tackles'], 
@@ -488,14 +488,14 @@ elif position == 'CB':
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
 
-    pizza_fig=create_pizza_plot(df_filtered, players, categories=['Defensive duels won, %', 'Accurate passes to final third, %',
+    pizza_fig=create_pizza_plot(df_filtered, players_CB, categories=['Defensive duels won, %', 'Accurate passes to final third, %',
                         'Accurate progressive passes, %','Aerial duels won, %'], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'Accurate passes to final third, %',
                         'Accurate progressive passes, %','Aerial duels won, %','Interceptions per 90','Successful defensive actions per 90','Fouls per 90'])
                               
-    radar_fig =create_radar_chart(df_position2, players, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+    radar_fig =create_radar_chart(df_position2, players_CB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
 
     col1, col2 = st.columns(2)
     with col1:
