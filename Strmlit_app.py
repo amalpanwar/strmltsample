@@ -553,7 +553,7 @@ elif position == 'CB':
         st.pyplot(pizza_fig)
 
     fig2 = px.scatter(df_filtered.reset_index(), x='Defensive duels per 90', y='Defensive duels won, %',
-                     color='Player',text='Player', title=f'{position} Defensive ability')
+                     color='Player',text='Player', title=f'{position} Defensive Strength')
   
     fig2.update_traces(textposition='top center')
 
