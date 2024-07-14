@@ -171,7 +171,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
 def create_pizza_plot(df, players, categories, title):
     N = len(categories)
     angles = np.linspace(0, 2 * pi, N, endpoint=False).tolist()
-    angles_mids = np.linspace(0, 2 * pi, N, endpoint=False) + (angles[1] / 2)
+    angles += angles[:1]  # Complete the loop
 
     fig = plt.figure(figsize=(8, 8))
     ax = plt.subplot(111, polar=True)
@@ -179,31 +179,26 @@ def create_pizza_plot(df, players, categories, title):
     ax.set_facecolor('grey') 
     ax.set_theta_offset(pi / 2)
     ax.set_theta_direction(-1)
-    ax.set_xticks(angles_mids)
-    ax.set_xticklabels(categories,color='white',fontsize=10)
-    ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(categories, color='white', fontsize=10)
 
     # Draw ylabels
     ax.set_rlabel_position(0)
     ax.set_yticks([20, 40, 60, 80, 100])
-    ax.set_yticklabels(["20", "40", "60", "80", "100"], color="black", size=8)
+    ax.set_yticklabels(["20", "40", "60", "80", "100"], color="white", size=8)
     ax.set_ylim(0, 100)
 
-    width = angles[1] - angles[0]
-
     for player in players:
-        values = df.loc[player, categories].values.flatten().tolist()
-        ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1, label=player)
+        values = df.loc[df['Player'] == player, categories].values.flatten().tolist()
+        values += values[:1]  # Complete the loop
+        ax.plot(angles, values, linewidth=1, linestyle='solid', label=player)
+        ax.fill(angles, values, alpha=0.25)
 
-    ax.grid(True, axis='x', which='minor')
-    ax.grid(False, axis='x', which='major')
-    ax.grid(True, axis='y', which='major')
-    ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1),facecolor='black', edgecolor='white', labelcolor='white')
-    plt.title(title,color='white',fontsize=14)
+    ax.grid(True)
+    ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1), facecolor='black', edgecolor='white', labelcolor='white')
+    plt.title(title, color='white', fontsize=14)
 
     return fig
-
-
 # RAG Pipeline for Chatting
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = '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'
@@ -342,9 +337,8 @@ position = st.sidebar.selectbox('Select position:', options=["GK","FB","CB","CM"
 if position == 'CM':
     df_position = pivot_df
     # Dropdown menu for player selection based on position
-    players_CM = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-    df_filtered = df_position.loc[players_CM].reset_index()
-
+    players_CM = st.sidebar.multiselect('Select players:', options=df_position['Player'].tolist(), default=['League Two Average'])
+    df_filtered = df_position[df_position['Player'].isin(players_CM)]
     # Create point facet graph
     fig = px.scatter(df_filtered, x='Passes per 90', y=['Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
                      color='Player',text='Player', title=f'{position} passing threats')
