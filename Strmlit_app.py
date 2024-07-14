@@ -364,7 +364,7 @@ if position == 'CM':
     #     players.append('League Two Average')
 
     pizza_fig=create_pizza_plot(df_filtered, players_CM, categories=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
-                        'Accurate progressive passes, %','Aerial duels won, %',], title='Pizza Plot for Selected Players')
+                        'Accurate progressive passes, %','Aerial duels won, %'], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
