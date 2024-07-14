@@ -462,7 +462,7 @@ elif position == 'CB':
     df_position = pvt_df_CB
     # Dropdown menu for player selection based on position
     players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-    df_filtered = df_position.loc[players_CB].reset_index()
+    df_filtered = df_position.loc[players_CB]
 
     df_long = df_filtered.melt(id_vars=['Player', 'Fouls per 90'], 
                            value_vars=['Interceptions per 90', 'PAdj Interceptions', 'PAdj Sliding tackles'], 
@@ -502,15 +502,17 @@ elif position == 'CB':
     with col2:
         st.pyplot(pizza_fig)
 
-    fig2 = px.scatter(df_filtered, x='Successful defensive actions per 90', y='Fouls per 90',
+    fig2 = px.scatter(df_filtered.reset_index(), x='Successful defensive actions per 90', y='Fouls per 90',
                      color='Player',text='Player', title=f'{position} Defensive ability')
   
     fig2.update_traces(textposition='top center')
+
+    df_filtered2=df_filtered.reset_index(),
     
 
-    df_filtered['Aerial duels won per 90'] = df_filtered['Aerial duels per 90'] * (df_filtered['Aerial duels won, %'] / 100)
+    df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
 
-    df_filtered2 = df_filtered.sort_values(by='Aerial duels won per 90', ascending=False)
+    df_filtered2 = df_filtered2.sort_values(by='Aerial duels won per 90', ascending=False)
 
     # Melt the dataframe to long format for stacking
     df_melted = df_filtered2.melt(id_vars='Player', value_vars=['Aerial duels per 90', 'Aerial duels won per 90'], var_name='Metric', value_name='Value')
