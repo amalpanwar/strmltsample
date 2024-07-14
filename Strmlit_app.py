@@ -337,8 +337,8 @@ position = st.sidebar.selectbox('Select position:', options=["GK","FB","CB","CM"
 if position == 'CM':
     df_position = pivot_df
     # Dropdown menu for player selection based on position
-    players_CM = st.sidebar.multiselect('Select players:', options=df_position['Player'].tolist(), default=['League Two Average'])
-    df_filtered = df_position[df_position['Player'].isin(players_CM)]
+   players_CM = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+   df_filtered = df_position.loc[players_CM]
     # Create point facet graph
     fig = px.scatter(df_filtered, x='Passes per 90', y=['Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
                      color='Player',text='Player', title=f'{position} passing threats')
