@@ -188,6 +188,8 @@ def create_pizza_plot(df, players, categories, title):
     ax.set_yticks([20, 40, 60, 80, 100])
     ax.set_yticklabels(["20", "40", "60", "80", "100"], color="white", size=8)
     ax.set_ylim(0, 100)
+    width = angles[1] - angles[0]
+
 
     for player in players:
         values = df.loc[player, categories].values.flatten().tolist()
