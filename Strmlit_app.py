@@ -171,7 +171,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
 def create_pizza_plot(df, players, categories, title):
     N = len(categories)
     angles = np.linspace(0, 2 * pi, N, endpoint=False).tolist()
-    angles += angles[:1]  # Complete the loop
+    angles_mids = np.linspace(0, 2 * pi, N, endpoint=False) + (angles[1] / 2)  # Complete the loop
 
     fig = plt.figure(figsize=(8, 8))
     ax = plt.subplot(111, polar=True)
@@ -179,8 +179,9 @@ def create_pizza_plot(df, players, categories, title):
     ax.set_facecolor('grey') 
     ax.set_theta_offset(pi / 2)
     ax.set_theta_direction(-1)
-    ax.set_xticks(angles[:-1])
+    ax.set_xticks(angles_mids)
     ax.set_xticklabels(categories, color='white', fontsize=10)
+    ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
 
     # Draw ylabels
     ax.set_rlabel_position(0)
@@ -190,13 +191,13 @@ def create_pizza_plot(df, players, categories, title):
 
     for player in players:
         values = df.loc[player, categories].values.flatten().tolist()
-        values += values[:1]  # Complete the loop
-        ax.plot(angles, values, linewidth=1, linestyle='solid', label=player)
-        ax.fill(angles, values, alpha=0.25)
+        ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1, label=player)
 
-    ax.grid(True)
-    ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1), facecolor='black', edgecolor='white', labelcolor='white')
-    plt.title(title, color='white', fontsize=14)
+    ax.grid(True, axis='x', which='minor')
+    ax.grid(False, axis='x', which='major')
+    ax.grid(True, axis='y', which='major')
+    ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1))
+    plt.title(title)
 
     return fig
 # RAG Pipeline for Chatting
