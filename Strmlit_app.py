@@ -214,7 +214,7 @@ def create_pizza_plot(df, players, categories, title, padding=1.25):
     angles = np.linspace(0, 2 * pi, N, endpoint=False).tolist()
     angles_mids = np.linspace(0, 2 * pi, N, endpoint=False) + (angles[1] / 2)  # Complete the loop
 
-    fig, ax = plt.subplots(figsize=(10, 10), subplot_kw=dict(polar=True))
+    fig, ax = plt.subplots(figsize=(10, 8), subplot_kw=dict(polar=True))
     # ax = plt.subplot(111, polar=True)
     fig.patch.set_facecolor('black')  # Set figure background to black
     ax.set_facecolor('grey') 
