@@ -688,7 +688,7 @@ elif position == 'Winger':
     df_melted = df_filtered3.melt(id_vars='Player', value_vars=['Successful attacking actions per 90', 'Assists per 90','Goals per 90'], var_name='Metric', value_name='Value')
 
     # Create stacked bar chart
-    fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', orientation='h', title=f'{position} Attacking Action')
+    fig3 = px.bar(df_melted, x='Value', y='Player', color='Metric', orientation='h', title=f'{position} Attacking Action')
     st.plotly_chart(fig3)
 
     # col1, col2 = st.columns([1.5, 1])
