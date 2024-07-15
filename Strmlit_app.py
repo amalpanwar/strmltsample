@@ -222,7 +222,7 @@ def create_pizza_plot(df, players, categories, title, padding=1.25):
     ax.set_theta_direction(-1)
     ax.set_xticks(angles_mids)
     ax.set_xticklabels(categories, color='white', fontsize=14)
-    ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
+    # ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
 
     # Draw ylabels
     ax.set_rlabel_position(0)
