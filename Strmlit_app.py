@@ -714,7 +714,7 @@ elif position == 'Winger':
     fig.update_xaxes(title_text="Fouls suffered per 90")
 
     fig.update_yaxes(title_text="Pressing Ability per 90", row=1, col=1)
-    fig.update_yaxes(title_text="Successful dribbles, %'", row=1, col=2)
+    fig.update_yaxes(title_text="Successful dribbles, %", row=1, col=2)
 
 # Display the plot in Streamlit
     st.plotly_chart(fig)
