@@ -634,7 +634,7 @@ elif position == 'Winger':
     
 
    
-    fig = px.scatter(df_filtered2, x='Pressing Ability per 90', y=['Goals per 90', 'Shots per 90', 'Shots on Target per 90'], facet_col='variable',
+    fig = px.scatter(df_filtered2, x='Pressing Ability per 90', y=['Shots on Target per 90','Goals per 90', 'Assists per 90'], facet_col='variable',
                  color='Player', text='Player', title='Pressing Threats vs Final Action')
 
     fig.update_layout(
@@ -653,7 +653,7 @@ elif position == 'Winger':
     #     players.append('League Two Average')
 
     pizza_fig=create_pizza_plot(df_filtered, players_Wing, categories=['Shots on target, %', 'Accurate crosses, %',
-                        'Offensive duels won, % ','Successful dribbles, %', 'Accurate passes, %','Accurate passes to penalty area, %'], title='Pizza Plot for Selected Players')
+                        'Offensive duels won, %','Successful dribbles, %', 'Accurate passes, %','Accurate passes to penalty area, %'], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
@@ -668,7 +668,7 @@ elif position == 'Winger':
     with col2:
         st.pyplot(pizza_fig)
 
-    fig2 = px.scatter(df_filtered2, x='Successful dribbles, %', y=['Pressing Ability per 90','Fouls suffered per 90'],
+    fig2 = px.scatter(df_filtered2, x='Successful dribbles, %', y=['Pressing Ability per 90','Fouls suffered per 90'],facet_col='variable',
                      color='Player',text='Player', title=f'{position} Dribbling vs Pressing skills and Foul suffered')
   
     fig2.update_traces(textposition='top center')
