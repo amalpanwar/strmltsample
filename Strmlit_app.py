@@ -234,12 +234,12 @@ def create_pizza_plot(df, players, categories, title, padding=1.25):
 
     for player in players:
         values = df.loc[player, categories].values.flatten().tolist()
-        ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1,alpha=0.5, label=player)
+        ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1,label=player)
 
     ax.grid(True, axis='x', which='minor')
     ax.grid(False, axis='x', which='major')
     ax.grid(True, axis='y', which='major')
-    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='white', edgecolor='black', labelcolor='black')
+    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), fontsize=14, facecolor='white', edgecolor='black', labelcolor='black')
     plt.title(title,color='white', fontsize=14)
 
     return fig
