@@ -669,44 +669,54 @@ elif position == 'Winger':
         st.pyplot(pizza_fig)
 
     
-    fig2 = go.Figure()
+    fig = make_subplots(rows=1, cols=2, shared_xaxes=True, subplot_titles=['Pressing Ability per 90', 'Successful dribbles, %'], specs=[[{"secondary_y": True}, {"secondary_y": True}]])
 
-# First y-axis
-    fig2.add_trace(go.Scatter(
-    x=df_filtered2['Fouls suffered per 90'],
-    y=df_filtered2['Pressing Ability per 90'],
-    mode='markers+text',
-    text=df_filtered2['Player'],
-    name='Pressing Ability per 90',
-    textposition='top center'
-       ))
+# First subplot for Pressing Ability per 90
+    fig.add_trace(
+    go.Scatter(
+        x=df_filtered2['Fouls suffered per 90'],
+        y=df_filtered2['Pressing Ability per 90'],
+        mode='markers+text',
+        text=df_filtered2['Player'],
+        name='Pressing Ability per 90',
+        textposition='top center'
+         ),
+       row=1, col=1, secondary_y=False
+       )
 
-# Second y-axis
-    fig2.add_trace(go.Scatter(
-    x=df_filtered2['Fouls suffered per 90'],
-    y=df_filtered2['Successful dribbles, %'],
-    mode='markers+text',
-    text=df_filtered2['Player'],
-    name='Fouls suffered per 90',
-    yaxis='y2',
-    textposition='top center'
-      ))
-
-# Update layout for the second y-axis
-    fig2.update_layout(
-    title=f'{position} Dribbling vs Pressing skills and Foul suffered',
-    xaxis=dict(title='Fouls suffered per 90'),
-    yaxis=dict(title='Pressing Ability per 90'),
-    yaxis2=dict(
-        title='Successful dribbles, %',
-        overlaying='y',
-        side='right'
+# Second subplot for Fouls suffered per 90
+     fig.add_trace(
+     go.Scatter(
+        x=df_filtered2['Fouls suffered per 90'],
+        y=df_filtered2['Successful dribbles, %'],
+        mode='markers+text',
+        text=df_filtered2['Player'],
+        name='Successful dribbles, %',
+        textposition='top center'
           ),
-          legend=dict(x=0.1, y=1.1)
+         row=1, col=2, secondary_y=False
          )
 
+# Update layout for the plots
+      fig.add_trace(
+      go.Scatter(
+        x=df_filtered2['Fouls suffered per 90'],
+        y=df_filtered2['Successful dribbles, %'],
+        mode='markers+text',
+        text=df_filtered2['Player'],
+        name='Successful dribbles, %',
+        textposition='top center'
+        ),
+          row=1, col=2, secondary_y=False
+         )
+
+      fig.update_xaxes(title_text="Fouls suffered per 90")
+
+      fig.update_yaxes(title_text="Pressing Ability per 90", row=1, col=1)
+      fig.update_yaxes(title_text="Successful dribbles, %'", row=1, col=2)
+
 # Display the plot in Streamlit
-    st.plotly_chart(fig2)
+      st.plotly_chart(fig)
     
     # fig2 = px.scatter(df_filtered2, x='Successful dribbles, %', y=['Pressing Ability per 90','Fouls suffered per 90'],facet_col='variable',
     #                  color='Player',text='Player', title=f'{position} Dribbling vs Pressing skills and Foul suffered')
