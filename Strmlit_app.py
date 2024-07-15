@@ -652,7 +652,7 @@ elif position == 'Winger':
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
 
-    pizza_fig=create_pizza_plot(df_filtered, players_CB, categories=['Shots on target, %', 'Accurate crosses, %',
+    pizza_fig=create_pizza_plot(df_filtered, players_Wing, categories=['Shots on target, %', 'Accurate crosses, %',
                         'Offensive duels won, % ','Successful dribbles, %', 'Accurate passes, %','Accurate passes to penalty area, %'], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
