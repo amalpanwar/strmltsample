@@ -209,7 +209,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     
 #     return fig
 
-def create_pizza_plot(df, players, categories, title):
+def create_pizza_plot(df, players, categories, title,padding=1.25):
     N = len(categories)
     angles = np.linspace(0, 2 * pi, N, endpoint=False).tolist()
     angles_mids = np.linspace(0, 2 * pi, N, endpoint=False) + (angles[1] / 2)  # Complete the loop
