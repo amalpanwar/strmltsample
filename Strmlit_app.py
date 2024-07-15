@@ -658,7 +658,7 @@ elif position == 'Winger':
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
                         'Shots on target, %', 'Accurate crosses, %','Assists','Progressive runs per 90',
-                        'Offensive duels won, % ','Successful dribbles, %', 'Accurate passes, %','Accurate passes to penalty area, %'])
+                        'Offensive duels won, %','Successful dribbles, %', 'Accurate passes, %','Accurate passes to penalty area, %'])
                               
     radar_fig =create_radar_chart(df_position2, players_Wing, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
 
