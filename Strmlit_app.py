@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import numpy as np
 import matplotlib.pyplot as plt
 from math import pi
@@ -49,23 +46,15 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 #import sqlite3
 
-
-
-# In[3]:
-
-
-#pip install streamlit
-
-
-# In[4]:
-
-
 import streamlit as st
 
-
+# ******************* Data Loading **************************************
 df = pd.read_excel("CM_Elgin.xlsx")
 df_CB = pd.read_csv("CB_ElginFC.csv")
+df_Wing = pd.read_csv("Wing_ElginFC.csv")
+
 pvt_df_CB = pd.DataFrame(df_CB).set_index('Player')
+pvt_df_Wing = pd.DataFrame(df_Wing).set_index('Player')
 
 # Pivot the dataframe
 pivot_df = df.pivot(index='Player', columns='Attribute', values='Value')
@@ -167,7 +156,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     ax.set_yticklabels([])
     ax.set_xticks(angles)
     ax.set_xticklabels(ticks, color='white', fontsize=10)
-    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='black', edgecolor='white', labelcolor='white')
+    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='white', edgecolor='black', labelcolor='black')
 
     if title is not None:
         plt.suptitle(title, color='white', fontsize=14)
@@ -231,7 +220,7 @@ def create_pizza_plot(df, players, categories, title):
     ax.set_theta_offset(pi / 2)
     ax.set_theta_direction(-1)
     ax.set_xticks(angles_mids)
-    ax.set_xticklabels(categories, color='white', fontsize=10)
+    ax.set_xticklabels(categories, color='white', fontsize=14)
     ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
 
     # Draw ylabels
@@ -249,8 +238,8 @@ def create_pizza_plot(df, players, categories, title):
     ax.grid(True, axis='x', which='minor')
     ax.grid(False, axis='x', which='major')
     ax.grid(True, axis='y', which='major')
-    ax.legend(loc='upper left', bbox_to_anchor=(0.9, 1.1))
-    plt.title(title)
+    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='white', edgecolor='black', labelcolor='black')
+    plt.title(title,color='white', fontsize=14)
 
     return fig
 # RAG Pipeline for Chatting
@@ -587,6 +576,137 @@ elif position == 'CB':
 
         # Loading document through loader
             loader = CSVLoader("CB_ElginFC.csv", encoding="windows-1252")
+            docs = loader.load()
+        # st.write("Documents loaded successfully.")
+  
+        # Initialize HuggingFaceHubEmbeddings with the provided API token
+            embedding = HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token)
+        # st.write("HuggingFaceHubEmbeddings initialized successfully.")
+
+        # Initialize Chroma vector store
+            try:
+                vectorstore = FAISS.from_documents(documents=docs, embedding=embedding)
+                retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 20, 'fetch_k': 50})
+            # st.success("Chroma vector store initialized successfully.")
+            except Exception as e:
+                 logging.error(f"Error initializing Chroma vector store: {str(e)}")
+            # st.error(f"Error initializing Chroma vector store: {str(e)}")
+        # Preparing Prompt for Q/A
+            system_prompt = (
+             "You are an assistant for question-answering tasks. "
+             "Use the following pieces of retrieved context to answer "
+             "the question. If you don't know the answer, say that you "
+             "don't know. Use three sentences maximum and keep the "
+             "answer concise."
+             "\n\n"
+             "{context}"
+              )
+
+            prompt = ChatPromptTemplate.from_messages(
+                  [
+                   ("system", system_prompt),
+                    ("human", "{input}"),
+                     ]
+                    )
+
+            question_answer_chain = create_stuff_documents_chain(llm, prompt)
+            rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+            user_prompt = st.text_input("Enter your query:")
+            if user_prompt:
+    # Get response from RAG chain
+                   response = rag_chain.invoke({"input": user_prompt})
+                   st.write(response["answer"])
+
+        # st.success("Chroma vector store initialized successfully.")
+        except Exception as e:
+                logging.error(f"Error: {str(e)}")
+######################################################Center Back#############################################    
+elif position == 'Winger':
+    df_position = pvt_df_Wing
+    # Dropdown menu for player selection based on position
+    players_Wing = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    df_filtered = df_position.loc[players_Wing]
+
+    df_filtered2=df_filtered.reset_index()
+    df_filtered2['Shots on Target per 90'] = df_filtered2['Shots per 90'] * (df_filtered2['Shots on target, %'] / 100)
+    df_filtered2['Offensive duels won per 90'] = df_filtered2['Offensive duels per 90'] * (df_filtered2['Offensive duels won, %'] / 100)
+    df_filtered2['Pressing Ability per 90']= df_filtered2['Offensive duels won per 90'] + df_filtered2['Progressive runs per 90']
+    
+
+   
+    fig = px.scatter(df_filtered2, x='Pressing Ability per 90', y=['Goals per 90', 'Shots per 90', 'Shots on Target per 90'], facet_col='variable',
+                 color='Player', text='Player', title='Pressing Threats vs Final Action')
+
+    fig.update_layout(
+        autosize=True,
+        width=1000,
+        height=600,
+        margin=dict(l=50, r=50, b=100, t=100, pad=4),
+        font=dict(size=8)
+    )
+    fig.update_traces(textposition='top center')
+    st.plotly_chart(fig)
+    
+    #st.plotly_chart(fig)
+    # Ensure 'League Two Average' is included in the list of selected players
+    # if 'League Two Average' not in players:
+    #     players.append('League Two Average')
+
+    pizza_fig=create_pizza_plot(df_filtered, players_CB, categories=['Shots on target, %', 'Accurate crosses, %',
+                        'Offensive duels won, % ','Successful dribbles, %', 'Accurate passes, %','Accurate passes to penalty area, %'], title='Pizza Plot for Selected Players')
+
+    # Create radar chart for selected players
+    df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
+                        'Shots on target, %', 'Accurate crosses, %','Assists','Progressive runs per 90',
+                        'Offensive duels won, % ','Successful dribbles, %', 'Accurate passes, %','Accurate passes to penalty area, %'])
+                              
+    radar_fig =create_radar_chart(df_position2, players_Wing, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(radar_fig)
+    with col2:
+        st.pyplot(pizza_fig)
+
+    fig2 = px.scatter(df_filtered2, x='Successful dribbles, %', y=['Pressing Ability per 90','Fouls suffered per 90'],
+                     color='Player',text='Player', title=f'{position} Dribbling vs Pressing skills and Foul suffered')
+  
+    fig2.update_traces(textposition='top center')
+     st.plotly_chart(fig2)
+
+    
+
+    df_filtered2['Overall attacking strength'] = df_filtered2['Goals per 90'] + df_filtered2['Assists per 90'] + df_filtered2['Successful attacking actions per 90']
+
+# Sorting the DataFrame by 'Goals + Assists per 90', 'Goals per 90', and 'Assists per 90' in descending order
+    df_filtered3 = df_filtered2.sort_values(by=['Overall attacking strength'], ascending=False)
+
+
+    # df_filtered2 = df_filtered2.sort_values(by=('Aerial duels won, %', ascending=False)
+
+    # Melt the dataframe to long format for stacking
+    df_melted = df_filtered3.melt(id_vars='Player', value_vars=['Successful attacking actions per 90', 'Assists per 90','Goals per 90'], var_name='Metric', value_name='Value')
+
+    # Create stacked bar chart
+    fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', orientation='h', title=f'{position} Attacking Action')
+    st.plotly_chart(fig3)
+
+    # col1, col2 = st.columns([1.5, 1])
+    # with col1:
+    #     st.plotly_chart(fig2)
+    # with col2:
+    #     st.plotly_chart(fig3)
+    # Input field for user prompt
+    # user_prompt = st.text_input("Enter your query:")
+    if not mistral_api_key or not api_token:
+        st.error("Please provide both the MISTRAL API Key and the API Key.")
+    else:
+        try:
+            # Initialize the LLM model
+            llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key=mistral_api_key)
+
+        # Loading document through loader
+            loader = CSVLoader("Wing_ElginFC.csv", encoding="windows-1252")
             docs = loader.load()
         # st.write("Documents loaded successfully.")
   
