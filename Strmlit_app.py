@@ -686,17 +686,17 @@ elif position == 'Winger':
        )
 
 # Second subplot for Fouls suffered per 90
-    fig.add_trace(
-    go.Scatter(
-        x=df_filtered2['Fouls suffered per 90'],
-        y=df_filtered2['Successful dribbles, %'],
-        mode='markers+text',
-        text=df_filtered2['Player'],
-        name='Successful dribbles, %',
-        textposition='top center'
-          ),
-         row=1, col=2, secondary_y=False
-         )
+    # fig.add_trace(
+    # go.Scatter(
+    #     x=df_filtered2['Fouls suffered per 90'],
+    #     y=df_filtered2['Successful dribbles, %'],
+    #     mode='markers+text',
+    #     text=df_filtered2['Player'],
+    #     name='Successful dribbles, %',
+    #     textposition='top center'
+    #       ),
+    #      row=1, col=2, secondary_y=False
+    #      )
 
 # Update layout for the plots
     fig.add_trace(
