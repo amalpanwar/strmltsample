@@ -234,7 +234,7 @@ def create_pizza_plot(df, players, categories, title, padding=1.25):
 
     for player in players:
         values = df.loc[player, categories].values.flatten().tolist()
-        ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1, label=player)
+        ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1,fontsize=10, label=player)
 
     ax.grid(True, axis='x', which='minor')
     ax.grid(False, axis='x', which='major')
