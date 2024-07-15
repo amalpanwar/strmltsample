@@ -672,7 +672,7 @@ elif position == 'Winger':
                      color='Player',text='Player', title=f'{position} Dribbling vs Pressing skills and Foul suffered')
   
     fig2.update_traces(textposition='top center')
-     st.plotly_chart(fig2)
+    st.plotly_chart(fig2)
 
     
 
