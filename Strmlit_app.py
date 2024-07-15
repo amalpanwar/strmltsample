@@ -668,11 +668,51 @@ elif position == 'Winger':
     with col2:
         st.pyplot(pizza_fig)
 
-    fig2 = px.scatter(df_filtered2, x='Successful dribbles, %', y=['Pressing Ability per 90','Fouls suffered per 90'],facet_col='variable',
-                     color='Player',text='Player', title=f'{position} Dribbling vs Pressing skills and Foul suffered')
-  
-    fig2.update_traces(textposition='top center')
+    
+    fig2 = go.Figure()
+
+# First y-axis
+    fig2.add_trace(go.Scatter(
+    x=df_filtered2['Fouls suffered per 90'],
+    y=df_filtered2['Pressing Ability per 90'],
+    mode='markers+text',
+    text=df_filtered2['Player'],
+    name='Pressing Ability per 90',
+    textposition='top center'
+       ))
+
+# Second y-axis
+    fig2.add_trace(go.Scatter(
+    x=df_filtered2['Fouls suffered per 90'],
+    y=df_filtered2['Successful dribbles, %'],
+    mode='markers+text',
+    text=df_filtered2['Player'],
+    name='Fouls suffered per 90',
+    yaxis='y2',
+    textposition='top center'
+      ))
+
+# Update layout for the second y-axis
+    fig2.update_layout(
+    title=f'{position} Dribbling vs Pressing skills and Foul suffered',
+    xaxis=dict(title='Fouls suffered per 90'),
+    yaxis=dict(title='Pressing Ability per 90'),
+    yaxis2=dict(
+        title='Successful dribbles, %',
+        overlaying='y',
+        side='right'
+          ),
+          legend=dict(x=0.1, y=1.1)
+         )
+
+# Display the plot in Streamlit
     st.plotly_chart(fig2)
+    
+    # fig2 = px.scatter(df_filtered2, x='Successful dribbles, %', y=['Pressing Ability per 90','Fouls suffered per 90'],facet_col='variable',
+    #                  color='Player',text='Player', title=f'{position} Dribbling vs Pressing skills and Foul suffered')
+  
+    # fig2.update_traces(textposition='top center')
+    # st.plotly_chart(fig2)
 
     
 
