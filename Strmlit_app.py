@@ -53,9 +53,11 @@ import streamlit as st
 df = pd.read_excel("CM_Elgin.xlsx")
 df_CB = pd.read_csv("CB_ElginFC.csv")
 df_Wing = pd.read_csv("Wing_ElginFC.csv")
+df_CF=pd.read_csv("CF_ElginFC.csv")
 
 pvt_df_CB = pd.DataFrame(df_CB).set_index('Player')
 pvt_df_Wing = pd.DataFrame(df_Wing).set_index('Player')
+pvt_df_CF = pd.DataFrame(df_CF).set_index('Player')
 
 # Pivot the dataframe
 pivot_df = df.pivot(index='Player', columns='Attribute', values='Value')
@@ -621,7 +623,7 @@ elif position == 'CB':
         # st.success("Chroma vector store initialized successfully.")
         except Exception as e:
                 logging.error(f"Error: {str(e)}")
-######################################################Center Back#############################################    
+###################################################### Winger #############################################    
 elif position == 'Winger':
     df_position = pvt_df_Wing
     # Dropdown menu for player selection based on position
@@ -685,20 +687,8 @@ elif position == 'Winger':
        row=1, col=1, secondary_y=False
        )
 
-# Second subplot for Fouls suffered per 90
-    # fig.add_trace(
-    # go.Scatter(
-    #     x=df_filtered2['Fouls suffered per 90'],
-    #     y=df_filtered2['Successful dribbles, %'],
-    #     mode='markers+text',
-    #     text=df_filtered2['Player'],
-    #     name='Successful dribbles, %',
-    #     textposition='top center'
-    #       ),
-    #      row=1, col=2, secondary_y=False
-    #      )
 
-# Update layout for the plots
+# Update layout Successful dribbles for the plots
     fig.add_trace(
     go.Scatter(
         x=df_filtered2['Fouls suffered per 90'],
@@ -802,7 +792,142 @@ elif position == 'Winger':
         # st.success("Chroma vector store initialized successfully.")
         except Exception as e:
                 logging.error(f"Error: {str(e)}")
+ ###################################################### Central Forward #############################################     
+elif position == 'CF':
+    df_position = pvt_df_CF
+    # Dropdown menu for player selection based on position
+    players_Wing = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    df_filtered = df_position.loc[players_Wing]
+
+    df_filtered2=df_filtered.reset_index()
+    df_filtered2['Shots on Target per 90'] = df_filtered2['Shots per 90'] * (df_filtered2['Shots on target, %'] / 100)
+    df_filtered2['SuccSuccessful dribbles per 90'] = df_filtered2['Dribbles per 90'] * (df_filtered2['Successful dribbles, %'] / 100)
+    df_filtered2['Recieve long pass, %']= (df_filtered2['Received long passes per 90'] / df_filtered2['Received passes per 90']) * 100
+    # df_filtered2['Attacking skills']= df_filtered2['SuccSuccessful dribbles per 90'] + df_filtered2['Received passes per 90'] * 100
     
+
+   
+    fig = px.scatter(df_filtered2, x='Shots per 90', y=['Shots on Target per 90','xG per 90','Goals per 90'], facet_col='variable',
+                 color='Player', text='Player', title='Threats on Goal')
+
+    fig.update_layout(
+        autosize=True,
+        width=1000,
+        height=600,
+        margin=dict(l=50, r=50, b=100, t=100, pad=4),
+        font=dict(size=8)
+    )
+    fig.update_traces(textposition='top center')
+    st.plotly_chart(fig)
+    
+    #st.plotly_chart(fig)
+    # Ensure 'League Two Average' is included in the list of selected players
+    # if 'League Two Average' not in players:
+    #     players.append('League Two Average')
+
+    pizza_fig=create_pizza_plot(df_filtered2.reset_index(), players_Wing, categories=['Shots on target, %', 'Aerial duels won, %',
+                        'Recieve long pass, %','Successful dribbles, %'], title='Pizza Plot for Selected Players')
+
+    # Create radar chart for selected players
+    df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
+                        'Shots on target, %', 'Aerial duels won, %','Shots on Target per 90','Shots per 90',
+                       'Recieve long pass, %','Successful dribbles, %' 'Received long passes per 90','Received passes per 90'])
+                              
+    radar_fig =create_radar_chart(df_position2, players_Wing, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(radar_fig)
+    with col2:
+        st.pyplot(pizza_fig)
+
+    
+    
+    
+    fig2 = px.scatter(df_filtered2, x='Touches in box per 90', y=['xG per 90','Goals per 90','Fouls suffered per 90'],facet_col='variable',
+                  color='Player',text='Player', title=f'{position} Touches in box vs Goal threat vs Foul suffered')
+  
+    fig2.update_traces(textposition='top center')
+    st.plotly_chart(fig2)
+
+    
+
+    df_filtered2['Overall Goal Threat'] = df_filtered2['Goals per 90'] + df_filtered2['xG per 90'] + df_filtered2['Successful attacking actions per 90']
+
+# Sorting the DataFrame by 'Goals + Assists per 90', 'Goals per 90', and 'Assists per 90' in descending order
+    df_filtered3 = df_filtered2.sort_values(by=['Overall Goal Threat'], ascending=False)
+
+
+    # df_filtered2 = df_filtered2.sort_values(by=('Aerial duels won, %', ascending=False)
+
+    # Melt the dataframe to long format for stacking
+    df_melted = df_filtered3.melt(id_vars='Player', value_vars=['Successful attacking actions per 90', 'xG per 90','Goals per 90'], var_name='Metric', value_name='Value')
+
+    # Create stacked bar chart
+    fig3 = px.bar(df_melted, x='Value', y='Player', color='Metric', orientation='h', title=f'{position} Attacking threats')
+    st.plotly_chart(fig3)
+
+    # col1, col2 = st.columns([1.5, 1])
+    # with col1:
+    #     st.plotly_chart(fig2)
+    # with col2:
+    #     st.plotly_chart(fig3)
+    # Input field for user prompt
+    # user_prompt = st.text_input("Enter your query:")
+    if not mistral_api_key or not api_token:
+        st.error("Please provide both the MISTRAL API Key and the API Key.")
+    else:
+        try:
+            # Initialize the LLM model
+            llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key=mistral_api_key)
+
+        # Loading document through loader
+            loader = CSVLoader("CF_ElginFC.csv", encoding="windows-1252")
+            docs = loader.load()
+        # st.write("Documents loaded successfully.")
+  
+        # Initialize HuggingFaceHubEmbeddings with the provided API token
+            embedding = HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token)
+        # st.write("HuggingFaceHubEmbeddings initialized successfully.")
+
+        # Initialize Chroma vector store
+            try:
+                vectorstore = FAISS.from_documents(documents=docs, embedding=embedding)
+                retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 20, 'fetch_k': 50})
+            # st.success("Chroma vector store initialized successfully.")
+            except Exception as e:
+                 logging.error(f"Error initializing Chroma vector store: {str(e)}")
+            # st.error(f"Error initializing Chroma vector store: {str(e)}")
+        # Preparing Prompt for Q/A
+            system_prompt = (
+             "You are an assistant for question-answering tasks. "
+             "Use the following pieces of retrieved context to answer "
+             "the question. If you don't know the answer, say that you "
+             "don't know. Use three sentences maximum and keep the "
+             "answer concise."
+             "\n\n"
+             "{context}"
+              )
+
+            prompt = ChatPromptTemplate.from_messages(
+                  [
+                   ("system", system_prompt),
+                    ("human", "{input}"),
+                     ]
+                    )
+
+            question_answer_chain = create_stuff_documents_chain(llm, prompt)
+            rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+            user_prompt = st.text_input("Enter your query:")
+            if user_prompt:
+    # Get response from RAG chain
+                   response = rag_chain.invoke({"input": user_prompt})
+                   st.write(response["answer"])
+
+        # st.success("Chroma vector store initialized successfully.")
+        except Exception as e:
+                logging.error(f"Error: {str(e)}")
+
 # players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
 # # Filter data for selected player
