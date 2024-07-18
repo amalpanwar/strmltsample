@@ -825,7 +825,7 @@ elif position == 'CF':
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
 
-    pizza_fig=create_pizza_plot(df_filtered2.reset_index(), players_CF, categories=['Shots on target, %', 'Aerial duels won, %',
+    pizza_fig=create_pizza_plot(df_filtered2, players_CF, categories=['Shots on target, %', 'Aerial duels won, %',
                         'Recieve long pass, %','Successful dribbles, %'], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
