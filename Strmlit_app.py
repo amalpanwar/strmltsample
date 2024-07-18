@@ -799,10 +799,12 @@ elif position == 'CF':
     players_CF = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     df_filtered = df_position.loc[players_CF]
 
+    df_filtered['Recieve long pass, %']= (df_filtered['Received long passes per 90'] / df_filtered['Received passes per 90']) * 100
+
     df_filtered2=df_filtered.reset_index()
     df_filtered2['Shots on Target per 90'] = df_filtered2['Shots per 90'] * (df_filtered2['Shots on target, %'] / 100)
     df_filtered2['SuccSuccessful dribbles per 90'] = df_filtered2['Dribbles per 90'] * (df_filtered2['Successful dribbles, %'] / 100)
-    df_filtered2['Recieve long pass, %']= (df_filtered2['Received long passes per 90'] / df_filtered2['Received passes per 90']) * 100
+    
     # df_filtered2['Attacking skills']= df_filtered2['SuccSuccessful dribbles per 90'] + df_filtered2['Received passes per 90'] * 100
     
 
@@ -825,7 +827,7 @@ elif position == 'CF':
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
 
-    pizza_fig=create_pizza_plot(df_filtered2, players_CF, categories=['Shots on target, %', 'Aerial duels won, %',
+    pizza_fig=create_pizza_plot(df_filtered, players_CF, categories=['Shots on target, %', 'Aerial duels won, %',
                         'Recieve long pass, %','Successful dribbles, %'], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
