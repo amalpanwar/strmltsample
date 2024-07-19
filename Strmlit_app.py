@@ -579,7 +579,7 @@ elif position == 'Winger':
     go.Scatter(
         x=df_filtered2['Fouls suffered per 90'],
         y=df_filtered2['Pressing Ability per 90'],
-        # mode='markers+text',
+        mode='markers',
         # text=df_filtered2['Player'],
         name='Pressing Ability per 90',
         textposition='top center'
@@ -593,7 +593,7 @@ elif position == 'Winger':
     go.Scatter(
         x=df_filtered2['Fouls suffered per 90'],
         y=df_filtered2['Successful dribbles, %'],
-        # mode='markers+text',
+        mode='markers',
         # text=df_filtered2['Player'],
         name='Successful dribbles, %',
         textposition='top center'
