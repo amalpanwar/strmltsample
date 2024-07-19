@@ -282,13 +282,7 @@ if position == 'CM':
 
     fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
                                 color='Player', text='Player', title='Passing threats')
-    fig.update_layout(
-        autosize=True,
-        width=1000,
-        height=600,
-        margin=dict(l=50, r=50, b=100, t=100, pad=4),
-        font=dict(size=8)
-    )
+
     fig.update_traces(textposition='top center')
     for annotation in fig.layout.annotations:
              if 'variable=' in annotation.text:
@@ -408,14 +402,10 @@ elif position == 'CB':
     fig = px.scatter(df_filtered.reset_index(), x='Fouls per 90', y=['Interceptions per 90', 'PAdj Interceptions', 'PAdj Sliding tackles'], facet_col='variable',
                  color='Player', text='Player', title='Defensive Clearance against Foul Committed')
 
-    fig.update_layout(
-        autosize=True,
-        width=1000,
-        height=600,
-        margin=dict(l=50, r=50, b=100, t=100, pad=4),
-        font=dict(size=8)
-    )
     fig.update_traces(textposition='top center')
+    for annotation in fig.layout.annotations:
+             if 'variable=' in annotation.text:
+                        annotation.text = annotation.text.split('=')[1]
     st.plotly_chart(fig)
     
     #st.plotly_chart(fig)
@@ -534,14 +524,10 @@ elif position == 'Winger':
     fig = px.scatter(df_filtered2, x='Pressing Ability per 90', y=['Shots on Target per 90','Goals per 90', 'Assists per 90'], facet_col='variable',
                  color='Player', text='Player', title='Pressing Threats vs Final Action')
 
-    fig.update_layout(
-        autosize=True,
-        width=1000,
-        height=600,
-        margin=dict(l=50, r=50, b=100, t=100, pad=4),
-        font=dict(size=8)
-    )
     fig.update_traces(textposition='top center')
+    for annotation in fig.layout.annotations:
+             if 'variable=' in annotation.text:
+                        annotation.text = annotation.text.split('=')[1]
     st.plotly_chart(fig)
     
     #st.plotly_chart(fig)
@@ -706,14 +692,10 @@ elif position == 'CF':
     fig = px.scatter(df_filtered2, x='Shots per 90', y=['Shots on Target per 90','xG per 90','Goals per 90'], facet_col='variable',
                  color='Player', text='Player', title='Threats on Goal')
 
-    fig.update_layout(
-        autosize=True,
-        width=1000,
-        height=600,
-        margin=dict(l=50, r=50, b=100, t=100, pad=4),
-        font=dict(size=8)
-    )
     fig.update_traces(textposition='top center')
+    for annotation in fig.layout.annotations:
+             if 'variable=' in annotation.text:
+                        annotation.text = annotation.text.split('=')[1]
     st.plotly_chart(fig)
     
     #st.plotly_chart(fig)
@@ -744,6 +726,9 @@ elif position == 'CF':
                   color='Player',text='Player', title=f'{position} Touches in box vs Goal threat vs Foul suffered')
   
     fig2.update_traces(textposition='top center')
+    for annotation in fig2.layout.annotations:
+             if 'variable=' in annotation.text:
+                        annotation.text = annotation.text.split('=')[1]
     st.plotly_chart(fig2)
 
     
