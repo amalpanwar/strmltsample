@@ -248,6 +248,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
         label.set_rotation(angle_text)
         label.set_verticalalignment(va)
         label.set_horizontalalignment(ha)
+        label.set_color('white') 
 
     # Draw y-labels
     ax.set_rlabel_position(0)
