@@ -600,16 +600,16 @@ elif position == 'Winger':
 
 # Second subplot for Successful dribbles, %
      for i, player in enumerate(df_filtered2['Player'].unique()):
-            player_data = df_filtered2[df_filtered2['Player'] == player]
+           player_data = df_filtered2[df_filtered2['Player'] == player]
            fig.add_trace(
            go.Scatter(
-            x=player_data['Fouls suffered per 90'],
-            y=player_data['Successful dribbles, %'],
-            mode='markers',
-            marker=dict(color=color_sequence[i % len(color_sequence)]),
-            name=player,
-            text=player,
-            textposition='top center'
+               x=player_data['Fouls suffered per 90'],
+               y=player_data['Successful dribbles, %'],
+               mode='markers',
+               marker=dict(color=color_sequence[i % len(color_sequence)]),
+               name=player,
+               text=player,
+               textposition='top center'
                   ),   
                row=1, col=2, secondary_y=False
                    )
