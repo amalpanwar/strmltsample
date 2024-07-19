@@ -123,12 +123,12 @@ st.markdown(
         width: 200px;  /* Adjust the width of the sidebar */
     }
     .css-1d391kg .css-e1fqkh5 {
-        width: 500px;  /* Adjust the width of the inner content */
+        width: 800px;  /* Adjust the width of the inner content */
     }
     </style>
     """,
     unsafe_allow_html=True
-)
+    )
 
 def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     df_selected = df.loc[players]
