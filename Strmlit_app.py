@@ -182,7 +182,8 @@ st.markdown(
 #     return fig
 
 def create_radar_chart(df, players, id_column, title=None, padding=1.25):
-    df_selected = df.loc[players]
+    # Ensure the players list is indexing correctly
+    df_selected = df[df[id_column].isin(players)].set_index(id_column)
     categories = df_selected.columns.tolist()
     
     # Convert all data to numeric, coercing errors and filling NaNs with zeros
@@ -210,7 +211,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     # Plotting radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
     fig.patch.set_facecolor('black')  # Set figure background to black
-    ax.set_facecolor('grey') 
+    ax.set_facecolor('grey')
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
         actual_values = [data[key][i] for key in data.keys()]
@@ -222,36 +223,33 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
 
     ax.fill(angles, np.ones(num_vars + 1), alpha=0.05)
 
-    # ax.set_yticklabels([])
-    # ax.set_xticks(angles)
+    ax.set_yticklabels([])
+    ax.set_xticks(angles)
     ax.set_xticklabels(ticks, color='white', fontsize=10)
-    ax.set_theta_offset(pi / 2)
-    ax.set_theta_direction(-1)
-    plt.xticks(angles, categories)
-    for label,i in zip(ax.get_xticklabels(),range(0,len(angles))):
-        angle_rad=angles[i]
+    
+    for label, i in zip(ax.get_xticklabels(), range(len(angles))):
+        angle_rad = angles[i]
         if angle_rad <= pi/2:
-            ha= 'left'
-            va= "bottom"
-            angle_text=angle_rad*(-180/pi)+90
+            ha = 'left'
+            va = "bottom"
+            angle_text = angle_rad * (-180 / pi) + 90
         elif pi/2 < angle_rad <= pi:
-            ha= 'left'
-            va= "top"
-            angle_text=angle_rad*(-180/pi)+90
-        elif pi < angle_rad <= (3*pi/2):
-            ha= 'right'
-            va= "top"  
-            angle_text=angle_rad*(-180/pi)-90
+            ha = 'left'
+            va = "top"
+            angle_text = angle_rad * (-180 / pi) + 90
+        elif pi < angle_rad <= (3 * pi / 2):
+            ha = 'right'
+            va = "top"
+            angle_text = angle_rad * (-180 / pi) - 90
         else:
-            ha= 'right'
-            va= "bottom"
-            angle_text=angle_rad*(-180/pi)-90
+            ha = 'right'
+            va = "bottom"
+            angle_text = angle_rad * (-180 / pi) - 90
         label.set_rotation(angle_text)
         label.set_verticalalignment(va)
         label.set_horizontalalignment(ha)
 
-
-# Draw ylabels
+    # Draw y-labels
     ax.set_rlabel_position(0)
     ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='white', edgecolor='black', labelcolor='black')
 
