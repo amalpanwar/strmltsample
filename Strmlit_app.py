@@ -299,7 +299,7 @@ if position == 'CM':
                                 color='Player',title='Passing threats')
 
     fig.update_traces(textposition='top center')
-    fig.update_traces(marker=dict(size=10))
+    fig.update_traces(marker=dict(size=8))
     for annotation in fig.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
@@ -327,9 +327,10 @@ if position == 'CM':
         st.pyplot(pizza_fig)
 
     fig2 = px.scatter(df_filtered.reset_index(), x='Successful defensive actions per 90', y='Fouls per 90',
-                     color='Player', size='Successful defensive actions per 90', title=f'{position} Defensive ability')
+                     color='Player', title=f'{position} Defensive ability')
   
     fig2.update_traces(textposition='top center')
+    fig2.update_traces(marker=dict(size=8))
 
     df_filtered2 = df_filtered.reset_index()
     
@@ -416,9 +417,10 @@ elif position == 'CB':
 
    
     fig = px.scatter(df_filtered.reset_index(), x='Fouls per 90', y=['Interceptions per 90', 'PAdj Interceptions', 'PAdj Sliding tackles'], facet_col='variable',
-                 color='Player', text='Player', title='Defensive Clearance against Foul Committed')
+                 color='Player',  title='Defensive Clearance against Foul Committed')
 
     fig.update_traces(textposition='top center')
+    fig.update_traces(marker=dict(size=8))
     for annotation in fig.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
@@ -445,9 +447,10 @@ elif position == 'CB':
         st.pyplot(pizza_fig)
 
     fig2 = px.scatter(df_filtered.reset_index(), x='Defensive duels per 90', y='Defensive duels won, %',
-                     color='Player',text='Player', title=f'{position} Defensive Strength')
+                     color='Player', title=f'{position} Defensive Strength')
   
     fig2.update_traces(textposition='top center')
+    fig.update_traces(marker=dict(size=2))
 
     df_filtered2=df_filtered.reset_index()
     
@@ -538,9 +541,10 @@ elif position == 'Winger':
 
    
     fig = px.scatter(df_filtered2, x='Pressing Ability per 90', y=['Shots on Target per 90','Goals per 90', 'Assists per 90'], facet_col='variable',
-                 color='Player', text='Player', title='Pressing Threats vs Final Action')
+                 color='Player', title='Pressing Threats vs Final Action')
 
     fig.update_traces(textposition='top center')
+    fig.update_traces(marker=dict(size=8))
     for annotation in fig.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
@@ -601,6 +605,7 @@ elif position == 'Winger':
 
     fig.update_yaxes(title_text="Pressing Ability per 90", row=1, col=1)
     fig.update_yaxes(title_text="Successful dribbles, %", row=1, col=2)
+    fig.update_traces(marker=dict(size=8))
 
 # Display the plot in Streamlit
     st.plotly_chart(fig)
@@ -706,9 +711,10 @@ elif position == 'CF':
 
    
     fig = px.scatter(df_filtered2, x='Shots per 90', y=['Shots on Target per 90','xG per 90','Goals per 90'], facet_col='variable',
-                 color='Player', text='Player', title='Threats on Goal')
+                 color='Player', title='Threats on Goal')
 
     fig.update_traces(textposition='top center')
+    fig.update_traces(marker=dict(size=8))
     for annotation in fig.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
@@ -739,9 +745,10 @@ elif position == 'CF':
     
     
     fig2 = px.scatter(df_filtered2, x='Touches in box per 90', y=['xG per 90','Goals per 90','Fouls suffered per 90'],facet_col='variable',
-                  color='Player',text='Player', title=f'{position} Touches in box vs Goal threat vs Foul suffered')
+                  color='Player',title=f'{position} Touches in box vs Goal threat vs Foul suffered')
   
     fig2.update_traces(textposition='top center')
+    fig.update_traces(marker=dict(size=8))
     for annotation in fig2.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
