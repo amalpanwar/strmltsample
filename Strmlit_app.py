@@ -611,7 +611,7 @@ elif position == 'Winger':
                marker=dict(color=color_sequence[i % len(color_sequence)]),
                name=player,
                text=player,
-               showlegend=True if player == df_filtered2['Player'].unique()[0],
+               showlegend=True if player == df_filtered2['Player'].unique()[0] else False,
                textposition='top center'
                   ),   
                row=1, col=2, secondary_y=False
