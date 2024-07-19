@@ -304,40 +304,40 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     
 #     return fig
 
-def create_pizza_plot(df, players, categories, title, padding=1.25):
-    N = len(categories)
-    angles = np.linspace(0, 2 * pi, N, endpoint=False).tolist()
-    angles_mids = np.linspace(0, 2 * pi, N, endpoint=False) + (angles[1] / 2)  # Complete the loop
+# def create_pizza_plot(df, players, categories, title, padding=1.25):
+#     N = len(categories)
+#     angles = np.linspace(0, 2 * pi, N, endpoint=False).tolist()
+#     angles_mids = np.linspace(0, 2 * pi, N, endpoint=False) + (angles[1] / 2)  # Complete the loop
 
-    fig, ax = plt.subplots(figsize=(10, 8), subplot_kw=dict(polar=True))
-    # ax = plt.subplot(111, polar=True)
-    fig.patch.set_facecolor('black')  # Set figure background to black
-    ax.set_facecolor('grey') 
-    ax.set_theta_offset(pi / 2)
-    ax.set_theta_direction(-1)
-    ax.set_xticks(angles_mids)
-    ax.set_xticklabels(categories, color='white', fontsize=14)
-    # ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
+#     fig, ax = plt.subplots(figsize=(10, 8), subplot_kw=dict(polar=True))
+#     # ax = plt.subplot(111, polar=True)
+#     fig.patch.set_facecolor('black')  # Set figure background to black
+#     ax.set_facecolor('grey') 
+#     ax.set_theta_offset(pi / 2)
+#     ax.set_theta_direction(-1)
+#     ax.set_xticks(angles_mids)
+#     ax.set_xticklabels(categories, color='white', fontsize=14)
+#     # ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
 
-    # Draw ylabels
-    ax.set_rlabel_position(0)
-    ax.set_yticks([20, 40, 60, 80, 100])
-    ax.set_yticklabels(["20", "40", "60", "80", "100"], color="white", size=8)
-    ax.set_ylim(0, 100)
-    width = angles[1] - angles[0]
+#     # Draw ylabels
+#     ax.set_rlabel_position(0)
+#     ax.set_yticks([20, 40, 60, 80, 100])
+#     ax.set_yticklabels(["20", "40", "60", "80", "100"], color="white", size=8)
+#     ax.set_ylim(0, 100)
+#     width = angles[1] - angles[0]
 
 
-    for player in players:
-        values = df.loc[player, categories].values.flatten().tolist()
-        ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1,label=player)
+#     for player in players:
+#         values = df.loc[player, categories].values.flatten().tolist()
+#         ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1,label=player)
 
-    ax.grid(True, axis='x', which='minor')
-    ax.grid(False, axis='x', which='major')
-    ax.grid(True, axis='y', which='major')
-    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), fontsize=14, facecolor='white', edgecolor='black', labelcolor='black')
-    plt.title(title,color='white', fontsize=14)
+#     ax.grid(True, axis='x', which='minor')
+#     ax.grid(False, axis='x', which='major')
+#     ax.grid(True, axis='y', which='major')
+#     ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), fontsize=14, facecolor='white', edgecolor='black', labelcolor='black')
+#     plt.title(title,color='white', fontsize=14)
 
-    return fig
+#     return fig
 # RAG Pipeline for Chatting
 mistral_api_key = st.sidebar.text_input('MISTRAL API Key')
 api_token = st.sidebar.text_input('API Key', type='password')
@@ -388,8 +388,8 @@ if position == 'CM':
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
 
-    pizza_fig=create_pizza_plot(df_filtered, players_CM, categories=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
-                        'Accurate progressive passes, %','Aerial duels won, %'], title='Pizza Plot for Selected Players')
+    # pizza_fig=create_pizza_plot(df_filtered, players_CM, categories=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
+    #                     'Accurate progressive passes, %','Aerial duels won, %'], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
@@ -397,12 +397,12 @@ if position == 'CM':
                               'Passes to final third per 90','Successful defensive actions per 90','Fouls per 90'])
                               
     radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-
-    col1, col2 = st.columns(2)
-    with col1:
-        st.pyplot(radar_fig)
-    with col2:
-        st.pyplot(pizza_fig)
+    st.pyplot(radar_fig)
+    # col1, col2 = st.columns(2)
+    # with col1:
+    #     st.pyplot(radar_fig)
+    # with col2:
+    #     st.pyplot(pizza_fig)
 
     fig2 = px.scatter(df_filtered.reset_index(), x='Successful defensive actions per 90', y='Fouls per 90',
                      color='Player', title=f'{position} Defensive ability')
