@@ -296,7 +296,7 @@ if position == 'CM':
     
 
     fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
-                                color='Player', text='Player', title='Passing threats')
+                                color='Player', title='Passing threats')
 
     fig.update_traces(textposition='top center')
     for annotation in fig.layout.annotations:
@@ -326,7 +326,7 @@ if position == 'CM':
         st.pyplot(pizza_fig)
 
     fig2 = px.scatter(df_filtered.reset_index(), x='Successful defensive actions per 90', y='Fouls per 90',
-                     color='Player',text='Player', title=f'{position} Defensive ability')
+                     color='Player',symbol='Player', title=f'{position} Defensive ability')
   
     fig2.update_traces(textposition='top center')
 
