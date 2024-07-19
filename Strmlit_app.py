@@ -582,7 +582,8 @@ elif position == 'Winger':
         mode='markers',
         marker=dict(color=df_filtered2['Player'].apply(lambda player: px.colors.qualitative.Plotly[hash(player) % len(px.colors.qualitative.Plotly)])),
         # text=df_filtered2['Player'],
-        name='Pressing Ability per 90',
+        # name='Pressing Ability per 90',
+        name = df_filtered2['Player'],
         textposition='top center'
          ),
        row=1, col=1, secondary_y=False
@@ -597,7 +598,8 @@ elif position == 'Winger':
         mode='markers',
         # text=df_filtered2['Player'],
         marker=dict(color=df_filtered2['Player'].apply(lambda player: px.colors.qualitative.Plotly[hash(player) % len(px.colors.qualitative.Plotly)])),
-        name='Successful dribbles, %',
+        # name='Successful dribbles, %',
+        name=df_filtered2['Player'],
         textposition='top center'
         ),
           row=1, col=2, secondary_y=False
