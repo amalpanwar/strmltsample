@@ -225,6 +225,8 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     # ax.set_yticklabels([])
     # ax.set_xticks(angles)
     # ax.set_xticklabels(ticks, color='white', fontsize=10)
+    ax.set_theta_offset(pi / 2)
+    ax.set_theta_direction(-1)
     plt.xticks(angles, categories)
     for label,i in zip(ax.get_xticklabels(),range(0,len(angles))):
         angle_rad=angles[i]
