@@ -580,7 +580,7 @@ elif position == 'Winger':
         x=df_filtered2['Fouls suffered per 90'],
         y=df_filtered2['Pressing Ability per 90'],
         mode='markers+text',
-        text=df_filtered2['Player'],
+        # text=df_filtered2['Player'],
         name='Pressing Ability per 90',
         textposition='top center'
          ),
@@ -594,7 +594,7 @@ elif position == 'Winger':
         x=df_filtered2['Fouls suffered per 90'],
         y=df_filtered2['Successful dribbles, %'],
         mode='markers+text',
-        text=df_filtered2['Player'],
+        # text=df_filtered2['Player'],
         name='Successful dribbles, %',
         textposition='top center'
         ),
