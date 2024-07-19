@@ -450,7 +450,7 @@ elif position == 'CB':
                      color='Player', title=f'{position} Defensive Strength')
   
     fig2.update_traces(textposition='top center')
-    fig.update_traces(marker=dict(size=2))
+    fig2.update_traces(marker=dict(size=2))
 
     df_filtered2=df_filtered.reset_index()
     
@@ -748,7 +748,7 @@ elif position == 'CF':
                   color='Player',title=f'{position} Touches in box vs Goal threat vs Foul suffered')
   
     fig2.update_traces(textposition='top center')
-    fig.update_traces(marker=dict(size=8))
+    fig2.update_traces(marker=dict(size=8))
     for annotation in fig2.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
