@@ -280,7 +280,7 @@ if position == 'CM':
     # Create point facet graph
     
 
-    fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Progressive passes per 90', 'Passes to final third per 90'], facet_col=variable,
+    fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
                                 color='Player', text='Player', title='Passing threats')
     fig.update_layout(
         autosize=True,
@@ -290,6 +290,9 @@ if position == 'CM':
         font=dict(size=8)
     )
     fig.update_traces(textposition='top center')
+    for annotation in fig.layout.annotations:
+             if 'variable=' in annotation.text:
+                        annotation.text = annotation.text.split('=')[1]
     st.plotly_chart(fig)
     
     #st.plotly_chart(fig)
