@@ -584,8 +584,8 @@ elif position == 'Winger':
 
 # First subplot for Pressing Ability per 90
     for i, player in enumerate(df_filtered2['Player'].unique()):
-            player_data = df_filtered2[df_filtered2['Player'] == player]
-            fig.add_trace(
+        player_data = df_filtered2[df_filtered2['Player'] == player]
+        fig.add_trace(
             go.Scatter(
             x=player_data['Fouls suffered per 90'],
             y=player_data['Pressing Ability per 90'],
@@ -597,11 +597,12 @@ elif position == 'Winger':
                  ),
             row=1, col=1, secondary_y=False
                )
+            
 
 # Second subplot for Successful dribbles, %
-     for i, player in enumerate(df_filtered2['Player'].unique()):
-         player_data = df_filtered2[df_filtered2['Player'] == player]
-         fig.add_trace(
+    for i, player in enumerate(df_filtered2['Player'].unique()):
+        player_data = df_filtered2[df_filtered2['Player'] == player]
+        fig.add_trace(
            go.Scatter(
                x=player_data['Fouls suffered per 90'],
                y=player_data['Successful dribbles, %'],
@@ -613,6 +614,7 @@ elif position == 'Winger':
                   ),   
                row=1, col=2, secondary_y=False
                    )
+         
            
 
     fig.update_xaxes(title_text="Fouls suffered per 90")
