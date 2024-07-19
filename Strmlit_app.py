@@ -326,7 +326,7 @@ if position == 'CM':
         st.pyplot(pizza_fig)
 
     fig2 = px.scatter(df_filtered.reset_index(), x='Successful defensive actions per 90', y='Fouls per 90',
-                     color='Player',symbol='Player', size='Successful defensive actions per 90', title=f'{position} Defensive ability')
+                     color='Player', size='Successful defensive actions per 90', title=f'{position} Defensive ability')
   
     fig2.update_traces(textposition='top center')
 
