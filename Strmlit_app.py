@@ -123,7 +123,7 @@ st.markdown(
         width: 200px;  /* Adjust the width of the sidebar */
     }
     .css-1d391kg .css-e1fqkh5 {
-        width: 200px;  /* Adjust the width of the inner content */
+        width: 500px;  /* Adjust the width of the inner content */
     }
     </style>
     """,
