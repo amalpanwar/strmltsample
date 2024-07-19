@@ -572,38 +572,47 @@ elif position == 'Winger':
         st.pyplot(pizza_fig)
 
     
-    fig = make_subplots(rows=1, cols=2, shared_xaxes=True, subplot_titles=['Pressing Ability per 90', 'Successful dribbles, %'], specs=[[{"secondary_y": True}, {"secondary_y": True}]])
+    # Create the subplots
+    fig = make_subplots(
+    rows=1, cols=2, shared_xaxes=True,
+    subplot_titles=['Pressing Ability per 90', 'Successful dribbles, %'],
+    specs=[[{"secondary_y": True}, {"secondary_y": True}]]
+     )
+
+# Define color sequence for players
+    color_sequence = px.colors.qualitative.Plotly
 
 # First subplot for Pressing Ability per 90
-    fig.add_trace(
-    go.Scatter(
-        x=df_filtered2['Fouls suffered per 90'],
-        y=df_filtered2['Pressing Ability per 90'],
-        mode='markers',
-        marker=dict(color=df_filtered2['Player'].apply(lambda player: px.colors.qualitative.Plotly[hash(player) % len(px.colors.qualitative.Plotly)])),
-        # text=df_filtered2['Player'],
-        # name='Pressing Ability per 90',
-        name = df_filtered2['Player'],
-        textposition='top center'
-         ),
-       row=1, col=1, secondary_y=False
-       )
+    for i, player in enumerate(df_filtered2['Player'].unique()):
+            player_data = df_filtered2[df_filtered2['Player'] == player]
+            fig.add_trace(
+            go.Scatter(
+            x=player_data['Fouls suffered per 90'],
+            y=player_data['Pressing Ability per 90'],
+            mode='markers',
+            marker=dict(color=color_sequence[i % len(color_sequence)]),
+            name=player,
+            text=player,
+            textposition='top center'
+                 ),
+            row=1, col=1, secondary_y=False
+               )
 
-
-# Update layout Successful dribbles for the plots
-    fig.add_trace(
-    go.Scatter(
-        x=df_filtered2['Fouls suffered per 90'],
-        y=df_filtered2['Successful dribbles, %'],
-        mode='markers',
-        # text=df_filtered2['Player'],
-        marker=dict(color=df_filtered2['Player'].apply(lambda player: px.colors.qualitative.Plotly[hash(player) % len(px.colors.qualitative.Plotly)])),
-        # name='Successful dribbles, %',
-        name=df_filtered2['Player'],
-        textposition='top center'
-        ),
-          row=1, col=2, secondary_y=False
-         )
+# Second subplot for Successful dribbles, %
+     for i, player in enumerate(df_filtered2['Player'].unique()):
+            player_data = df_filtered2[df_filtered2['Player'] == player]
+           fig.add_trace(
+           go.Scatter(
+            x=player_data['Fouls suffered per 90'],
+            y=player_data['Successful dribbles, %'],
+            mode='markers',
+            marker=dict(color=color_sequence[i % len(color_sequence)]),
+            name=player,
+            text=player,
+            textposition='top center'
+                  ),   
+               row=1, col=2, secondary_y=False
+                   )
 
     fig.update_xaxes(title_text="Fouls suffered per 90")
 
