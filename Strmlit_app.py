@@ -115,6 +115,21 @@ pivot_df = df.pivot(index='Player', columns='Attribute', values='Value')
     
 #     return fig
 
+# Custom CSS to adjust the sidebar size
+st.markdown(
+    """
+    <style>
+    .css-1d391kg {
+        width: 300px;  /* Adjust the width of the sidebar */
+    }
+    .css-1d391kg .css-e1fqkh5 {
+        width: 300px;  /* Adjust the width of the inner content */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     df_selected = df.loc[players]
     categories = df_selected.columns.tolist()
