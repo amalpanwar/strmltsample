@@ -120,10 +120,10 @@ st.markdown(
     """
     <style>
     .css-1d391kg {
-        width: 300px;  /* Adjust the width of the sidebar */
+        width: 200px;  /* Adjust the width of the sidebar */
     }
     .css-1d391kg .css-e1fqkh5 {
-        width: 300px;  /* Adjust the width of the inner content */
+        width: 200px;  /* Adjust the width of the inner content */
     }
     </style>
     """,
