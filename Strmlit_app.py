@@ -296,7 +296,7 @@ if position == 'CM':
     
 
     fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
-                                color='Player',size='Passes per 90', title='Passing threats')
+                                color='Player',size= 5, title='Passing threats')
 
     fig.update_traces(textposition='top center')
     for annotation in fig.layout.annotations:
