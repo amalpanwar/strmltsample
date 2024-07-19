@@ -280,7 +280,7 @@ if position == 'CM':
     # Create point facet graph
     
 
-    fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Progressive passes per 90', 'Passes to final third per 90'], facet_col=y,
+    fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Progressive passes per 90', 'Passes to final third per 90'], facet_col=variable,
                                 color='Player', text='Player', title='Passing threats')
     fig.update_layout(
         autosize=True,
