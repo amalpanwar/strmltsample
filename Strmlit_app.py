@@ -222,7 +222,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
 
     ax.fill(angles, np.ones(N + 1), alpha=0.05)
 
-    ax.set_theta_offset(pi / 2)
+    ax.set_theta_offset(np.deg2rad(-80))
     ax.set_theta_direction(-1)
     
     ticks = list(data.keys())
