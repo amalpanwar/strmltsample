@@ -254,7 +254,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
 
     # Draw y-labels
     ax.set_rlabel_position(0)
-    ax.legend(loc='center left', bbox_to_anchor=(0.1, 0.1), facecolor='white', edgecolor='black', labelcolor='black')
+    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='white', edgecolor='black', labelcolor='black')
 
     if title is not None:
         plt.suptitle(title, color='white', fontsize=14)
