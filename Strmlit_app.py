@@ -185,6 +185,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     # Ensure the players list is indexing correctly
     df_selected = df.loc[players]
     categories = df_selected.columns.tolist()
+    N = len(categories)
     
     # Convert all data to numeric, coercing errors and filling NaNs with zeros
     df_selected = df_selected.apply(pd.to_numeric, errors='coerce').fillna(0)
@@ -206,7 +207,8 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     num_vars = len(data.keys())
     ticks = list(data.keys())
     ticks += ticks[:1]
-    angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist() + [0]
+    # angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist() + [0]
+    angles = [n / float(N) * 2 * pi for n in range(N)]
 
     # Plotting radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
