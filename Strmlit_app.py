@@ -230,27 +230,27 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     ax.set_xticks(angles)
     ax.set_xticklabels(ticks, color='white', fontsize=10)
 
-    for label, angle_rad in zip(ax.get_xticklabels(), angles):
-        if angle_rad <= pi/2:
-            ha = 'left'
-            va = "bottom"
-            angle_text = angle_rad * (-180 / pi) + 90
-        elif pi/2 < angle_rad <= pi:
-            ha = 'left'
-            va = "top"
-            angle_text = angle_rad * (-180 / pi) + 90
-        elif pi < angle_rad <= (3 * pi / 2):
-            ha = 'right'
-            va = "top"
-            angle_text = angle_rad * (-180 / pi) - 90
-        else:
-            ha = 'right'
-            va = "bottom"
-            angle_text = angle_rad * (-180 / pi) - 90
-        label.set_rotation(angle_text)
-        label.set_verticalalignment(va)
-        label.set_horizontalalignment(ha)
-        label.set_color('white') 
+    # for label, angle_rad in zip(ax.get_xticklabels(), angles):
+    #     if angle_rad <= pi/2:
+    #         ha = 'left'
+    #         va = "bottom"
+    #         angle_text = angle_rad * (-180 / pi) + 90
+    #     elif pi/2 < angle_rad <= pi:
+    #         ha = 'left'
+    #         va = "top"
+    #         angle_text = angle_rad * (-180 / pi) + 90
+    #     elif pi < angle_rad <= (3 * pi / 2):
+    #         ha = 'right'
+    #         va = "top"
+    #         angle_text = angle_rad * (-180 / pi) - 90
+    #     else:
+    #         ha = 'right'
+    #         va = "bottom"
+    #         angle_text = angle_rad * (-180 / pi) - 90
+    #     label.set_rotation(angle_text)
+    #     label.set_verticalalignment(va)
+    #     label.set_horizontalalignment(ha)
+    #     label.set_color('white') 
 
     # Draw y-labels
     ax.set_rlabel_position(0)
