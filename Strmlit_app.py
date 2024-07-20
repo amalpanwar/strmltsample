@@ -208,7 +208,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     ticks = list(data.keys())
     ticks += ticks[:1]
     # angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist() + [0]
-    angles = [n / float(N) * 2 * pi for n in range(N)]
+    angles = [n / float(N) * 2 * np.pi for n in range(N)]
 
     # Plotting radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
@@ -225,7 +225,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
 
     ax.fill(angles, np.ones(num_vars + 1), alpha=0.05)
 
-    ax.set_theta_offset(pi / 2)
+    # ax.set_theta_offset(pi / 2)
     ax.set_theta_direction(-1)
     # ax.set_xticklabels(ticks, color='white', fontsize=10)
     # ax.set_xticklabels(ticks, color='white', ha='right')
