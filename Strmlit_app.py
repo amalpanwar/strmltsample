@@ -183,7 +183,7 @@ st.markdown(
 
 def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     # Ensure the players list is indexing correctly
-    df_selected = df.set_index(id_column).loc[players]
+    df_selected = df.loc[players]
     categories = df_selected.columns.tolist()
     N = len(categories)
     
