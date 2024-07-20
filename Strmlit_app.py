@@ -226,7 +226,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     ax.fill(angles, np.ones(num_vars + 1), alpha=0.05)
 
     ax.set_theta_offset(pi / 2)
-    # ax.set_theta_direction(-1)
+    ax.set_theta_direction(-1)
     # ax.set_xticklabels(ticks, color='white', fontsize=10)
     # ax.set_xticklabels(ticks, color='white', ha='right')
     
