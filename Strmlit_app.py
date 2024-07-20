@@ -183,7 +183,7 @@ st.markdown(
 
 def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     # Ensure the players list is indexing correctly
-    df_selected = df.loc[players]
+    df_selected = df.set_index(id_column).loc[players]
     categories = df_selected.columns.tolist()
     N = len(categories)
     
@@ -204,11 +204,8 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     for key, value in data.items():
         normalized_data[key] = np.array(value) / max_values[key]
 
-    num_vars = len(data.keys())
-    ticks = list(data.keys())
-    ticks += ticks[:1]
-    # angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist() + [0]
     angles = [n / float(N) * 2 * np.pi for n in range(N)]
+    angles += angles[:1]  # Complete the circle
 
     # Plotting radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
@@ -223,15 +220,17 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
         for angle, value, actual_value in zip(angles, values, actual_values):
             ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
 
-    ax.fill(angles, np.ones(num_vars + 1), alpha=0.05)
+    ax.fill(angles, np.ones(N + 1), alpha=0.05)
 
     ax.set_theta_offset(pi / 2)
     ax.set_theta_direction(-1)
-    # ax.set_xticklabels(ticks, color='white', fontsize=10)
-    # ax.set_xticklabels(ticks, color='white', ha='right')
     
-    for label, i in zip(ax.get_xticklabels(), range(len(angles))):
-        angle_rad = angles[i]
+    ticks = list(data.keys())
+    ticks += ticks[:1]  # Add the first category to the end to close the circle
+    ax.set_xticks(angles)
+    ax.set_xticklabels(ticks, color='white', fontsize=10)
+
+    for label, angle_rad in zip(ax.get_xticklabels(), angles):
         if angle_rad <= pi/2:
             ha = 'left'
             va = "bottom"
