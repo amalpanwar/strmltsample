@@ -223,7 +223,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
     ax.fill(angles, np.ones(N + 1), alpha=0.05)
 
     ax.set_theta_offset(np.pi/2)
-    ax.set_theta_direction(-2)
+    ax.set_theta_direction(-1)
     
     ticks = list(data.keys())
     ticks += ticks[:1]  # Add the first category to the end to close the circle
@@ -253,7 +253,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
         label.set_color('white') 
 
     # Draw y-labels
-    ax.set_rlabel_position(0)
+    # ax.set_rlabel_position(0)
     ax.legend(loc='lower right', bbox_to_anchor=(0.1, 0.1), facecolor='white', edgecolor='black', labelcolor='black')
 
     if title is not None:
