@@ -504,14 +504,7 @@ elif position == 'CB':
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
     st.plotly_chart(fig)
-    
-    #st.plotly_chart(fig)
-    # Ensure 'League Two Average' is included in the list of selected players
-    # if 'League Two Average' not in players:
-    #     players.append('League Two Average')
-
-    # pizza_fig=create_pizza_plot(df_filtered, players_CB, categories=['Defensive duels won, %', 'Accurate passes to final third, %',
-    #                     'Accurate progressive passes, %','Aerial duels won, %'], title='Pizza Plot for Selected Players')
+  
 
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'Accurate passes to final third, %','Team','Contract Expiry \n(Trnsfmkt)','Defensive duels won, %',
@@ -634,9 +627,7 @@ elif position == 'Winger':
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
 
-    # pizza_fig=create_pizza_plot(df_filtered, players_Wing, categories=['Shots on target, %', 'Accurate crosses, %',
-    #                     'Offensive duels won, %','Successful dribbles, %', 'Accurate passes, %','Accurate passes to penalty area, %'], title='Pizza Plot for Selected Players')
-
+   
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
                         'Shots on target, %', 'Accurate crosses, %','Assists','Progressive runs per 90',
@@ -644,12 +635,7 @@ elif position == 'Winger':
                               
     radar_fig =create_radar_chart(df_position2, players_Wing, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
     st.pyplot(radar_fig)
-    # col1, col2 = st.columns(2)
-    # with col1:
-    #     st.pyplot(radar_fig)
-    # with col2:
-    #     st.pyplot(pizza_fig)
-
+    
     
     # Create the subplots
     fig = make_subplots(
@@ -707,11 +693,6 @@ elif position == 'Winger':
 # Display the plot in Streamlit
     st.plotly_chart(fig)
     
-    # fig2 = px.scatter(df_filtered2, x='Successful dribbles, %', y=['Pressing Ability per 90','Fouls suffered per 90'],facet_col='variable',
-    #                  color='Player',text='Player', title=f'{position} Dribbling vs Pressing skills and Foul suffered')
-  
-    # fig2.update_traces(textposition='top center')
-    # st.plotly_chart(fig2)
 
     
 
@@ -730,13 +711,7 @@ elif position == 'Winger':
     fig3 = px.bar(df_melted, x='Value', y='Player', color='Metric', orientation='h', title=f'{position} Attacking Action')
     st.plotly_chart(fig3)
 
-    # col1, col2 = st.columns([1.5, 1])
-    # with col1:
-    #     st.plotly_chart(fig2)
-    # with col2:
-    #     st.plotly_chart(fig3)
-    # Input field for user prompt
-    # user_prompt = st.text_input("Enter your query:")
+    # Input for user query
     if not mistral_api_key or not api_token:
         st.error("Please provide both the MISTRAL API Key and the API Key.")
     else:
@@ -817,13 +792,6 @@ elif position == 'CF':
                         annotation.text = annotation.text.split('=')[1]
     st.plotly_chart(fig)
     
-    #st.plotly_chart(fig)
-    # Ensure 'League Two Average' is included in the list of selected players
-    # if 'League Two Average' not in players:
-    #     players.append('League Two Average')
-
-    # pizza_fig=create_pizza_plot(df_filtered, players_CF, categories=['Shots on target, %', 'Aerial duels won, %',
-    #                     'Recieve long pass, %','Successful dribbles, %'], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
@@ -832,11 +800,6 @@ elif position == 'CF':
                               
     radar_fig =create_radar_chart(df_position2, players_CF, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
     st.pyplot(radar_fig)
-    # col1, col2 = st.columns(2)
-    # with col1:
-    #     st.pyplot(radar_fig)
-    # with col2:
-    #     st.pyplot(pizza_fig)
 
     
     
@@ -868,11 +831,7 @@ elif position == 'CF':
     fig3 = px.bar(df_melted, x='Value', y='Player', color='Metric', orientation='h', title=f'{position} Attacking threats')
     st.plotly_chart(fig3)
 
-    # col1, col2 = st.columns([1.5, 1])
-    # with col1:
-    #     st.plotly_chart(fig2)
-    # with col2:
-    #     st.plotly_chart(fig3)
+    
     # Input field for user prompt
     # user_prompt = st.text_input("Enter your query:")
     if not mistral_api_key or not api_token:
