@@ -510,20 +510,20 @@ elif position == 'CB':
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
 
-    pizza_fig=create_pizza_plot(df_filtered, players_CB, categories=['Defensive duels won, %', 'Accurate passes to final third, %',
-                        'Accurate progressive passes, %','Aerial duels won, %'], title='Pizza Plot for Selected Players')
+    # pizza_fig=create_pizza_plot(df_filtered, players_CB, categories=['Defensive duels won, %', 'Accurate passes to final third, %',
+    #                     'Accurate progressive passes, %','Aerial duels won, %'], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'Accurate passes to final third, %','Team','Contract Expiry \n(Trnsfmkt)','Defensive duels won, %',
                         'Accurate progressive passes, %','Aerial duels won, %','Interceptions per 90','Successful defensive actions per 90','Fouls per 90'])
                               
     radar_fig =create_radar_chart(df_position2, players_CB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-
-    col1, col2 = st.columns(2)
-    with col1:
-        st.pyplot(radar_fig)
-    with col2:
-        st.pyplot(pizza_fig)
+    st.pyplot(radar_fig)
+    # col1, col2 = st.columns(2)
+    # with col1:
+    #     st.pyplot(radar_fig)
+    # with col2:
+    #     st.pyplot(pizza_fig)
 
     fig2 = px.scatter(df_filtered.reset_index(), x='Defensive duels per 90', y='Defensive duels won, %',
                      color='Player', title=f'{position} Defensive Strength')
@@ -634,8 +634,8 @@ elif position == 'Winger':
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
 
-    pizza_fig=create_pizza_plot(df_filtered, players_Wing, categories=['Shots on target, %', 'Accurate crosses, %',
-                        'Offensive duels won, %','Successful dribbles, %', 'Accurate passes, %','Accurate passes to penalty area, %'], title='Pizza Plot for Selected Players')
+    # pizza_fig=create_pizza_plot(df_filtered, players_Wing, categories=['Shots on target, %', 'Accurate crosses, %',
+    #                     'Offensive duels won, %','Successful dribbles, %', 'Accurate passes, %','Accurate passes to penalty area, %'], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
@@ -643,12 +643,12 @@ elif position == 'Winger':
                         'Offensive duels won, %','Successful dribbles, %', 'Accurate passes, %','Accurate passes to penalty area, %'])
                               
     radar_fig =create_radar_chart(df_position2, players_Wing, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-
-    col1, col2 = st.columns(2)
-    with col1:
-        st.pyplot(radar_fig)
-    with col2:
-        st.pyplot(pizza_fig)
+    st.pyplot(radar_fig)
+    # col1, col2 = st.columns(2)
+    # with col1:
+    #     st.pyplot(radar_fig)
+    # with col2:
+    #     st.pyplot(pizza_fig)
 
     
     # Create the subplots
@@ -822,8 +822,8 @@ elif position == 'CF':
     # if 'League Two Average' not in players:
     #     players.append('League Two Average')
 
-    pizza_fig=create_pizza_plot(df_filtered, players_CF, categories=['Shots on target, %', 'Aerial duels won, %',
-                        'Recieve long pass, %','Successful dribbles, %'], title='Pizza Plot for Selected Players')
+    # pizza_fig=create_pizza_plot(df_filtered, players_CF, categories=['Shots on target, %', 'Aerial duels won, %',
+    #                     'Recieve long pass, %','Successful dribbles, %'], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
@@ -831,12 +831,12 @@ elif position == 'CF':
                        'Recieve long pass, %','Successful dribbles, %', 'Received long passes per 90','Received passes per 90'])
                               
     radar_fig =create_radar_chart(df_position2, players_CF, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-
-    col1, col2 = st.columns(2)
-    with col1:
-        st.pyplot(radar_fig)
-    with col2:
-        st.pyplot(pizza_fig)
+    st.pyplot(radar_fig)
+    # col1, col2 = st.columns(2)
+    # with col1:
+    #     st.pyplot(radar_fig)
+    # with col2:
+    #     st.pyplot(pizza_fig)
 
     
     
