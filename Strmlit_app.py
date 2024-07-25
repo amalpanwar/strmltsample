@@ -543,6 +543,7 @@ elif position == 'CB':
       'Defender Score(0-100)': 'Rating (0-100)',
       'Matches played\n(23/24)': 'Matches played (2023/24)'
          })
+    df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
 
 # Style the DataFrame
     def style_dataframe(df):
