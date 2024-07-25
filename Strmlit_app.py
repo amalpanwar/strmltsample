@@ -435,7 +435,7 @@ if position == 'CM':
         st.plotly_chart(fig3)
     # Input field for user prompt
    
-    if not mistral_api_key or not api_token:
+    if not Together_api_key or not api_token:
         st.error("Please provide both the MISTRAL API Key and the API Key.")
     else:
         try:
