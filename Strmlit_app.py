@@ -28,6 +28,7 @@ from langchain_core.runnables import RunnablePassthrough
 #from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceHubEmbeddings
 from langchain_mistralai import ChatMistralAI
+from langchain_together import ChatTogether
 #from unstructured.partition.xlsx import partition_xlsx
 import networkx as nx
 #import pandas as pd
@@ -342,7 +343,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
 
 #     return fig
 # RAG Pipeline for Chatting
-mistral_api_key = st.sidebar.text_input('MISTRAL API Key')
+Together_api_key = st.sidebar.text_input('Together API Key')
 api_token = st.sidebar.text_input('API Key', type='password')
 
 
@@ -439,7 +440,11 @@ if position == 'CM':
     else:
         try:
             # Initialize the LLM model
-            llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key=mistral_api_key)
+            llm = ChatTogether(
+                      base_url="https://api.together.xyz/v1",
+                      api_key=Together_api_key,
+                      model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+                        )
 
         # Loading document through loader
             loader = CSVLoader("CM_ElginFC.csv", encoding="windows-1252")
