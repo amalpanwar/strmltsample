@@ -508,10 +508,8 @@ elif position == 'CB':
     df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
     df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
     # Dropdown menu for player selection based on position
-    if st.button('Show Top 5 Players'):
+    if st.sidebar.button('Show Top 5 Players'):
         top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
-        st.sidebar.write("Top 5 Players:")
-        st.sidebar.write(top_5_players)
     # Multiselect only includes top 5 players
         players_CB = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
     else:
@@ -534,7 +532,7 @@ elif position == 'CB':
   
 
     # Create radar chart for selected players
-    df_position2=df_filtered.drop(columns=[ 'Accurate passes to final third, %','Team','Contract Expiry \n(Trnsfmkt)','Defensive duels won, %',
+    df_position2=df_filtered.drop(columns=[ 'defensive zscore','Defender Score(0-100)','Player Rank','Accurate passes to final third, %','Team','Contract Expiry \n(Trnsfmkt)','Defensive duels won, %',
                         'Accurate progressive passes, %','Aerial duels won, %','Interceptions per 90','Successful defensive actions per 90','Fouls per 90'])
                               
     radar_fig =create_radar_chart(df_position2, players_CB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
