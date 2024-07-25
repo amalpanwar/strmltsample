@@ -20,4 +20,5 @@ pysqlite3-binary
 langchain
 faiss-cpu
 scipy
+seaborn
 
