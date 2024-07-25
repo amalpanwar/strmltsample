@@ -21,4 +21,4 @@ langchain
 faiss-cpu
 scipy
 seaborn
-
+langchain-together
