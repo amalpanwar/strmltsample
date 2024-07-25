@@ -538,10 +538,11 @@ elif position == 'CB':
     radar_fig =create_radar_chart(df_position2, players_CB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
     # st.pyplot(radar_fig)
     columns_to_display = ['Player','Team','Age', 'Matches played\n(23/24)', 'Minutes played', 'Defender Score(0-100)', 'Player Rank']
-    df_filtered_display = df_filtered[columns_to_display].rename(columns={
+    df_filtered_display=df_filtered.reset_index()
+    df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
       'Defender Score(0-100)': 'Rating (0-100)',
       'Matches played\n(23/24)': 'Matches played (2023/24)'
-         }).reset_index()
+         })
 
 # Style the DataFrame
     def highlight_header(s):
