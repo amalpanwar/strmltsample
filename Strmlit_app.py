@@ -545,14 +545,20 @@ elif position == 'CB':
          })
 
 # Style the DataFrame
-    def highlight_header(s):
-        return ['font-weight: bold; background-color: #f2f2f2'] * len(s)
+    def style_dataframe(df):
+        return df.style.set_table_styles(
+        [
+            {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
+            {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
+            {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
+        ]
+          ).hide(axis="index")
 
-    styled_df = df_filtered_display.style.apply(highlight_header, axis=0)
+    styled_df = style_dataframe(df_filtered_display)
 
 # Display styled DataFrame in Streamlit
-    st.write("Players Info:")
-    st.dataframe(styled_df, use_container_width=True)
+    # st.write("Players Info:")
+    # st.dataframe(styled_df, use_container_width=True)
     col1, col2 = st.columns(2)
     with col1:
         st.pyplot(radar_fig)
