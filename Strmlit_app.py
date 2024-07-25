@@ -436,7 +436,7 @@ if position == 'CM':
     # Input field for user prompt
    
     if not Together_api_key or not api_token:
-        st.error("Please provide both the MISTRAL API Key and the API Key.")
+        st.error("Please provide both the TOGETHER API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
@@ -599,12 +599,16 @@ elif position == 'CB':
         st.plotly_chart(fig3)
     # Input field for user prompt
     # user_prompt = st.text_input("Enter your query:")
-    if not mistral_api_key or not api_token:
-        st.error("Please provide both the MISTRAL API Key and the API Key.")
+    if not Together_api_key or not api_token:
+        st.error("Please provide both the TOGETHER API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
-            llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key=mistral_api_key)
+            llm = ChatTogether(
+                      base_url="https://api.together.xyz/v1",
+                      api_key=Together_api_key,
+                      model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+                        )
 
         # Loading document through loader
             loader = CSVLoader("CB_ElginFC.csv", encoding="windows-1252")
@@ -766,12 +770,16 @@ elif position == 'Winger':
     st.plotly_chart(fig3)
 
     # Input for user query
-    if not mistral_api_key or not api_token:
-        st.error("Please provide both the MISTRAL API Key and the API Key.")
+    if not Together_api_key or not api_token:
+        st.error("Please provide both the TOGETHER API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
-            llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key=mistral_api_key)
+            llm = ChatTogether(
+                      base_url="https://api.together.xyz/v1",
+                      api_key=Together_api_key,
+                      model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+                        )
 
         # Loading document through loader
             loader = CSVLoader("Wing_ElginFC.csv", encoding="windows-1252")
@@ -885,12 +893,16 @@ elif position == 'CF':
     
     # Input field for user prompt
     # user_prompt = st.text_input("Enter your query:")
-    if not mistral_api_key or not api_token:
-        st.error("Please provide both the MISTRAL API Key and the API Key.")
+    if not Together_api_key or not api_token:
+        st.error("Please provide both the TOGETHER API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
-            llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key=mistral_api_key)
+            llm = ChatTogether(
+                      base_url="https://api.together.xyz/v1",
+                      api_key=Together_api_key,
+                      model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+                        )
 
         # Loading document through loader
             loader = CSVLoader("CF_ElginFC.csv", encoding="windows-1252")
