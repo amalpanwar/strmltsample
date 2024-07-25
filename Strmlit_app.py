@@ -493,14 +493,14 @@ if position == 'CM':
 elif position == 'CB':
     df_position = pvt_df_CB
 
-    original_metrics =[
+    original_metrics =['Age',
        'Successful defensive actions per 90', 'Defensive duels per 90',
        'Defensive duels won, %', 'Aerial duels per 90', 'Aerial duels won, %',
        'PAdj Sliding tackles', 'Shots blocked per 90', 'Interceptions per 90',
        'PAdj Interceptions', 'Fouls per 90', 'Passes to final third per 90',
        'Accurate passes to final third, %', 'Progressive passes per 90',
        'Accurate progressive passes, %']
-    weights=[0.8,0.5,1,0.8,0.8,-0.8,1,0.3,0.9,-0.8,0.5,0.8,0.5,0.8]
+    weights=[-0.5,0.8,0.5,1,0.8,0.8,-0.2,1,0.3,0.9,-0.8,0.5,0.8,0.5,0.8]
     df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
     original_mean = df_position["defensive zscore"].mean()
     original_std = df_position["defensive zscore"].std()
