@@ -19,4 +19,5 @@ python-dotenv
 pysqlite3-binary 
 langchain
 faiss-cpu
+scipy
 
