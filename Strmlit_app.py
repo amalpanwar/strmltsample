@@ -536,18 +536,34 @@ elif position == 'CB':
                         'Accurate progressive passes, %','Aerial duels won, %','Interceptions per 90','Successful defensive actions per 90','Fouls per 90'])
                               
     radar_fig =create_radar_chart(df_position2, players_CB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-    st.pyplot(radar_fig)
-    # col1, col2 = st.columns(2)
-    # with col1:
-    #     st.pyplot(radar_fig)
-    # with col2:
-    #     st.pyplot(pizza_fig)
+    # st.pyplot(radar_fig)
+    columns_to_display = ['Player','Team','Age', 'Matches played\n(23/24)', 'Minutes played', 'Defender Score(0-100)', 'Player Rank']
+    df_filtered_display = df_filtered[columns_to_display].rename(columns={
+      'Defender Score(0-100)': 'Rating (0-100)',
+      'Matches played\n(23/24)': 'Matches played (2023/24)'
+         }).reset_index()
+
+# Style the DataFrame
+    def highlight_header(s):
+        return ['font-weight: bold; background-color: #f2f2f2'] * len(s)
+
+    styled_df = df_filtered_display.style.apply(highlight_header, axis=0)
+
+# Display styled DataFrame in Streamlit
+    st.write("Players Info:")
+    st.dataframe(styled_df, use_container_width=True)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(radar_fig)
+    with col2:
+        st.write("Players Info:")
+        st.dataframe(styled_df, use_container_width=True)
 
     fig2 = px.scatter(df_filtered.reset_index(), x='Defensive duels per 90', y='Defensive duels won, %',
                      color='Player', title=f'{position} Defensive Strength')
   
     fig2.update_traces(textposition='top center')
-    fig2.update_traces(marker=dict(size=2))
+    fig2.update_traces(marker=dict(size=8))
 
     df_filtered2=df_filtered.reset_index()
     
