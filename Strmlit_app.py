@@ -3,6 +3,8 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import norm
 from math import pi
 import pandas as pd
 import plotly.express as px
@@ -490,8 +492,33 @@ if position == 'CM':
 ######################################################Center Back#############################################    
 elif position == 'CB':
     df_position = pvt_df_CB
+
+    original_metrics =[
+       'Successful defensive actions per 90', 'Defensive duels per 90',
+       'Defensive duels won, %', 'Aerial duels per 90', 'Aerial duels won, %',
+       'PAdj Sliding tackles', 'Shots blocked per 90', 'Interceptions per 90',
+       'PAdj Interceptions', 'Fouls per 90', 'Passes to final third per 90',
+       'Accurate passes to final third, %', 'Progressive passes per 90',
+       'Accurate progressive passes, %']
+    weights=[1,1,1,1,1,-0.8,1,0.75,1,-0.8,0.75,1,0.75,1]
+    df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
+    original_mean = df_position["defensive zscore"].mean()
+    original_std = df_position["defensive zscore"].std()
+    df_position["defensive zscore"] = (df_position["defensive zscore"] - original_mean) / original_std
+    df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
+    df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
     # Dropdown menu for player selection based on position
-    players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    if st.button('Show Top 5 Players'):
+        top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
+        st.sidebar.write("Top 5 Players:")
+        st.sidebar.write(top_5_players)
+    # Multiselect only includes top 5 players
+        players_CB = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
+    else:
+    # Multiselect includes all players
+        players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+
+    # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     df_filtered = df_position.loc[players_CB]
 
    
