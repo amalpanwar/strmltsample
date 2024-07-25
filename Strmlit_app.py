@@ -500,7 +500,7 @@ elif position == 'CB':
        'PAdj Interceptions', 'Fouls per 90', 'Passes to final third per 90',
        'Accurate passes to final third, %', 'Progressive passes per 90',
        'Accurate progressive passes, %']
-    weights=[1,1,1,1,1,-0.8,1,0.75,1,-0.8,0.75,1,0.75,1]
+    weights=[0.8,0.5,1,0.8,0.8,-0.8,1,0.3,0.9,-0.8,0.5,0.8,0.5,0.8]
     df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
     original_mean = df_position["defensive zscore"].mean()
     original_std = df_position["defensive zscore"].std()
