@@ -443,7 +443,8 @@ if position == 'CM':
             llm = ChatTogether(
                       base_url="https://api.together.xyz/v1",
                       api_key=Together_api_key,
-                      model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+                      model="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+                      temperature=0
                         )
 
         # Loading document through loader
@@ -461,7 +462,7 @@ if position == 'CM':
                 retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 20, 'fetch_k': 20})
             # st.success("Chroma vector store initialized successfully.")
             except Exception as e:
-                 logging.error(f"Error initializing Chroma vector store: {str(e)}")
+                 logging.error(f"Error initializing FAISS vector store: {str(e)}")
             # st.error(f"Error initializing Chroma vector store: {str(e)}")
         # Preparing Prompt for Q/A
             system_prompt = (
@@ -607,7 +608,8 @@ elif position == 'CB':
             llm = ChatTogether(
                       base_url="https://api.together.xyz/v1",
                       api_key=Together_api_key,
-                      model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+                      model="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+                      temperature=0
                         )
 
         # Loading document through loader
@@ -778,7 +780,8 @@ elif position == 'Winger':
             llm = ChatTogether(
                       base_url="https://api.together.xyz/v1",
                       api_key=Together_api_key,
-                      model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+                      model="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+                      temperature=0
                         )
 
         # Loading document through loader
@@ -901,7 +904,8 @@ elif position == 'CF':
             llm = ChatTogether(
                       base_url="https://api.together.xyz/v1",
                       api_key=Together_api_key,
-                      model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+                      model="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+                      temperature=0
                         )
 
         # Loading document through loader
