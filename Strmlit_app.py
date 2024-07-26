@@ -184,7 +184,7 @@ st.markdown(
 
 #     return fig
 
-def create_radar_chart(df, players, id_column, title=None, padding=0.5):
+def create_radar_chart(df, players, id_column, title=None, padding=1):
     # Ensure the players list is indexing correctly
     df_selected = df.loc[players]
     categories = df_selected.columns.tolist()
@@ -257,7 +257,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=0.5):
 
     # Draw y-labels
     # ax.set_rlabel_position(0)
-    ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='white', edgecolor='black', labelcolor='black')
+    ax.legend(loc='upper right', bbox_to_anchor=(0.5, 0.5), facecolor='white', edgecolor='black', labelcolor='black')
 
     if title is not None:
         plt.suptitle(title, color='white', fontsize=14)
