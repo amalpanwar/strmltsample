@@ -538,8 +538,8 @@ elif position == 'CB':
   
 
     # Create radar chart for selected players
-    df_position2=df_filtered.drop(columns=[ 'defensive zscore','Defender Score(0-100)','Player Rank','Passes to final third per 90','Team','Contract Expiry \n(Trnsfmkt)','Age',
-                        'Progressive passes per 90','Interceptions per 90','Defensive duels per 90','Matches played\n(23/24)','Minutes played'])
+    df_position2=df_filtered.drop(columns=[ 'defensive zscore','Defender Score(0-100)','Player Rank','Team','Contract Expiry \n(Trnsfmkt)','Age',
+                        'Matches played\n(23/24)','Minutes played'])
                               
     radar_fig =create_radar_chart(df_position2, players_CB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
     # st.pyplot(radar_fig)
