@@ -213,7 +213,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
     # Plotting radar chart
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
     fig.patch.set_facecolor('black')  # Set figure background to black
-    ax.set_facecolor('grey')
+    ax.set_facecolor('white')
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
         actual_values = [data[key][i] for key in data.keys()]
