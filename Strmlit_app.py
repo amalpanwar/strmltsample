@@ -184,7 +184,7 @@ st.markdown(
 
 #     return fig
 
-def create_radar_chart(df, players, id_column, title=None, padding=1.25):
+def create_radar_chart(df, players, id_column, title=None, padding=1.15):
     # Ensure the players list is indexing correctly
     df_selected = df.loc[players]
     categories = df_selected.columns.tolist()
@@ -220,8 +220,8 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.25):
         values += values[:1]  # Close the plot for a better look
         ax.plot(angles, values, label=model_name)
         ax.fill(angles, values, alpha=0.15)
-        for angle, value, actual_value in zip(angles, values, actual_values):
-            ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
+        # for angle, value, actual_value in zip(angles, values, actual_values):
+        #     ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
 
     ax.fill(angles, np.ones(N + 1), alpha=0.05)
 
