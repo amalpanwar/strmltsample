@@ -519,7 +519,7 @@ if position == 'CM':
             llm = ChatTogether(
                       base_url="https://api.together.xyz/v1",
                       api_key=Together_api_key,
-                      model="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
                       temperature=0
                         )
 
@@ -705,7 +705,7 @@ elif position == 'CB':
             llm = ChatTogether(
                       base_url="https://api.together.xyz/v1",
                       api_key=Together_api_key,
-                      model="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
                       temperature=0
                         )
 
@@ -952,7 +952,7 @@ elif position == 'Winger':
             llm = ChatTogether(
                       base_url="https://api.together.xyz/v1",
                       api_key=Together_api_key,
-                      model="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
                       temperature=0
                         )
 
@@ -1076,7 +1076,7 @@ elif position == 'CF':
             llm = ChatTogether(
                       base_url="https://api.together.xyz/v1",
                       api_key=Together_api_key,
-                      model="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
                       temperature=0
                         )
 
