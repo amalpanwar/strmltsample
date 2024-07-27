@@ -450,12 +450,36 @@ if position == 'CM':
     df_position2=df_filtered.drop(columns=['Age','Team', 'Matches played','Contract Expiry \n(Trnsfmkt)', 'Minutes played'])
                               
     radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-    st.pyplot(radar_fig)
-    # col1, col2 = st.columns(2)
-    # with col1:
-    #     st.pyplot(radar_fig)
-    # with col2:
-    #     st.pyplot(pizza_fig)
+    
+    columns_to_display = ['Player','Team','Age', 'Matches played\n(23/24)', 'Minutes played', 'CM Score(0-100)', 'Player Rank']
+    df_filtered_display=df_filtered.reset_index()
+    df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
+      'CM Score(0-100)': 'Rating (0-100)',
+      'Matches played': 'Matches played (2023/24)'
+         })
+    df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
+
+# Style the DataFrame
+    def style_dataframe(df):
+        return df.style.set_table_styles(
+        [
+            {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
+            {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
+            {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
+        ]
+          ).hide(axis="index")
+
+    styled_df = style_dataframe(df_filtered_display)
+
+# Display styled DataFrame in Streamlit
+    # st.write("Players Info:")
+    # st.dataframe(styled_df, use_container_width=True)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(radar_fig)
+    with col2:
+        st.write("Players Info:")
+        st.dataframe(styled_df, use_container_width=True)
 
     df_filtered2 = df_filtered.reset_index()
     df_filtered2['Assists per 90'] = ((df_filtered2['Assists'] / df_filtered2['Minutes played']) * 90).round(2)
