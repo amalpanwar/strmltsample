@@ -507,12 +507,33 @@ elif position == 'CB':
        'Accurate passes to final third, %', 'Progressive passes per 90',
        'Accurate progressive passes, %']
     weights=[1,1,1,1,1,1,1,1,1,-1.25,0.75,0.9,0.8,0.9]
-    df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
+    weighted_metrics = pd.DataFrame()
+    for metric, weight in zip(original_metrics, weights):
+        weighted_metrics[metric] = df_position[metric] * weight
+    
+    # Calculate z-scores for the weighted metrics
+    z_scores = pd.DataFrame()
+    for metric in original_metrics:
+        mean = weighted_metrics[metric].mean()
+        std = weighted_metrics[metric].std()
+        z_scores[f'{metric} zscore'] = (weighted_metrics[metric] - mean) / std
+
+# Aggregate the z-scores to get a final z-score
+    df_position["defensive zscore"] = z_scores.mean(axis=1)
+
+# Calculate final z-score and score
     original_mean = df_position["defensive zscore"].mean()
     original_std = df_position["defensive zscore"].std()
     df_position["defensive zscore"] = (df_position["defensive zscore"] - original_mean) / original_std
     df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
     df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
+
+    # df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
+    # original_mean = df_position["defensive zscore"].mean()
+    # original_std = df_position["defensive zscore"].std()
+    # df_position["defensive zscore"] = (df_position["defensive zscore"] - original_mean) / original_std
+    # df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
+    # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
     # Dropdown menu for player selection based on position
     if st.sidebar.button('Show Top 5 Players'):
         top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
