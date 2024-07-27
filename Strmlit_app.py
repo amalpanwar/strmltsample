@@ -53,17 +53,19 @@ logging.basicConfig(level=logging.DEBUG)
 import streamlit as st
 
 # ******************* Data Loading **************************************
-df = pd.read_excel("CM_Elgin.xlsx")
+# df = pd.read_excel("CM_Elgin.xlsx")
+df_CM = pd.read_csv("CM_ElginFC.csv")
 df_CB = pd.read_csv("CB_ElginFC.csv")
 df_Wing = pd.read_csv("Wing_ElginFC.csv")
 df_CF=pd.read_csv("CF_ElginFC.csv")
 
+pvt_df_CM = pd.DataFrame(df_CM).set_index('Player')
 pvt_df_CB = pd.DataFrame(df_CB).set_index('Player')
 pvt_df_Wing = pd.DataFrame(df_Wing).set_index('Player')
 pvt_df_CF = pd.DataFrame(df_CF).set_index('Player')
 
 # Pivot the dataframe
-pivot_df = df.pivot(index='Player', columns='Attribute', values='Value')
+# pivot_df = df.pivot(index='Player', columns='Attribute', values='Value')
 
 
 # def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
@@ -369,7 +371,7 @@ position = st.sidebar.selectbox('Select position:', options=["GK","FB","CB","CM"
 
 # Ensure df_position is selected
 if position == 'CM':
-    df_position = pivot_df
+    df_position = pvt_df_CM
     # Dropdown menu for player selection based on position
     players_CM = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     df_filtered = df_position.loc[players_CM]
