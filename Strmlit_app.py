@@ -409,7 +409,7 @@ if position == 'CM':
     #     st.pyplot(pizza_fig)
 
     df_filtered2 = df_filtered.reset_index()
-    df_filtered2['Assists per 90'] = df_filtered2['Assists'] / (df_filtered2['Minutes played'] * 90)
+    df_filtered2['Assists per 90'] = ((df_filtered2['Assists'] / df_filtered2['Minutes played']) * 90).round(2)
     
     fig2 = px.scatter(df_filtered2, x='Key passes per 90', y='Assists per 90',
                      color='Player', title=f'{position} Progression ability')
