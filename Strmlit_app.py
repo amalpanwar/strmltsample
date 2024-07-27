@@ -447,11 +447,11 @@ if position == 'CM':
     #                     'Accurate progressive passes, %','Aerial duels won, %'], title='Pizza Plot for Selected Players')
 
     # Create radar chart for selected players
-    df_position2=df_filtered.drop(columns=['Age','Team', 'Matches played','Contract Expiry \n(Trnsfmkt)', 'Minutes played'])
+    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'CM zscore','Player Rank','Age','Team', 'Matches played','Contract Expiry \n(Trnsfmkt)', 'Minutes played'])
                               
     radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
     
-    columns_to_display = ['Player','Team','Age', 'Matches played\n(23/24)', 'Minutes played', 'CM Score(0-100)', 'Player Rank']
+    columns_to_display = ['Player','Team','Age', 'Matches played', 'Minutes played', 'CM Score(0-100)', 'Player Rank']
     df_filtered_display=df_filtered.reset_index()
     df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
       'CM Score(0-100)': 'Rating (0-100)',
