@@ -408,13 +408,16 @@ if position == 'CM':
     # with col2:
     #     st.pyplot(pizza_fig)
 
-    fig2 = px.scatter(df_filtered.reset_index(), x='Successful defensive actions per 90', y='Fouls per 90',
-                     color='Player', title=f'{position} Defensive ability')
+    df_filtered2 = df_filtered.reset_index()
+    df_filtered2['Assists per 90'] = df_filtered2['Assists'] / (df_filtered2['Minutes played'] * 90)
+    
+    fig2 = px.scatter(df_filtered2, x='Key passes per 90', y='Assists per 90',
+                     color='Player', title=f'{position} Progression ability')
   
     fig2.update_traces(textposition='top center')
     fig2.update_traces(marker=dict(size=8))
 
-    df_filtered2 = df_filtered.reset_index()
+    # df_filtered2 = df_filtered.reset_index()
     
 
     df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
