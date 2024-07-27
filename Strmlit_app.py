@@ -372,9 +372,58 @@ position = st.sidebar.selectbox('Select position:', options=["GK","FB","CB","CM"
 # Ensure df_position is selected
 if position == 'CM':
     df_position = pvt_df_CM
+
+    original_metrics =[
+       'Assists',
+       'Successful defensive actions per 90', 'Aerial duels per 90',
+       'Aerial duels won, %', 'Interceptions per 90', 'Fouls per 90',
+       'Shots per 90', 'Recieved Passes P/90', 'Passes per 90',
+       'Accurate passes, %', 'Forward passes per 90',
+       'Accurate forward passes, %', 'Key passes per 90',
+       'Passes to final third per 90', 'Accurate passes to final third, %',
+       'Progressive passes per 90', 'Accurate progressive passes, %']
+    weights=[0.8,1,0.9,0.9,1,-1.25,0.8,1,0.9,1,0.9,1,1,0.9,1,0.9,1]
+    weighted_metrics = pd.DataFrame()
+    for metric, weight in zip(original_metrics, weights):
+        weighted_metrics[metric] = df_position[metric] * weight
+    
+    # Calculate z-scores for the weighted metrics
+    z_scores = pd.DataFrame()
+    for metric in original_metrics:
+        mean = weighted_metrics[metric].mean()
+        std = weighted_metrics[metric].std()
+        z_scores[f'{metric} zscore'] = (weighted_metrics[metric] - mean) / std
+
+# Aggregate the z-scores to get a final z-score
+    df_position["CM zscore"] = z_scores.mean(axis=1)
+
+# Calculate final z-score and score
+    original_mean = df_position["CM zscore"].mean()
+    original_std = df_position["CM zscore"].std()
+    df_position["CM zscore"] = (df_position["CM zscore"] - original_mean) / original_std
+    df_position["CM Score(0-100)"] = (norm.cdf(df_position["CM zscore"]) * 100).round(2)
+    df_position['Player Rank'] = df_position['CM Score(0-100)'].rank(ascending=False)
+
+    # df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
+    # original_mean = df_position["defensive zscore"].mean()
+    # original_std = df_position["defensive zscore"].std()
+    # df_position["defensive zscore"] = (df_position["defensive zscore"] - original_mean) / original_std
+    # df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
+    # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
     # Dropdown menu for player selection based on position
-    players_CM = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    if st.sidebar.button('Show Top 5 Players'):
+        top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
+    # Multiselect only includes top 5 players
+        players_CM = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
+    else:
+    # Multiselect includes all players
+        players_CM = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+
+    # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     df_filtered = df_position.loc[players_CM]
+    # Dropdown menu for player selection based on position
+    # players_CM = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    # df_filtered = df_position.loc[players_CM]
     # Create point facet graph
     # Create point facet graph
     
