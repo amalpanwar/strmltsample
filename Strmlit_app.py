@@ -62,6 +62,7 @@ df_CF=pd.read_csv("CF_ElginFC.csv",encoding='ISO-8859-1')
 pvt_df_CM = pd.DataFrame(df_CM).set_index('Player')
 pvt_df_CB = pd.DataFrame(df_CB).set_index('Player')
 pvt_df_Wing = pd.DataFrame(df_Wing).set_index('Player')
+df_CF[df_CF.columns[3:]] = df_CF[df_CF.columns[3:]].apply(pd.to_numeric, errors='coerce')
 pvt_df_CF = pd.DataFrame(df_CF).set_index('Player')
 
 # Pivot the dataframe
