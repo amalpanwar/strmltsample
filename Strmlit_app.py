@@ -57,7 +57,7 @@ import streamlit as st
 df_CM = pd.read_csv("CM_ElginFC.csv",encoding='ISO-8859-1')
 df_CB = pd.read_csv("CB_ElginFC.csv")
 df_Wing = pd.read_csv("Wing_ElginFC.csv",encoding='ISO-8859-1')
-df_CF=pd.read_csv("CF_ElginFC.csv")
+df_CF=pd.read_csv("CF_ElginFC.csv",encoding='ISO-8859-1')
 
 pvt_df_CM = pd.DataFrame(df_CM).set_index('Player')
 pvt_df_CB = pd.DataFrame(df_CB).set_index('Player')
@@ -1006,8 +1006,56 @@ elif position == 'Winger':
 elif position == 'CF':
     df_position = pvt_df_CF
     # Dropdown menu for player selection based on position
-    players_CF = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+
+    original_metrics =[
+       'Goals', 'Aerial duels per 90', 'Aerial duels won, %',
+       'Successful attacking actions per 90', 'Goals per 90', 'xG per 90',
+       'Shots per 90', 'Shots on target, %', 'Dribbles per 90',
+       'Successful dribbles, %', 'Touches in box per 90',
+       'Received passes per 90', 'Received long passes per 90',
+       'Fouls suffered per 90']
+    weights=[1,1,1,1,1,1,1,1,0.8,0.8,1,1,0.9,0.9]
+    weighted_metrics = pd.DataFrame()
+    for metric, weight in zip(original_metrics, weights):
+        weighted_metrics[metric] = df_position[metric] * weight
+    
+    # Calculate z-scores for the weighted metrics
+    z_scores = pd.DataFrame()
+    for metric in original_metrics:
+        mean = weighted_metrics[metric].mean()
+        std = weighted_metrics[metric].std()
+        z_scores[f'{metric} zscore'] = (weighted_metrics[metric] - mean) / std
+
+# Aggregate the z-scores to get a final z-score
+    df_position["CF zscore"] = z_scores.mean(axis=1)
+
+# Calculate final z-score and score
+    original_mean = df_position["CF zscore"].mean()
+    original_std = df_position["CF zscore"].std()
+    df_position["CF zscore"] = (df_position["CF zscore"] - original_mean) / original_std
+    df_position["CF Score(0-100)"] = (norm.cdf(df_position["CF zscore"]) * 100).round(2)
+    df_position['Player Rank'] = df_position['CF Score(0-100)'].rank(ascending=False)
+
+    # df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
+    # original_mean = df_position["defensive zscore"].mean()
+    # original_std = df_position["defensive zscore"].std()
+    # df_position["defensive zscore"] = (df_position["defensive zscore"] - original_mean) / original_std
+    # df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
+    # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
+    # Dropdown menu for player selection based on position
+    if st.sidebar.button('Show Top 5 Players'):
+        top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
+    # Multiselect only includes top 5 players
+        players_CF = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
+    else:
+    # Multiselect includes all players
+        players_CF = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+
+    # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     df_filtered = df_position.loc[players_CF]
+    
+    # players_CF = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    # df_filtered = df_position.loc[players_CF]
 
     df_filtered['Recieve long pass, %']= (df_filtered['Received long passes per 90'] / df_filtered['Received passes per 90']) * 100
 
@@ -1032,11 +1080,41 @@ elif position == 'CF':
 
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
-                        'Shots on target, %', 'Aerial duels won, %','Shots per 90',
-                       'Recieve long pass, %','Successful dribbles, %', 'Received long passes per 90','Received passes per 90'])
+                        'Matches played', 'Minutes played','Age',
+                       'CF Score(0-100)', 'Player Rank', 'CF zscore'])
                               
     radar_fig =create_radar_chart(df_position2, players_CF, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-    st.pyplot(radar_fig)
+    
+    columns_to_display = ['Player','Team','Age', 'Matches played', 'Minutes played', 'CF Score(0-100)', 'Player Rank']
+    df_filtered_display=df_filtered.reset_index()
+    df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
+      'CF Score(0-100)': 'Rating (0-100)',
+      'Matches played': 'Matches played (2023/24)'
+         })
+    df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
+
+# Style the DataFrame
+    def style_dataframe(df):
+        return df.style.set_table_styles(
+        [
+            {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
+            {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
+            {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
+        ]
+          ).hide(axis="index")
+
+    styled_df = style_dataframe(df_filtered_display)
+
+# Display styled DataFrame in Streamlit
+    # st.write("Players Info:")
+    # st.dataframe(styled_df, use_container_width=True)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(radar_fig)
+    with col2:
+        st.write("Players Info:")
+        st.dataframe(styled_df, use_container_width=True)
+    
 
     
     
