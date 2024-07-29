@@ -58,12 +58,14 @@ df_CM = pd.read_csv("CM_ElginFC.csv",encoding='ISO-8859-1')
 df_CB = pd.read_csv("CB_ElginFC.csv")
 df_Wing = pd.read_csv("Wing_ElginFC.csv",encoding='ISO-8859-1')
 df_CF=pd.read_csv("CF_ElginFC.csv",encoding='ISO-8859-1')
+df_GK=pd.read_csv("GK_ElginFC.csv",encoding='ISO-8859-1')
 
 pvt_df_CM = pd.DataFrame(df_CM).set_index('Player')
 pvt_df_CB = pd.DataFrame(df_CB).set_index('Player')
 pvt_df_Wing = pd.DataFrame(df_Wing).set_index('Player')
 df_CF[df_CF.columns[3:]] = df_CF[df_CF.columns[3:]].apply(pd.to_numeric, errors='coerce')
 pvt_df_CF = pd.DataFrame(df_CF).set_index('Player')
+pvt_df_GK = pd.DataFrame(df_GK).set_index('Player')
 
 # Pivot the dataframe
 # pivot_df = df.pivot(index='Player', columns='Attribute', values='Value')
@@ -1142,6 +1144,228 @@ elif position == 'CF':
 
     # Create stacked bar chart
     fig3 = px.bar(df_melted, x='Value', y='Player', color='Metric', orientation='h', title=f'{position} Attacking threats')
+    st.plotly_chart(fig3)
+
+    
+    # Input field for user prompt
+    # user_prompt = st.text_input("Enter your query:")
+    if not Together_api_key or not api_token:
+        st.error("Please provide both the TOGETHER API Key and the API Key.")
+    else:
+        try:
+            # Initialize the LLM model
+            llm = ChatTogether(
+                      base_url="https://api.together.xyz/v1",
+                      api_key=Together_api_key,
+                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
+                      temperature=0
+                        )
+
+        # Loading document through loader
+            loader = CSVLoader("CF_ElginFC.csv", encoding="windows-1252")
+            docs = loader.load()
+        # st.write("Documents loaded successfully.")
+  
+        # Initialize HuggingFaceHubEmbeddings with the provided API token
+            embedding = HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token)
+        # st.write("HuggingFaceHubEmbeddings initialized successfully.")
+
+        # Initialize Chroma vector store
+            try:
+                vectorstore = FAISS.from_documents(documents=docs, embedding=embedding)
+                retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 103, 'fetch_k': 103})
+            # st.success("Chroma vector store initialized successfully.")
+            except Exception as e:
+                 logging.error(f"Error initializing Chroma vector store: {str(e)}")
+            # st.error(f"Error initializing Chroma vector store: {str(e)}")
+        # Preparing Prompt for Q/A
+            system_prompt = (
+             "You are an assistant for question-answering tasks. "
+             "Use the following pieces of retrieved context to answer "
+             "the question. If you don't know the answer, say that you "
+             "don't know. Use three sentences maximum and keep the "
+             "answer concise."
+             "\n\n"
+             "{context}"
+              )
+
+            prompt = ChatPromptTemplate.from_messages(
+                  [
+                   ("system", system_prompt),
+                    ("human", "{input}"),
+                     ]
+                    )
+
+            question_answer_chain = create_stuff_documents_chain(llm, prompt)
+            rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+            user_prompt = st.text_input("Enter your query:")
+            if user_prompt:
+    # Get response from RAG chain
+                   response = rag_chain.invoke({"input": user_prompt})
+                   st.write(response["answer"])
+
+        # st.success("Chroma vector store initialized successfully.")
+        except Exception as e:
+                logging.error(f"Error: {str(e)}")
+
+
+###################################################### Goal Keeper #############################################     
+elif position == 'GK':
+    df_position = pvt_df_GK
+    # Dropdown menu for player selection based on position
+
+    original_metrics =[
+       'Conceded goals', 'Conceded goals per 90',
+       'xG against', 'xG against per 90', 'Prevented goals',
+       'Prevented goals per 90', 'Shots against', 'Shots against per 90',
+       'Clean sheets', 'Save rate, %', 'Exits per 90', 'Aerial duels per 90']
+    weights=[1,-1.25,-0.9,-0.9,1,1,-0.8,-0.8,1.25,1,1,1]
+    weighted_metrics = pd.DataFrame()
+    for metric, weight in zip(original_metrics, weights):
+        weighted_metrics[metric] = df_position[metric] * weight
+    
+    # Calculate z-scores for the weighted metrics
+    z_scores = pd.DataFrame()
+    for metric in original_metrics:
+        mean = weighted_metrics[metric].mean()
+        std = weighted_metrics[metric].std()
+        z_scores[f'{metric} zscore'] = (weighted_metrics[metric] - mean) / std
+
+# Aggregate the z-scores to get a final z-score
+    df_position["GK zscore"] = z_scores.mean(axis=1)
+
+# Calculate final z-score and score
+    original_mean = df_position["GK zscore"].mean()
+    original_std = df_position["GK zscore"].std()
+    df_position["GK zscore"] = (df_position["GK zscore"] - original_mean) / original_std
+    df_position["GK Score(0-100)"] = (norm.cdf(df_position["GK zscore"]) * 100).round(2)
+    df_position['Player Rank'] = df_position['GK Score(0-100)'].rank(ascending=False)
+
+    # df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
+    # original_mean = df_position["defensive zscore"].mean()
+    # original_std = df_position["defensive zscore"].std()
+    # df_position["defensive zscore"] = (df_position["defensive zscore"] - original_mean) / original_std
+    # df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
+    # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
+    # Dropdown menu for player selection based on position
+    if st.sidebar.button('Show Top 5 Players'):
+        top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
+    # Multiselect only includes top 5 players
+        players_GK = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
+    else:
+    # Multiselect includes all players
+        players_GK = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['L1 & L2 Average'])
+
+    # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    df_filtered = df_position.loc[players_GK]
+    
+    # players_CF = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    # df_filtered = df_position.loc[players_CF]
+
+    # df_filtered['Recieve long pass, %']= (df_filtered['Received long passes per 90'] / df_filtered['Received passes per 90']) * 100
+
+    df_filtered2=df_filtered.reset_index()
+    # df_filtered2['Shots on Target per 90'] = df_filtered2['Shots per 90'] * (df_filtered2['Shots on target, %'] / 100)
+    # df_filtered2['SuccSuccessful dribbles per 90'] = df_filtered2['Dribbles per 90'] * (df_filtered2['Successful dribbles, %'] / 100)
+    
+    # df_filtered2['Attacking skills']= df_filtered2['SuccSuccessful dribbles per 90'] + df_filtered2['Received passes per 90'] * 100
+    
+
+   
+    fig = px.scatter(df_filtered2, x='Shots against per 90', y=['xG against per 90','Conceded goals per 90','Prevented goals per 90'], facet_col='variable',
+                 color='Player', title='GK Stats against Shots')
+
+    fig.update_traces(textposition='top center')
+    fig.update_traces(marker=dict(size=8))
+    for annotation in fig.layout.annotations:
+             if 'variable=' in annotation.text:
+                        annotation.text = annotation.text.split('=')[1]
+    st.plotly_chart(fig)
+    
+
+    # Create radar chart for selected players
+    df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
+                        'Matches played', 'Minutes played','Age',
+                       'GK Score(0-100)', 'Player Rank', 'GK zscore'])
+                              
+    radar_fig =create_radar_chart(df_position2, players_GK, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+    
+    columns_to_display = ['Player','Team','Age', 'Matches played', 'Minutes played', 'GK Score(0-100)', 'Player Rank']
+    df_filtered_display=df_filtered.reset_index()
+    df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
+      'GK Score(0-100)': 'Rating (0-100)',
+      'Matches played': 'Matches played (2023/24)'
+         })
+    df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
+
+# Style the DataFrame
+    def style_dataframe(df):
+        return df.style.set_table_styles(
+        [
+            {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
+            {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
+            {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
+        ]
+          ).hide(axis="index")
+
+    styled_df = style_dataframe(df_filtered_display)
+
+# Display styled DataFrame in Streamlit
+    # st.write("Players Info:")
+    # st.dataframe(styled_df, use_container_width=True)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(radar_fig)
+    with col2:
+        st.write("Players Info:")
+        st.dataframe(styled_df, use_container_width=True)
+    
+
+    
+    
+    
+    fig2 = px.scatter(df_filtered.reset_index(), x='Shots against', y='Save rate, %',
+                     color='Player', title=f'{position} Saving Strength')
+    
+    
+  
+    fig2.update_traces(textposition='top center')
+    fig2.update_traces(marker=dict(size=8))
+    # for annotation in fig2.layout.annotations:
+    #          if 'variable=' in annotation.text:
+    #                     annotation.text = annotation.text.split('=')[1]
+    
+    
+    fig3 = px.scatter(df_filtered.reset_index(), x='Matches played', y='Clean sheets',
+                     color='Player', title=f'{position} Clean sheets vs Matches Played')
+    
+    
+  
+    fig3.update_traces(textposition='top center')
+    fig3.update_traces(marker=dict(size=8))
+    # for annotation in fig3.layout.annotations:
+    #          if 'variable=' in annotation.text:
+    #                     annotation.text = annotation.text.split('=')[1]
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.plotly_chart(fig2)
+    with col2:
+         st.plotly_chart(fig3)
+   
+
+    
+
+    df_filtered2['Action on Goal Lines'] = df_filtered2['Exits per 90'] + df_filtered2['Aerial duels per 90']
+
+# Sorting the DataFrame by 'Goals + Assists per 90', 'Goals per 90', and 'Assists per 90' in descending order
+    df_filtered3 = df_filtered2.sort_values(by=['Action on Goal Lines'], ascending=False)
+
+    # Melt the dataframe to long format for stacking
+    df_melted = df_filtered3.melt(id_vars='Player', value_vars=['Exits per 90' 'Aerial duels per 90'], var_name='Metric', value_name='Value')
+
+    # Create stacked bar chart
+    fig3 = px.bar(df_melted, x='Value', y='Player', color='Metric', orientation='h', title=f'{position} Actions on Goal Lines')
     st.plotly_chart(fig3)
 
     
