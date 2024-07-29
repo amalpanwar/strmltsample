@@ -1219,7 +1219,7 @@ elif position == 'GK':
        'xG against', 'xG against per 90', 'Prevented goals',
        'Prevented goals per 90', 'Shots against', 'Shots against per 90',
        'Clean sheets', 'Save rate, %', 'Exits per 90', 'Aerial duels per 90']
-    weights=[1,-1.25,-0.9,-0.9,1,1,0.7,0.7,1.25,1,1,1]
+    weights=[1,-1.25,-0.9,-0.9,1,1,0.4,0.4,1.25,1,1,1]
     weighted_metrics = pd.DataFrame()
     for metric, weight in zip(original_metrics, weights):
         weighted_metrics[metric] = df_position[metric] * weight
