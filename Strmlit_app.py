@@ -1472,7 +1472,7 @@ elif position == 'FB':
     # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
     # Dropdown menu for player selection based on position
     if st.sidebar.button('Show Top 5 Players'):
-        df_position_sorted = df_position.sort_values(by='Defender Score(0-100)', ascending=False)  # Assuming higher score is better
+        df_position_sorted = df_position.sort_values(by='FB Score(0-100)', ascending=False)  # Assuming higher score is better
 
 # Remove duplicates, keeping the one with the highest 'Defender Score(0-100)'
         df_position_unique = df_position_sorted.drop_duplicates(subset='Player', keep='first')
