@@ -1489,8 +1489,8 @@ elif position == 'FB':
         df_filtered2 = df_position_reset[df_position_reset['Player'].isin(players_FB)]
     
     # To ensure only the best rank is retained for each player
-        df_filtered2 = df_filtered.sort_values(by='FB Score(0-100)', ascending=False)
-        df_filtered2 = df_filtered.drop_duplicates(subset='Player', keep='first')
+        df_filtered2 = df_filtered2.sort_values(by='FB Score(0-100)', ascending=False)
+        df_filtered2 = df_filtered2.drop_duplicates(subset='Player', keep='first')
 
     else:
     # Multiselect includes all players
