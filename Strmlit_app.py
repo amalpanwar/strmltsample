@@ -1488,7 +1488,7 @@ elif position == 'FB':
     df_filtered2 = df_filtered2.rename(columns={'Successful defensive actions per 90': 'Successful def. Action/90'})
 
    
-    fig = px.scatter(df_filtered2, x='Successful defensive actions per 90', y=['Defensive duels won per 90', 'Interceptions per 90', 'Aerial duels won per 90'], facet_col='variable',
+    fig = px.scatter(df_filtered2, x='Successful def. Action/90', y=['Defensive duels won per 90', 'Interceptions per 90', 'Aerial duels won per 90'], facet_col='variable',
                  color='Player',  title='Defensive Action')
 
     fig.update_traces(textposition='top center')
