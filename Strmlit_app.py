@@ -1535,7 +1535,7 @@ elif position == 'FB':
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
 
-   fig2 = px.scatter(df_filtered.reset_index(), x='Accurate forward passes, %', y=['Accurate long passes, %', 'Accurate passes to final third, %'], facet_col='variable',
+    fig2 = px.scatter(df_filtered.reset_index(), x='Accurate forward passes, %', y=['Accurate long passes, %', 'Accurate passes to final third, %'], facet_col='variable',
                  color='Player',  title='FB Passing Skills')
 
     fig2.update_traces(textposition='top center')
