@@ -1479,10 +1479,12 @@ elif position == 'FB':
         df_position_unique = df_position_sorted.drop_duplicates(subset='Player', keep='first')
 
 # Step 2: Get the top 5 players
-        top_5_df = df_position_unique.head(5)  # Adjust based on your rank column if available
+        top_5_df = df_position_unique.head(5) 
+        str.write("top5:", top_5_df)# Adjust based on your rank column if available
 
 # Extract top 5 player names for Streamlit multiselect
         top_5_players = top_5_df['Player'].tolist()
+        str.write("top5new:", top_5_players)
     
     # Multiselect only includes top 5 players
         players_FB = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
