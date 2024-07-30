@@ -1496,10 +1496,11 @@ elif position == 'FB':
     # Multiselect includes all players
         players_FB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
         df_filtered = df_position.loc[players_FB]
+        df_filtered2=df_filtered.reset_index()
 
     # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     # df_filtered = df_position.loc[players_FB]
-    df_filtered2=df_filtered.reset_index()
+    
 
     df_filtered2['Defensive duels won per 90'] = df_filtered2['Defensive duels per 90'] * (df_filtered2['Defensive duels won, %'] / 100)
     df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
