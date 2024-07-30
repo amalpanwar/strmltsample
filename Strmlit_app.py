@@ -1455,11 +1455,11 @@ elif position == 'FB':
         z_scores[f'{metric} zscore'] = (weighted_metrics[metric] - mean) / std
 
 # Aggregate the z-scores to get a final z-score
-    df_position["defensive zscore"] = z_scores.mean(axis=1)
+    df_position["FB zscore"] = z_scores.mean(axis=1)
 
 # Calculate final z-score and score
     original_mean = df_position["FB zscore"].mean()
-    original_std = df_position["defensive zscore"].std()
+    original_std = df_position["FB zscore"].std()
     df_position["FB zscore"] = (df_position["FB zscore"] - original_mean) / original_std
     df_position["FB Score(0-100)"] = (norm.cdf(df_position["FB zscore"]) * 100).round(2)
     df_position['Player Rank'] = df_position['FB Score(0-100)'].rank(ascending=False)
