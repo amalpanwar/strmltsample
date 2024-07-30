@@ -1472,14 +1472,19 @@ elif position == 'FB':
     # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
     # Dropdown menu for player selection based on position
     if st.sidebar.button('Show Top 5 Players'):
-        top_5_df = df_position.nsmallest(5, 'Player Rank')
+        df_position_reset = df_position.reset_index(drop=True)
     
-    # Step 2: Remove duplicates, keeping only the player with the best rank
-    # Sorting by rank and then dropping duplicates (keeping the first one - which is the best rank)
-        top_5_df = top_5_df.sort_values(by='Player Rank').reset_index().drop_duplicates(subset='Player', keep='first').set_index('Player')
+    # Sort by 'Player Rank' to keep the best rank
+        df_position_sorted = df_position_reset.sort_values(by='Player Rank')
+    
+    # Drop duplicates, keeping the first occurrence which is the best rank
+        df_position_unique = df_position_sorted.drop_duplicates(subset='Player Name', keep='first')
+    
+    # Get the top 5 players with unique names and best ranks
+        top_5_df = df_position_unique.nsmallest(5, 'Player Rank')
     
     # Convert index to list for multiselect options
-        top_5_players = top_5_df.index.tolist()
+        top_5_players = top_5_df['Player Name'].tolist()
     
     # Multiselect only includes top 5 players
         players_FB = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
