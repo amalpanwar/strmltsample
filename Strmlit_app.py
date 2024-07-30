@@ -1522,7 +1522,7 @@ elif position == 'FB':
     df_position2=df_filtered2.drop(columns=[ 'FB zscore','FB Score(0-100)','Player Rank','Team','Contract Expiry \n(Trnsfmkt)','Age',
                         'Matches played','Minutes played'])
                               
-    radar_fig =create_radar_chart(df_position2, players_FB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+    radar_fig =create_radar_chart(df_position2.set_index('Player'), players_FB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
     # st.pyplot(radar_fig)
     columns_to_display = ['Player','Team','Age', 'Matches played', 'Minutes played', 'FB Score(0-100)', 'Player Rank']
     df_filtered_display=df_filtered2
