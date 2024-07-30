@@ -1544,7 +1544,7 @@ elif position == 'FB':
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
 
-    
+    st.plotly_chart(fig2)
     
 
     # df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
@@ -1555,14 +1555,15 @@ elif position == 'FB':
     df_melted = df_filtered2.melt(id_vars='Player', value_vars=['Accurate crosses, %'], var_name='Metric', value_name='Value')
 
     # Create stacked bar chart
-    fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', title=f'{position} Crossing Skills')
+    fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', orientation='h', title=f'{position} Crossing Skills')
+    st.plotly_chart(fig3)
     
 
-    col1, col2 = st.columns([1.5, 1])
-    with col1:
-        st.plotly_chart(fig2)
-    with col2:
-        st.plotly_chart(fig3)
+    # col1, col2 = st.columns([1.5, 1])
+    # with col1:
+    #     st.plotly_chart(fig2)
+    # with col2:
+    #     st.plotly_chart(fig3)
     # Input field for user prompt
     # user_prompt = st.text_input("Enter your query:")
     if not Together_api_key or not api_token:
