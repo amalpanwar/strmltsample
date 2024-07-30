@@ -1486,12 +1486,19 @@ elif position == 'FB':
     
     # Multiselect only includes top 5 players
         players_FB = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
+        df_filtered2 = df_position_reset[df_position_reset['Player'].isin(players_FB)]
+    
+    # To ensure only the best rank is retained for each player
+        df_filtered2 = df_filtered.sort_values(by='FB Score(0-100)', ascending=False)
+        df_filtered2 = df_filtered.drop_duplicates(subset='Player', keep='first')
+
     else:
     # Multiselect includes all players
         players_FB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+        df_filtered = df_position.loc[players_FB]
 
     # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-    df_filtered = df_position.loc[players_FB]
+    # df_filtered = df_position.loc[players_FB]
     df_filtered2=df_filtered.reset_index()
 
     df_filtered2['Defensive duels won per 90'] = df_filtered2['Defensive duels per 90'] * (df_filtered2['Defensive duels won, %'] / 100)
