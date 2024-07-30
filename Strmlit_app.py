@@ -1472,18 +1472,15 @@ elif position == 'FB':
     # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
     # Dropdown menu for player selection based on position
     if st.sidebar.button('Show Top 5 Players'):
-        df_position_reset = df_position.reset_index(drop=True)
-    
-    # Sort by 'Player Rank' to keep the best rank
-        df_position_sorted = df_position_reset.sort_values(by='Player Rank')
-    
-    # Drop duplicates, keeping the first occurrence which is the best rank
+        df_position_sorted = df_position.sort_values(by='Defender Score(0-100)', ascending=False)  # Assuming higher score is better
+
+# Remove duplicates, keeping the one with the highest 'Defender Score(0-100)'
         df_position_unique = df_position_sorted.drop_duplicates(subset='Player', keep='first')
-    
-    # Get the top 5 players with unique names and best ranks
-        top_5_df = df_position_unique.nsmallest(5, 'Player Rank')
-    
-    # Convert index to list for multiselect options
+
+# Step 2: Get the top 5 players
+        top_5_df = df_position_unique.head(5)  # Adjust based on your rank column if available
+
+# Extract top 5 player names for Streamlit multiselect
         top_5_players = top_5_df['Player'].tolist()
     
     # Multiselect only includes top 5 players
