@@ -1519,13 +1519,13 @@ elif position == 'FB':
   
 
     # Create radar chart for selected players
-    df_position2=df_filtered.drop(columns=[ 'FB zscore','FB Score(0-100)','Player Rank','Team','Contract Expiry \n(Trnsfmkt)','Age',
+    df_position2=df_filtered2.drop(columns=[ 'FB zscore','FB Score(0-100)','Player Rank','Team','Contract Expiry \n(Trnsfmkt)','Age',
                         'Matches played','Minutes played'])
                               
     radar_fig =create_radar_chart(df_position2, players_FB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
     # st.pyplot(radar_fig)
     columns_to_display = ['Player','Team','Age', 'Matches played', 'Minutes played', 'FB Score(0-100)', 'Player Rank']
-    df_filtered_display=df_filtered.reset_index()
+    df_filtered_display=df_filtered2
     df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
       'FB Score(0-100)': 'Rating (0-100)',
       'Matches played': 'Matches played (2023/24)'
@@ -1554,7 +1554,7 @@ elif position == 'FB':
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
 
-    fig2 = px.scatter(df_filtered.reset_index(), x='Accurate forward passes, %', y=['Accurate long passes, %', 'Accurate passes to final third, %'], facet_col='variable',
+    fig2 = px.scatter(df_filtered2, x='Accurate forward passes, %', y=['Accurate long passes, %', 'Accurate passes to final third, %'], facet_col='variable',
                  color='Player',  title='FB Passing Skills')
 
     fig2.update_traces(textposition='top center')
