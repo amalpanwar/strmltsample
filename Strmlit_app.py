@@ -192,7 +192,19 @@ st.markdown(
 
 #     return fig
 
-def show_hover_panel(df, get_text_func=None):
+subplot_df_dict = {}
+
+def show_annotation(sel):
+    ax = sel.artist.axes
+    df = subplot_df_dict[ax]
+    item = df.iloc[sel.index]
+    parts = [
+        f"Player: {item.name}",
+        *[f"{col}: {val:.1f}" for col, val in item.items() if col != 'Player']
+    ]
+    sel.annotation.set_text("\n".join(parts))
+
+def show_hover_panel(show_annotation_func=None):
     cursor = mplcursors.cursor(
         hover=True,  # Make the hover effect more noticeable
         annotation_kwargs=dict(
@@ -208,13 +220,11 @@ def show_hover_panel(df, get_text_func=None):
         highlight=True,
         highlight_kwargs=dict(linewidth=2),
     )
-
-    if get_text_func:
+    if show_annotation_func is not None:
         cursor.connect(
             event="add",
-            func=lambda sel: sel.annotation.set_text(get_text_func(sel.index)),
+            func=show_annotation_func
         )
-
     return cursor
 
 def create_radar_chart(df, players, id_column, title=None, padding=1.15):
@@ -247,23 +257,25 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
     fig.patch.set_facecolor('black')  # Set figure background to black
     ax.set_facecolor('white')
+    subplot_df_dict[ax] = df_selected
     # lines = []
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
         actual_values = [data[key][i] for key in data.keys()]
         values += values[:1]  # Close the plot for a better look
-        line, = ax.plot(angles, values, label=model_name,marker='o')
+        angles_with_end = angles + angles[:1]
+        line, = ax.plot(angles_with_end, values, label=model_name)
         # ax.plot(angles, values, label=model_name)
-        ax.fill(angles, values, alpha=0.15)
+        ax.fill(angles_with_end, values, alpha=0.15)
         # lines.append((line, model_name, actual_values))
-        def get_tooltip_text(index):
-            player = ids[index]
-            values_text = ', '.join([f'{cat}: {val:.1f}' for cat, val in zip(categories, actual_values)])
-            return f'{player}\n{values_text}'
+        # def get_tooltip_text(index):
+        #     player = ids[index]
+        #     values_text = ', '.join([f'{cat}: {val:.1f}' for cat, val in zip(categories, actual_values)])
+        #     return f'{player}\n{values_text}'
 
-        # Use show_hover_panel for tooltips
-        cursor = show_hover_panel(df_selected, get_text_func=get_tooltip_text)
-        cursor.connect("add", lambda sel: sel.annotation.set_text(get_tooltip_text(sel.index)))
+        # # Use show_hover_panel for tooltips
+        # cursor = show_hover_panel(df_selected, get_text_func=get_tooltip_text)
+        # cursor.connect("add", lambda sel: sel.annotation.set_text(get_tooltip_text(sel.index)))
         # for angle, value, actual_value in zip(angles, values, actual_values):
         #     ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
 
@@ -312,6 +324,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
     # Draw y-labels
     # ax.set_rlabel_position(0)
     ax.legend(loc='upper right', bbox_to_anchor=(0.05, 0.05), facecolor='white', edgecolor='black', labelcolor='black')
+     show_hover_panel(show_annotation)
 
     if title is not None:
         plt.suptitle(title, color='white', fontsize=14)
