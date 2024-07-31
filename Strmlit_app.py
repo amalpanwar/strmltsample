@@ -345,7 +345,9 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 range=[0, 1]
             )),
         showlegend=True,
-        title=title
+        title=title,
+        width=1000,  # Set the width of the figure
+        height=1000
        )
     
     return fig
