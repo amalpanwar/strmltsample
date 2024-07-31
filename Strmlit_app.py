@@ -222,7 +222,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
     fig.patch.set_facecolor('black')  # Set figure background to black
     ax.set_facecolor('white')
-    lines = []
+    # lines = []
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
         actual_values = [data[key][i] for key in data.keys()]
@@ -230,7 +230,10 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
         line, = ax.plot(angles, values, label=model_name,marker='o')
         # ax.plot(angles, values, label=model_name)
         ax.fill(angles, values, alpha=0.15)
-        lines.append((line, model_name, actual_values))
+        # lines.append((line, model_name, actual_values))
+        mplcursors.cursor(line, hover=True).connect(
+            "add", lambda sel: sel.annotation.set_text(f'{model_name}: ' + ', '.join([f'{cat}: {val:.1f}' for cat, val in zip(categories, actual_values)]))
+        )
         # for angle, value, actual_value in zip(angles, values, actual_values):
         #     ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
 
@@ -283,15 +286,15 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
     if title is not None:
         plt.suptitle(title, color='white', fontsize=14)
 
-    def hover_annotation(sel):
-        index = sel.index
-        angle_idx = int(index % len(angles))  # Determine the index of the angle
-        player_name = lines[index][1]
-        actual_value = lines[index][2][angle_idx]
-        sel.annotation.set_text(f'{player_name}\n{ticks[angle_idx]}: {actual_value:.1f}')
+    # def hover_annotation(sel):
+    #     index = sel.index
+    #     angle_idx = int(index % len(angles))  # Determine the index of the angle
+    #     player_name = lines[index][1]
+    #     actual_value = lines[index][2][angle_idx]
+    #     sel.annotation.set_text(f'{player_name}\n{ticks[angle_idx]}: {actual_value:.1f}')
     
-    cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
-    cursor.connect("add", hover_annotation)
+    # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
+    # cursor.connect("add", hover_annotation)
     return fig
 # def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
 #     df_selected = df.loc[players]
