@@ -357,7 +357,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         title=title,
         width=500,  # Set the width of the figure
         height=200,  # Set the height of the figure
-        margin=dict(l=0, r=0, t=50, b=0),  # Adjust margins to ensure the chart occupies more space
+        margin=dict(l=50, r=0, t=50, b=0),  # Adjust margins to ensure the chart occupies more space
     )
     
     return fig
