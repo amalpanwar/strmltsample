@@ -305,6 +305,7 @@ st.markdown(
 #     # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
 #     # cursor.connect("add", hover_annotation)
 #     return fig
+@st.cache_data
 def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.15):
     df_selected = df.loc[players]
     categories = df_selected.columns.tolist()
@@ -367,9 +368,9 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         ),
         showlegend=True,
         title=title,
-        width=900,  # Increase width of the figure
-        height=900,  # Increase height of the figure
-        margin=dict(l=50, r=50, t=50, b=50),  # Adjust margins to give more space around the chart
+        width=200,  # Increase width of the figure
+        height=200,  # Increase height of the figure
+        margin=dict(l=100, r=50, t=50, b=50),  # Adjust margins to give more space around the chart
     )
     
     return fig
