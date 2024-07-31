@@ -227,7 +227,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
         values = [normalized_data[key][i] for key in data.keys()]
         actual_values = [data[key][i] for key in data.keys()]
         values += values[:1]  # Close the plot for a better look
-        line, = ax.plot(angles, values, label=model_name)
+        line, = ax.plot(angles, values, label=model_name,marker='o')
         # ax.plot(angles, values, label=model_name)
         ax.fill(angles, values, alpha=0.15)
         lines.append((line, model_name, actual_values))
@@ -271,9 +271,10 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
         line, player_name, actual_values = lines[sel.index]
         angle_idx = np.argmin(np.abs(np.array(angles) - sel.artist.get_data()[0][sel.index]))
         value = actual_values[angle_idx]
-        sel.annotation.set_text(f'{player_name}: {categories[angle_idx]} = {value:.1f}')
+        sel.annotation.set_text(f'{player_name}\n{categories[angle_idx]}: {value:.1f}')
     
-    mplcursors.cursor([line for line, _, _ in lines]).connect("add", hover_annotation)
+    cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
+    cursor.connect("add", hover_annotation)
 
     # Draw y-labels
     # ax.set_rlabel_position(0)
