@@ -141,58 +141,7 @@ st.markdown(
     unsafe_allow_html=True
     )
 
-def create_radar_chart(df, players,id_column, title=None, padding=1.15):
-    # Ensure the players list is indexing correctly
-    df_selected = df.loc[players]
-    categories = df_selected.columns.tolist()
-    N = len(categories)
-    
-    # Convert all data to numeric, coercing errors and filling NaNs with zeros
-    df_selected = df_selected.apply(pd.to_numeric, errors='coerce').fillna(0)
-    
-    data = df_selected.to_dict(orient='list')
-    ids = df_selected.index.tolist()
-
-    max_values = {}
-    for key, value in data.items():
-        max_values[key] = padding * max(value) if max(value) != 0 else 1  # Avoid zero division
-
-    # Normalize the data
-    normalized_data = {}
-    for key, value in data.items():
-        normalized_data[key] = np.array(value) / max_values[key]
-
-    # Create radar chart
-    fig = go.Figure()
-
-    for i, model_name in enumerate(ids):
-        values = [normalized_data[key][i] for key in data.keys()]
-        actual_values = [data[key][i] for key in data.keys()]
-        values += values[:1]  # Close the plot for a better look
-        actual_values += actual_values[:1]
-        angles = [n / float(N) * 2 * np.pi for n in range(N)]
-        angles += angles[:1]  # Complete the circle
-
-        fig.add_trace(go.Scatterpolar(
-            r=values,
-            theta=[categories[j] for j in range(len(categories))] + [categories[0]],
-            mode='lines+markers',
-            name=model_name,
-            hovertemplate='<b>%{theta}</b>: %{r:.1f}<extra></extra>'
-        ))
-
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(visible=True),
-            angularaxis=dict(ticks=''),
-        ),
-        showlegend=True,
-        title='Radar Chart'
-    )
-
-    return fig
-
-# def create_radar_chart(df, players, id_column, title=None, padding=1.15):
+# def create_radar_chart(df, players,id_column, title=None, padding=1.15):
 #     # Ensure the players list is indexing correctly
 #     df_selected = df.loc[players]
 #     categories = df_selected.columns.tolist()
@@ -206,8 +155,6 @@ def create_radar_chart(df, players,id_column, title=None, padding=1.15):
 
 #     max_values = {}
 #     for key, value in data.items():
-#         if any(pd.isna(value)):
-#             data[key] = [0 if pd.isna(v) else v for v in value]
 #         max_values[key] = padding * max(value) if max(value) != 0 else 1  # Avoid zero division
 
 #     # Normalize the data
@@ -215,84 +162,137 @@ def create_radar_chart(df, players,id_column, title=None, padding=1.15):
 #     for key, value in data.items():
 #         normalized_data[key] = np.array(value) / max_values[key]
 
-#     angles = [n / float(N) * 2 * np.pi for n in range(N)]
-#     angles += angles[:1]  # Complete the circle
+#     # Create radar chart
+#     fig = go.Figure()
 
-#     # Plotting radar chart
-#     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
-#     fig.patch.set_facecolor('black')  # Set figure background to black
-#     ax.set_facecolor('white')
-#     lines = []
 #     for i, model_name in enumerate(ids):
 #         values = [normalized_data[key][i] for key in data.keys()]
 #         actual_values = [data[key][i] for key in data.keys()]
 #         values += values[:1]  # Close the plot for a better look
-#         line, = ax.plot(angles, values, label=model_name,marker='o')
-#         # ax.plot(angles, values, label=model_name)
-#         ax.fill(angles, values, alpha=0.15)
-#         lines.append((line, model_name, actual_values))
-#         # for angle, value, actual_value in zip(angles, values, actual_values):
-#         #     ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
+#         actual_values += actual_values[:1]
+#         angles = [n / float(N) * 2 * np.pi for n in range(N)]
+#         angles += angles[:1]  # Complete the circle
 
-#     ax.fill(angles, np.ones(N + 1), alpha=0.05)
+#         fig.add_trace(go.Scatterpolar(
+#             r=values,
+#             theta=[categories[j] for j in range(len(categories))] + [categories[0]],
+#             mode='lines+markers',
+#             name=model_name,
+#             hovertemplate='<b>%{theta}</b>: %{r:.1f}<extra></extra>'
+#         ))
 
-#     ax.set_theta_offset(np.pi/2)
-#     ax.set_theta_direction(-1)
-    
-#     ticks = list(data.keys())
-#     ticks += ticks[:1]  # Add the first category to the end to close the circle
-#     ax.set_xticks(angles)
-#     ax.set_xticklabels(ticks, color='white', fontsize=10)
+#     fig.update_layout(
+#         polar=dict(
+#             radialaxis=dict(visible=True),
+#             angularaxis=dict(ticks=''),
+#         ),
+#         showlegend=True,
+#         title='Radar Chart'
+#     )
 
-#     for label, angle_rad in zip(ax.get_xticklabels(), angles):
-#         if angle_rad <= pi/2:
-#             ha = 'left'
-#             va = "bottom"
-#             angle_text = angle_rad * (-180 / pi) + 90
-#         elif pi/2 < angle_rad <= pi:
-#             ha = 'left'
-#             va = "top"
-#             angle_text = angle_rad * (-180 / pi) + 90
-#         elif pi < angle_rad <= (3 * pi / 2):
-#             ha = 'right'
-#             va = "top"
-#             angle_text = angle_rad * (-180 / pi) - 90
-#         else:
-#             ha = 'right'
-#             va = "bottom"
-#             angle_text = angle_rad * (-180 / pi) - 90
-#         label.set_rotation(angle_text)
-#         label.set_verticalalignment(va)
-#         label.set_horizontalalignment(ha)
-#         label.set_color('white') 
-
-#     # Add tooltips
-#     # def hover_annotation(sel):
-#     #     line, player_name, actual_values = lines[sel.index]
-#     #     angle_idx = np.argmin(np.abs(np.array(angles) - sel.artist.get_data()[0][sel.index]))
-#     #     value = actual_values[angle_idx]
-#     #     sel.annotation.set_text(f'{player_name}\n{categories[angle_idx]}: {value:.1f}')
-    
-#     # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
-#     # cursor.connect("add", hover_annotation)
-
-#     # Draw y-labels
-#     # ax.set_rlabel_position(0)
-#     ax.legend(loc='upper right', bbox_to_anchor=(0.05, 0.05), facecolor='white', edgecolor='black', labelcolor='black')
-
-#     if title is not None:
-#         plt.suptitle(title, color='white', fontsize=14)
-
-#     def hover_annotation(sel):
-#         index = sel.index
-#         angle_idx = int(index % len(angles))  # Determine the index of the angle
-#         player_name = lines[index][1]
-#         actual_value = lines[index][2][angle_idx]
-#         sel.annotation.set_text(f'{player_name}\n{ticks[angle_idx]}: {actual_value:.1f}')
-    
-#     cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
-#     cursor.connect("add", hover_annotation)
 #     return fig
+
+def create_radar_chart(df, players, id_column, title=None, padding=1.15):
+    # Ensure the players list is indexing correctly
+    df_selected = df.loc[players]
+    categories = df_selected.columns.tolist()
+    N = len(categories)
+    
+    # Convert all data to numeric, coercing errors and filling NaNs with zeros
+    df_selected = df_selected.apply(pd.to_numeric, errors='coerce').fillna(0)
+    
+    data = df_selected.to_dict(orient='list')
+    ids = df_selected.index.tolist()
+
+    max_values = {}
+    for key, value in data.items():
+        if any(pd.isna(value)):
+            data[key] = [0 if pd.isna(v) else v for v in value]
+        max_values[key] = padding * max(value) if max(value) != 0 else 1  # Avoid zero division
+
+    # Normalize the data
+    normalized_data = {}
+    for key, value in data.items():
+        normalized_data[key] = np.array(value) / max_values[key]
+
+    angles = [n / float(N) * 2 * np.pi for n in range(N)]
+    angles += angles[:1]  # Complete the circle
+
+    # Plotting radar chart
+    fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+    fig.patch.set_facecolor('black')  # Set figure background to black
+    ax.set_facecolor('white')
+    lines = []
+    for i, model_name in enumerate(ids):
+        values = [normalized_data[key][i] for key in data.keys()]
+        actual_values = [data[key][i] for key in data.keys()]
+        values += values[:1]  # Close the plot for a better look
+        line, = ax.plot(angles, values, label=model_name,marker='o')
+        # ax.plot(angles, values, label=model_name)
+        ax.fill(angles, values, alpha=0.15)
+        lines.append((line, model_name, actual_values))
+        # for angle, value, actual_value in zip(angles, values, actual_values):
+        #     ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
+
+    ax.fill(angles, np.ones(N + 1), alpha=0.05)
+
+    ax.set_theta_offset(np.pi/2)
+    ax.set_theta_direction(-1)
+    
+    ticks = list(data.keys())
+    ticks += ticks[:1]  # Add the first category to the end to close the circle
+    ax.set_xticks(angles)
+    ax.set_xticklabels(ticks, color='white', fontsize=10)
+
+    for label, angle_rad in zip(ax.get_xticklabels(), angles):
+        if angle_rad <= pi/2:
+            ha = 'left'
+            va = "bottom"
+            angle_text = angle_rad * (-180 / pi) + 90
+        elif pi/2 < angle_rad <= pi:
+            ha = 'left'
+            va = "top"
+            angle_text = angle_rad * (-180 / pi) + 90
+        elif pi < angle_rad <= (3 * pi / 2):
+            ha = 'right'
+            va = "top"
+            angle_text = angle_rad * (-180 / pi) - 90
+        else:
+            ha = 'right'
+            va = "bottom"
+            angle_text = angle_rad * (-180 / pi) - 90
+        label.set_rotation(angle_text)
+        label.set_verticalalignment(va)
+        label.set_horizontalalignment(ha)
+        label.set_color('white') 
+
+    # Add tooltips
+    # def hover_annotation(sel):
+    #     line, player_name, actual_values = lines[sel.index]
+    #     angle_idx = np.argmin(np.abs(np.array(angles) - sel.artist.get_data()[0][sel.index]))
+    #     value = actual_values[angle_idx]
+    #     sel.annotation.set_text(f'{player_name}\n{categories[angle_idx]}: {value:.1f}')
+    
+    # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
+    # cursor.connect("add", hover_annotation)
+
+    # Draw y-labels
+    # ax.set_rlabel_position(0)
+    ax.legend(loc='upper right', bbox_to_anchor=(0.05, 0.05), facecolor='white', edgecolor='black', labelcolor='black')
+
+    if title is not None:
+        plt.suptitle(title, color='white', fontsize=14)
+
+    def hover_annotation(sel):
+        index = sel.index
+        angle_idx = int(index % len(angles))  # Determine the index of the angle
+        player_name = lines[index][1]
+        actual_value = lines[index][2][angle_idx]
+        sel.annotation.set_text(f'{player_name}\n{ticks[angle_idx]}: {actual_value:.1f}')
+    
+    cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
+    cursor.connect("add", hover_annotation)
+    return fig
 # def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
 #     df_selected = df.loc[players]
 #     categories = df_selected.columns.tolist()
@@ -504,7 +504,7 @@ if position == 'CM':
     # st.dataframe(styled_df, use_container_width=True)
     col1, col2 = st.columns(2)
     with col1:
-        st.plotly_chart(radar_fig)
+        st.pyplot(radar_fig)
     with col2:
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
