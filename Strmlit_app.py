@@ -373,7 +373,7 @@ fig.update_layout(
         height=800,  # Adjust height as needed
         margin=dict(l=120, r=80, t=80, b=0),  # Adjust margins to ensure the chart is not clipped
     )
-     return fig
+return fig
 
 # def create_pizza_plot(df, players, categories, title, padding=1.25):
 #     N = len(categories)
