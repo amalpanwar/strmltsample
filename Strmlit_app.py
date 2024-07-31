@@ -305,7 +305,7 @@ st.markdown(
 #     # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
 #     # cursor.connect("add", hover_annotation)
 #     return fig
-def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
+def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.15):
     df_selected = df.loc[players]
     categories = df_selected.columns.tolist()
     data = df_selected.to_dict(orient='list')
@@ -343,21 +343,33 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             radialaxis=dict(
                 visible=True,
                 range=[0, 1],
-                tickvals=[0, 0.5, 1],  # Optional: adjust ticks if necessary
-                ticktext=['0', '0.5', '1'],  # Optional: adjust tick labels if necessary
+                tickvals=[0, 0.5, 1],
+                ticktext=['0', '0.5', '1'],
+                showticklabels=True,
+                ticks="",
+                showline=True,
+                showgrid=True,
+                gridcolor='gray',
+                gridwidth=1
             ),
             angularaxis=dict(
-                tickvals=list(range(len(categories))),  # Set ticks to match the number of categories
-                ticktext=categories + [categories[0]],  # Add the first category again to close the circle
-                rotation=0,  # Set rotation to 0 to ensure labels are upright
-                direction="clockwise",  # Set the direction of the axis
+                tickvals=list(range(len(categories))),
+                ticktext=categories + [categories[0]],
+                rotation=0,
+                direction="clockwise",
+                showticklabels=True,
+                ticks="",
+                showline=True,
+                showgrid=True,
+                gridcolor='gray',
+                gridwidth=1
             ),
         ),
         showlegend=True,
         title=title,
-        width=500,  # Set the width of the figure
-        height=200,  # Set the height of the figure
-        margin=dict(l=150, r=0, t=0, b=0),  # Adjust margins to ensure the chart occupies more space
+        width=900,  # Increase width of the figure
+        height=900,  # Increase height of the figure
+        margin=dict(l=50, r=50, t=50, b=50),  # Adjust margins to give more space around the chart
     )
     
     return fig
