@@ -516,7 +516,7 @@ if position == 'CM':
     # st.dataframe(styled_df, use_container_width=True)
     col1, col2 = st.columns(2)
     with col1:
-        st.pyplot(radar_fig)
+        st.plotly_chart(radar_fig)
     with col2:
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
