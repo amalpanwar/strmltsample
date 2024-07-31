@@ -192,197 +192,163 @@ st.markdown(
 
 #     return fig
 
-subplot_df_dict = {}
 
-def show_annotation(sel):
-    ax = sel.artist.axes
-    df = subplot_df_dict[ax]
-    item = df.iloc[sel.index]
-    parts = [
-        f"Player: {item.name}",
-        *[f"{col}: {val:.1f}" for col, val in item.items() if col != 'Player']
-    ]
-    sel.annotation.set_text("\n".join(parts))
-
-def show_hover_panel(show_annotation_func=None):
-    cursor = mplcursors.cursor(
-        hover=True,  # Make the hover effect more noticeable
-        annotation_kwargs=dict(
-            bbox=dict(
-                boxstyle="square,pad=0.5",
-                facecolor="white",
-                edgecolor="black",
-                linewidth=0.5,
-            ),
-            linespacing=1.5,
-            arrowprops=None,
-        ),
-        highlight=True,
-        highlight_kwargs=dict(linewidth=2),
-    )
-    if show_annotation_func is not None:
-        cursor.connect(
-            event="add",
-            func=show_annotation_func
-        )
-    return cursor
-
-def create_radar_chart(df, players, id_column, title=None, padding=1.15):
-    # Ensure the players list is indexing correctly
-    df_selected = df.loc[players]
-    categories = df_selected.columns.tolist()
-    N = len(categories)
-    
-    # Convert all data to numeric, coercing errors and filling NaNs with zeros
-    df_selected = df_selected.apply(pd.to_numeric, errors='coerce').fillna(0)
-    
-    data = df_selected.to_dict(orient='list')
-    ids = df_selected.index.tolist()
-
-    max_values = {}
-    for key, value in data.items():
-        if any(pd.isna(value)):
-            data[key] = [0 if pd.isna(v) else v for v in value]
-        max_values[key] = padding * max(value) if max(value) != 0 else 1  # Avoid zero division
-
-    # Normalize the data
-    normalized_data = {}
-    for key, value in data.items():
-        normalized_data[key] = np.array(value) / max_values[key]
-
-    angles = [n / float(N) * 2 * np.pi for n in range(N)]
-    angles += angles[:1]  # Complete the circle
-
-    # Plotting radar chart
-    fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
-    fig.patch.set_facecolor('black')  # Set figure background to black
-    ax.set_facecolor('white')
-    subplot_df_dict[ax] = df_selected
-    # lines = []
-    for i, model_name in enumerate(ids):
-        values = [normalized_data[key][i] for key in data.keys()]
-        actual_values = [data[key][i] for key in data.keys()]
-        values += values[:1]  # Close the plot for a better look
-        angles_with_end = angles
-        line, = ax.plot(angles_with_end, values, label=model_name)
-        # ax.plot(angles, values, label=model_name)
-        ax.fill(angles_with_end, values, alpha=0.15)
-        # lines.append((line, model_name, actual_values))
-        # def get_tooltip_text(index):
-        #     player = ids[index]
-        #     values_text = ', '.join([f'{cat}: {val:.1f}' for cat, val in zip(categories, actual_values)])
-        #     return f'{player}\n{values_text}'
-
-        # # Use show_hover_panel for tooltips
-        # cursor = show_hover_panel(df_selected, get_text_func=get_tooltip_text)
-        # cursor.connect("add", lambda sel: sel.annotation.set_text(get_tooltip_text(sel.index)))
-        # for angle, value, actual_value in zip(angles, values, actual_values):
-        #     ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
-
-    ax.fill(angles, np.ones(N + 1), alpha=0.05)
-
-    ax.set_theta_offset(np.pi/2)
-    ax.set_theta_direction(-1)
-    
-    ticks = categories
-    ticks += ticks[:1]  # Add the first category to the end to close the circle
-    ax.set_xticks(angles)
-    ax.set_xticklabels(ticks, color='white', fontsize=10)
-
-    for label, angle_rad in zip(ax.get_xticklabels(), angles):
-        if angle_rad <= pi/2:
-            ha = 'left'
-            va = "bottom"
-            angle_text = angle_rad * (-180 / pi) + 90
-        elif pi/2 < angle_rad <= pi:
-            ha = 'left'
-            va = "top"
-            angle_text = angle_rad * (-180 / pi) + 90
-        elif pi < angle_rad <= (3 * pi / 2):
-            ha = 'right'
-            va = "top"
-            angle_text = angle_rad * (-180 / pi) - 90
-        else:
-            ha = 'right'
-            va = "bottom"
-            angle_text = angle_rad * (-180 / pi) - 90
-        label.set_rotation(angle_text)
-        label.set_verticalalignment(va)
-        label.set_horizontalalignment(ha)
-        label.set_color('white') 
-
-    # Add tooltips
-    # def hover_annotation(sel):
-    #     line, player_name, actual_values = lines[sel.index]
-    #     angle_idx = np.argmin(np.abs(np.array(angles) - sel.artist.get_data()[0][sel.index]))
-    #     value = actual_values[angle_idx]
-    #     sel.annotation.set_text(f'{player_name}\n{categories[angle_idx]}: {value:.1f}')
-    
-    # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
-    # cursor.connect("add", hover_annotation)
-
-    # Draw y-labels
-    # ax.set_rlabel_position(0)
-    ax.legend(loc='upper right', bbox_to_anchor=(0.05, 0.05), facecolor='white', edgecolor='black', labelcolor='black')
-    show_hover_panel(show_annotation)
-
-    if title is not None:
-        plt.suptitle(title, color='white', fontsize=14)
-
-    # def hover_annotation(sel):
-    #     index = sel.index
-    #     angle_idx = int(index % len(angles))  # Determine the index of the angle
-    #     player_name = lines[index][1]
-    #     actual_value = lines[index][2][angle_idx]
-    #     sel.annotation.set_text(f'{player_name}\n{ticks[angle_idx]}: {actual_value:.1f}')
-    
-    # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
-    # cursor.connect("add", hover_annotation)
-    return fig
-# def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
+# def create_radar_chart(df, players, id_column, title=None, padding=1.15):
+#     # Ensure the players list is indexing correctly
 #     df_selected = df.loc[players]
 #     categories = df_selected.columns.tolist()
+#     N = len(categories)
+    
+#     # Convert all data to numeric, coercing errors and filling NaNs with zeros
+#     df_selected = df_selected.apply(pd.to_numeric, errors='coerce').fillna(0)
+    
 #     data = df_selected.to_dict(orient='list')
 #     ids = df_selected.index.tolist()
-    
-#     if max_values is None:
-#         max_values = {key: padding * max(value) for key, value in data.items()}
-#     else:
-#         for key, max_val in max_values.items():
-#             if max_val == 0 or np.isnan(max_val):
-#                 max_values[key] = padding * max(data[key])
-                
+
+#     max_values = {}
+#     for key, value in data.items():
+#         if any(pd.isna(value)):
+#             data[key] = [0 if pd.isna(v) else v for v in value]
+#         max_values[key] = padding * max(value) if max(value) != 0 else 1  # Avoid zero division
+
+#     # Normalize the data
 #     normalized_data = {}
 #     for key, value in data.items():
-#         if max_values[key] != 0:
-#             normalized_data[key] = np.array(value) / max_values[key]
-#         else:
-#             normalized_data[key] = np.zeros(len(value))
-    
-#     fig = go.Figure()
+#         normalized_data[key] = np.array(value) / max_values[key]
 
+#     angles = [n / float(N) * 2 * np.pi for n in range(N)]
+#     angles += angles[:1]  # Complete the circle
+
+#     # Plotting radar chart
+#     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+#     fig.patch.set_facecolor('black')  # Set figure background to black
+#     ax.set_facecolor('white')
+#     subplot_df_dict[ax] = df_selected
+#     # lines = []
 #     for i, model_name in enumerate(ids):
 #         values = [normalized_data[key][i] for key in data.keys()]
 #         actual_values = [data[key][i] for key in data.keys()]
-#         values += values[:1]
-#         fig.add_trace(go.Scatterpolar(
-#             r=values,
-#             theta=categories + [categories[0]],
-#             fill='toself',
-#             name=model_name
-#         ))
+#         values += values[:1]  # Close the plot for a better look
+#         angles_with_end = angles
+#         line, = ax.plot(angles_with_end, values, label=model_name)
+#         # ax.plot(angles, values, label=model_name)
+#         ax.fill(angles_with_end, values, alpha=0.15)
+#         # lines.append((line, model_name, actual_values))
+#         # def get_tooltip_text(index):
+#         #     player = ids[index]
+#         #     values_text = ', '.join([f'{cat}: {val:.1f}' for cat, val in zip(categories, actual_values)])
+#         #     return f'{player}\n{values_text}'
 
-#     fig.update_layout(
-#         polar=dict(
-#             radialaxis=dict(
-#                 visible=True,
-#                 range=[0, 1]
-#             )),
-#         showlegend=True,
-#         title=title
-#        )
+#         # # Use show_hover_panel for tooltips
+#         # cursor = show_hover_panel(df_selected, get_text_func=get_tooltip_text)
+#         # cursor.connect("add", lambda sel: sel.annotation.set_text(get_tooltip_text(sel.index)))
+#         # for angle, value, actual_value in zip(angles, values, actual_values):
+#         #     ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
+
+#     ax.fill(angles, np.ones(N + 1), alpha=0.05)
+
+#     ax.set_theta_offset(np.pi/2)
+#     ax.set_theta_direction(-1)
     
+#     ticks = categories
+#     ticks += ticks[:1]  # Add the first category to the end to close the circle
+#     ax.set_xticks(angles)
+#     ax.set_xticklabels(ticks, color='white', fontsize=10)
+
+#     for label, angle_rad in zip(ax.get_xticklabels(), angles):
+#         if angle_rad <= pi/2:
+#             ha = 'left'
+#             va = "bottom"
+#             angle_text = angle_rad * (-180 / pi) + 90
+#         elif pi/2 < angle_rad <= pi:
+#             ha = 'left'
+#             va = "top"
+#             angle_text = angle_rad * (-180 / pi) + 90
+#         elif pi < angle_rad <= (3 * pi / 2):
+#             ha = 'right'
+#             va = "top"
+#             angle_text = angle_rad * (-180 / pi) - 90
+#         else:
+#             ha = 'right'
+#             va = "bottom"
+#             angle_text = angle_rad * (-180 / pi) - 90
+#         label.set_rotation(angle_text)
+#         label.set_verticalalignment(va)
+#         label.set_horizontalalignment(ha)
+#         label.set_color('white') 
+
+#     # Add tooltips
+#     # def hover_annotation(sel):
+#     #     line, player_name, actual_values = lines[sel.index]
+#     #     angle_idx = np.argmin(np.abs(np.array(angles) - sel.artist.get_data()[0][sel.index]))
+#     #     value = actual_values[angle_idx]
+#     #     sel.annotation.set_text(f'{player_name}\n{categories[angle_idx]}: {value:.1f}')
+    
+#     # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
+#     # cursor.connect("add", hover_annotation)
+
+#     # Draw y-labels
+#     # ax.set_rlabel_position(0)
+#     ax.legend(loc='upper right', bbox_to_anchor=(0.05, 0.05), facecolor='white', edgecolor='black', labelcolor='black')
+#     show_hover_panel(show_annotation)
+
+#     if title is not None:
+#         plt.suptitle(title, color='white', fontsize=14)
+
+#     # def hover_annotation(sel):
+#     #     index = sel.index
+#     #     angle_idx = int(index % len(angles))  # Determine the index of the angle
+#     #     player_name = lines[index][1]
+#     #     actual_value = lines[index][2][angle_idx]
+#     #     sel.annotation.set_text(f'{player_name}\n{ticks[angle_idx]}: {actual_value:.1f}')
+    
+#     # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
+#     # cursor.connect("add", hover_annotation)
 #     return fig
+def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
+    df_selected = df.loc[players]
+    categories = df_selected.columns.tolist()
+    data = df_selected.to_dict(orient='list')
+    ids = df_selected.index.tolist()
+    
+    if max_values is None:
+        max_values = {key: padding * max(value) for key, value in data.items()}
+    else:
+        for key, max_val in max_values.items():
+            if max_val == 0 or np.isnan(max_val):
+                max_values[key] = padding * max(data[key])
+                
+    normalized_data = {}
+    for key, value in data.items():
+        if max_values[key] != 0:
+            normalized_data[key] = np.array(value) / max_values[key]
+        else:
+            normalized_data[key] = np.zeros(len(value))
+    
+    fig = go.Figure()
+
+    for i, model_name in enumerate(ids):
+        values = [normalized_data[key][i] for key in data.keys()]
+        actual_values = [data[key][i] for key in data.keys()]
+        values += values[:1]
+        fig.add_trace(go.Scatterpolar(
+            r=values,
+            theta=categories + [categories[0]],
+            fill='toself',
+            name=model_name
+        ))
+
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 1]
+            )),
+        showlegend=True,
+        title=title
+       )
+    
+    return fig
 
 # def create_pizza_plot(df, players, categories, title, padding=1.25):
 #     N = len(categories)
