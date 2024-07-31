@@ -263,7 +263,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
         values = [normalized_data[key][i] for key in data.keys()]
         actual_values = [data[key][i] for key in data.keys()]
         values += values[:1]  # Close the plot for a better look
-        angles_with_end = angles + angles[:1]
+        angles_with_end = angles
         line, = ax.plot(angles_with_end, values, label=model_name)
         # ax.plot(angles, values, label=model_name)
         ax.fill(angles_with_end, values, alpha=0.15)
