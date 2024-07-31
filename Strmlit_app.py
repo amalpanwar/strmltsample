@@ -211,7 +211,7 @@ def show_hover_panel(show_annotation_func=None):
             bbox=dict(
                 boxstyle="square,pad=0.5",
                 facecolor="white",
-                edgecolor="#ddd",
+                edgecolor="black",
                 linewidth=0.5,
             ),
             linespacing=1.5,
@@ -284,7 +284,7 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
     ax.set_theta_offset(np.pi/2)
     ax.set_theta_direction(-1)
     
-    ticks = list(data.keys())
+    ticks = categories
     ticks += ticks[:1]  # Add the first category to the end to close the circle
     ax.set_xticks(angles)
     ax.set_xticklabels(ticks, color='white', fontsize=10)
