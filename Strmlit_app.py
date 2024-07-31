@@ -267,14 +267,14 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
         label.set_color('white') 
 
     # Add tooltips
-    def hover_annotation(sel):
-        line, player_name, actual_values = lines[sel.index]
-        angle_idx = np.argmin(np.abs(np.array(angles) - sel.artist.get_data()[0][sel.index]))
-        value = actual_values[angle_idx]
-        sel.annotation.set_text(f'{player_name}\n{categories[angle_idx]}: {value:.1f}')
+    # def hover_annotation(sel):
+    #     line, player_name, actual_values = lines[sel.index]
+    #     angle_idx = np.argmin(np.abs(np.array(angles) - sel.artist.get_data()[0][sel.index]))
+    #     value = actual_values[angle_idx]
+    #     sel.annotation.set_text(f'{player_name}\n{categories[angle_idx]}: {value:.1f}')
     
-    cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
-    cursor.connect("add", hover_annotation)
+    # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
+    # cursor.connect("add", hover_annotation)
 
     # Draw y-labels
     # ax.set_rlabel_position(0)
@@ -283,6 +283,15 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
     if title is not None:
         plt.suptitle(title, color='white', fontsize=14)
 
+    def hover_annotation(sel):
+        index = sel.index
+        angle_idx = int(index % len(angles))  # Determine the index of the angle
+        player_name = lines[index][1]
+        actual_value = lines[index][2][angle_idx]
+        sel.annotation.set_text(f'{player_name}\n{ticks[angle_idx]}: {actual_value:.1f}')
+    
+    cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
+    cursor.connect("add", hover_annotation)
     return fig
 # def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
 #     df_selected = df.loc[players]
