@@ -22,3 +22,4 @@ faiss-cpu
 scipy
 seaborn
 langchain-together
+mplcursors
