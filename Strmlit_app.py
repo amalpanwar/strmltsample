@@ -3,6 +3,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import mplcursors
 import seaborn as sns
 from scipy.stats import norm
 from math import pi
@@ -221,12 +222,15 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
     fig.patch.set_facecolor('black')  # Set figure background to black
     ax.set_facecolor('white')
+    lines = []
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
         actual_values = [data[key][i] for key in data.keys()]
         values += values[:1]  # Close the plot for a better look
-        ax.plot(angles, values, label=model_name)
+        line, = ax.plot(angles, values, label=model_name)
+        # ax.plot(angles, values, label=model_name)
         ax.fill(angles, values, alpha=0.15)
+        lines.append((line, model_name, actual_values))
         # for angle, value, actual_value in zip(angles, values, actual_values):
         #     ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
 
@@ -261,6 +265,15 @@ def create_radar_chart(df, players, id_column, title=None, padding=1.15):
         label.set_verticalalignment(va)
         label.set_horizontalalignment(ha)
         label.set_color('white') 
+
+    # Add tooltips
+    def hover_annotation(sel):
+        line, player_name, actual_values = lines[sel.index]
+        angle_idx = np.argmin(np.abs(np.array(angles) - sel.artist.get_data()[0][sel.index]))
+        value = actual_values[angle_idx]
+        sel.annotation.set_text(f'{player_name}: {categories[angle_idx]} = {value:.1f}')
+    
+    mplcursors.cursor([line for line, _, _ in lines]).connect("add", hover_annotation)
 
     # Draw y-labels
     # ax.set_rlabel_position(0)
@@ -1610,6 +1623,209 @@ elif position == 'FB':
             try:
                 vectorstore = FAISS.from_documents(documents=docs, embedding=embedding)
                 retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 20, 'fetch_k': 20})
+            # st.success("Chroma vector store initialized successfully.")
+            except Exception as e:
+                 logging.error(f"Error initializing Chroma vector store: {str(e)}")
+            # st.error(f"Error initializing Chroma vector store: {str(e)}")
+        # Preparing Prompt for Q/A
+            system_prompt = (
+             "You are an assistant for question-answering tasks. "
+             "Use the following pieces of retrieved context to answer "
+             "the question. If you don't know the answer, say that you "
+             "don't know. Use three sentences maximum and keep the "
+             "answer concise."
+             "\n\n"
+             "{context}"
+              )
+
+            prompt = ChatPromptTemplate.from_messages(
+                  [
+                   ("system", system_prompt),
+                    ("human", "{input}"),
+                     ]
+                    )
+
+            question_answer_chain = create_stuff_documents_chain(llm, prompt)
+            rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+            user_prompt = st.text_input("Enter your query:")
+            if user_prompt:
+    # Get response from RAG chain
+                   response = rag_chain.invoke({"input": user_prompt})
+                   st.write(response["answer"])
+
+        # st.success("Chroma vector store initialized successfully.")
+        except Exception as e:
+                logging.error(f"Error: {str(e)}")
+
+###################################################### Center Attacking Midfielder #############################################  
+elif position == 'CAM':
+    df_position = pvt_df_CAM
+
+    original_metrics =[
+       'Assists', 'Defensive duels per 90',
+       'Defensive duels won, %', 'Successful attacking actions per 90',
+       'Shots per 90', 'Shots on target, %', 'Successful dribbles, %',
+       'Offensive duels won, %', 'Progressive runs per 90',
+       'Received passes per 90', 'Passes per 90', 'Accurate passes, %',
+       'Accurate forward passes, %', 'Accurate passes to final third, %',
+       'Accurate passes to penalty area, %', 'Accurate progressive passes, %']
+    weights=[1,0.8,0.8,1,0.9,0.9,0.8,1,1,1,1,1,1,1,1,1]
+    weighted_metrics = pd.DataFrame()
+    for metric, weight in zip(original_metrics, weights):
+        weighted_metrics[metric] = df_position[metric] * weight
+    
+    # Calculate z-scores for the weighted metrics
+    z_scores = pd.DataFrame()
+    for metric in original_metrics:
+        mean = weighted_metrics[metric].mean()
+        std = weighted_metrics[metric].std()
+        z_scores[f'{metric} zscore'] = (weighted_metrics[metric] - mean) / std
+
+# Aggregate the z-scores to get a final z-score
+    df_position["CAM zscore"] = z_scores.mean(axis=1)
+
+# Calculate final z-score and score
+    original_mean = df_position["CAM zscore"].mean()
+    original_std = df_position["CAM zscore"].std()
+    df_position["CAM zscore"] = (df_position["CAM zscore"] - original_mean) / original_std
+    df_position["CAM Score(0-100)"] = (norm.cdf(df_position["CAM zscore"]) * 100).round(2)
+    df_position['Player Rank'] = df_position['CAM Score(0-100)'].rank(ascending=False)
+
+    # df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
+    # original_mean = df_position["defensive zscore"].mean()
+    # original_std = df_position["defensive zscore"].std()
+    # df_position["defensive zscore"] = (df_position["defensive zscore"] - original_mean) / original_std
+    # df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
+    # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
+    # Dropdown menu for player selection based on position
+    if st.sidebar.button('Show Top 5 Players'):
+        top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
+    # Multiselect only includes top 5 players
+        players_CAM = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
+    else:
+    # Multiselect includes all players
+        players_CAM = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+
+    # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    df_filtered = df_position.loc[players_CAM]
+    
+    # players_CF = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+    # df_filtered = df_position.loc[players_CF]
+
+    df_filtered['Recieve long pass, %']= (df_filtered['Received long passes per 90'] / df_filtered['Received passes per 90']) * 100
+
+    df_filtered2=df_filtered.reset_index()
+    df_filtered2['Shots on Target per 90'] = df_filtered2['Shots per 90'] * (df_filtered2['Shots on target, %'] / 100)
+    df_filtered2['SuccSuccessful dribbles per 90'] = df_filtered2['Dribbles per 90'] * (df_filtered2['Successful dribbles, %'] / 100)
+    
+    # df_filtered2['Attacking skills']= df_filtered2['SuccSuccessful dribbles per 90'] + df_filtered2['Received passes per 90'] * 100
+    
+
+   
+    fig = px.scatter(df_filtered2, x='Shots per 90', y=['Shots on Target per 90','xG per 90','Goals per 90'], facet_col='variable',
+                 color='Player', title='Threats on Goal')
+
+    fig.update_traces(textposition='top center')
+    fig.update_traces(marker=dict(size=8))
+    for annotation in fig.layout.annotations:
+             if 'variable=' in annotation.text:
+                        annotation.text = annotation.text.split('=')[1]
+    st.plotly_chart(fig)
+    
+
+    # Create radar chart for selected players
+    df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
+                        'Matches played', 'Minutes played','Age',
+                       'CF Score(0-100)', 'Player Rank', 'CF zscore'])
+                              
+    radar_fig =create_radar_chart(df_position2, players_CAM, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+    
+    columns_to_display = ['Player','Team','Age', 'Matches played', 'Minutes played', 'CAM Score(0-100)', 'Player Rank']
+    df_filtered_display=df_filtered.reset_index()
+    df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
+      'CAM Score(0-100)': 'Rating (0-100)',
+      'Matches played': 'Matches played (2023/24)'
+         })
+    df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
+
+# Style the DataFrame
+    def style_dataframe(df):
+        return df.style.set_table_styles(
+        [
+            {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
+            {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
+            {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
+        ]
+          ).hide(axis="index")
+
+    styled_df = style_dataframe(df_filtered_display)
+
+# Display styled DataFrame in Streamlit
+    # st.write("Players Info:")
+    # st.dataframe(styled_df, use_container_width=True)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.pyplot(radar_fig)
+    with col2:
+        st.write("Players Info:")
+        st.dataframe(styled_df, use_container_width=True)
+    
+
+    
+    
+    
+    fig2 = px.scatter(df_filtered2, x='Touches in box per 90', y=['xG per 90','Goals per 90','Fouls suffered per 90'],facet_col='variable',
+                  color='Player',title=f'{position} Touches in box vs Goal threat vs Foul suffered')
+  
+    fig2.update_traces(textposition='top center')
+    fig2.update_traces(marker=dict(size=8))
+    for annotation in fig2.layout.annotations:
+             if 'variable=' in annotation.text:
+                        annotation.text = annotation.text.split('=')[1]
+    st.plotly_chart(fig2)
+
+    
+
+    df_filtered2['Overall Goal Threat'] = df_filtered2['Goals per 90'] + df_filtered2['xG per 90'] + df_filtered2['Successful attacking actions per 90']
+
+# Sorting the DataFrame by 'Goals + Assists per 90', 'Goals per 90', and 'Assists per 90' in descending order
+    df_filtered3 = df_filtered2.sort_values(by=['Overall Goal Threat'], ascending=False)
+
+    # Melt the dataframe to long format for stacking
+    df_melted = df_filtered3.melt(id_vars='Player', value_vars=['Successful attacking actions per 90', 'xG per 90','Goals per 90'], var_name='Metric', value_name='Value')
+
+    # Create stacked bar chart
+    fig3 = px.bar(df_melted, x='Value', y='Player', color='Metric', orientation='h', title=f'{position} Attacking threats')
+    st.plotly_chart(fig3)
+
+    
+    # Input field for user prompt
+    # user_prompt = st.text_input("Enter your query:")
+    if not Together_api_key or not api_token:
+        st.error("Please provide both the TOGETHER API Key and the API Key.")
+    else:
+        try:
+            # Initialize the LLM model
+            llm = ChatTogether(
+                      base_url="https://api.together.xyz/v1",
+                      api_key=Together_api_key,
+                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
+                      temperature=0
+                        )
+
+        # Loading document through loader
+            loader = CSVLoader("CF_ElginFC.csv", encoding="windows-1252")
+            docs = loader.load()
+        # st.write("Documents loaded successfully.")
+  
+        # Initialize HuggingFaceHubEmbeddings with the provided API token
+            embedding = HuggingFaceHubEmbeddings(huggingfacehub_api_token=api_token)
+        # st.write("HuggingFaceHubEmbeddings initialized successfully.")
+
+        # Initialize Chroma vector store
+            try:
+                vectorstore = FAISS.from_documents(documents=docs, embedding=embedding)
+                retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 103, 'fetch_k': 103})
             # st.success("Chroma vector store initialized successfully.")
             except Exception as e:
                  logging.error(f"Error initializing Chroma vector store: {str(e)}")
