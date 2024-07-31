@@ -342,13 +342,21 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         polar=dict(
             radialaxis=dict(
                 visible=True,
-                range=[0, 1]
-            )),
+                range=[0, 1],
+                tickvals=[0, 0.5, 1],  # Optional: adjust ticks if necessary
+                ticktext=['0', '0.5', '1'],  # Optional: adjust tick labels if necessary
+            ),
+            angularaxis=dict(
+                tickvals=list(range(len(categories))),  # Adjust if needed
+                ticktext=categories + [categories[0]],  # Add the first category again to close the circle
+            ),
+        ),
         showlegend=True,
         title=title,
-        width=1000,  # Set the width of the figure
-        height=1000
-       )
+        width=200,  # Set the width of the figure
+        height=200,  # Set the height of the figure
+        margin=dict(l=0, r=0, t=50, b=0),  # Adjust margins to ensure the chart occupies more space
+    )
     
     return fig
 
