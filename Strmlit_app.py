@@ -28,7 +28,7 @@ from langchain_core.runnables import RunnablePassthrough
 #from langchain_openai import OpenAIEmbeddings
 #from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceHubEmbeddings
-from langchain_mistralai import ChatMistralAI
+# from langchain_mistralai import ChatMistralAI
 from langchain_together import ChatTogether
 #from unstructured.partition.xlsx import partition_xlsx
 import networkx as nx
