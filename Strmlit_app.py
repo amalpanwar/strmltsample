@@ -332,10 +332,10 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         values = [normalized_data[key][i] for key in data.keys()]
         values += values[:1]  # Complete the circle
         hovertext = [
-            f"{categories[j]}: {data[key][i]:.2f}"
-            for j, key in enumerate(data.keys())
+            f"{categories[j]}: {data[c][i]:.2f}"
+            for j, c in enumerate(categories)
         ]
-        hovertext += [hovertext[0]]  # Repeat the first item to complete the circle
+        hovertext += [hovertext[0]]  # Complete the circle for hovertext
 
         fig.add_trace(go.Scatterpolar(
             r=values,
