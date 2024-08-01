@@ -328,13 +328,12 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     
     fig = go.Figure()
 
-    color_map = {player: f'rgba({np.random.randint(256)},{np.random.randint(256)},{np.random.randint(256)})' for player in ids}
+    # color_map = {player: f'rgba({np.random.randint(256)},{np.random.randint(256)},{np.random.randint(256)})' for player in ids}
 
-    for i, model_name in enumerate(ids):
+     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
         values += values[:1]  # Complete the circle
 
-        # Hover text with metric values
         hovertext = [
             f"{categories[j]}: {data[c][i]:.2f}"
             for j, c in enumerate(categories)
@@ -344,15 +343,10 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         fig.add_trace(go.Scatterpolar(
             r=values,
             theta=categories + [categories[0]],
-            fill=color_map[model_name],
+            fill='toself',
             name=model_name,
             hoverinfo='text',
-            hovertext=hovertext,
-            marker=dict(
-                symbol='circle',  # Marker symbol
-                size=10,          # Marker size
-                color=color_map[model_name]  # Dynamic color based on player
-            )
+            hovertext=hovertext
         ))
 
 
