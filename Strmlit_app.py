@@ -367,9 +367,9 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         ),
         title=title,
         width=900,  # Increased width for better clarity
-        height=900,  # Increased height for better clarity
+        height=500,  # Increased height for better clarity
         margin=dict(l=100, r=100, t=100, b=100),  # Sufficient margins to avoid clipping
-        paper_bgcolor='white',  # Background color
+        paper_bgcolor='black',  # Background color
         plot_bgcolor='white'    # Plot area background color
     )
 
