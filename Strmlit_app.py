@@ -398,13 +398,13 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         paper_bgcolor='black',  # Background color
         plot_bgcolor='white',    # Plot area background color
         legend=dict(
-            orientation="h",  # Horizontal orientation
+            orientation="v",  # Horizontal orientation
             yanchor="top",    # Position the legend above the plot area
             y=-0.1,           # Vertical position (below the plot area)
-            xanchor="left", # Center the legend horizontally
+            xanchor="right", # Center the legend horizontally
             x=0.5,            # Horizontal position (centered)
             bgcolor='rgba(255, 255, 255, 0)', # Transparent background
-            bordercolor='black',
+            bordercolor='white',
             borderwidth=1
         )
         
