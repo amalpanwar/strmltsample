@@ -337,6 +337,14 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             fill='toself',
             name=model_name
         ))
+    fig.update_traces(
+        hoverlabel=dict(
+            bgcolor='white',  # Background color of the hover label
+            font=dict(
+                color='black'  # Text color of the hover label
+            )
+        )
+    )
 
     fig.update_layout(
         polar=dict(
@@ -368,7 +376,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         title=title,
         width=1000,  # Increased width for better clarity
         height=300,  # Increased height for better clarity
-        margin=dict(l=110, r=100, t=50, b=0),  # Increased bottom margin to accommodate the legend
+        margin=dict(l=110, r=110, t=20, b=0),  # Increased bottom margin to accommodate the legend
         paper_bgcolor='black',  # Background color
         plot_bgcolor='white',    # Plot area background color
         legend=dict(
