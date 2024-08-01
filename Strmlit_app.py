@@ -344,7 +344,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         fig.add_trace(go.Scatterpolar(
             r=values,
             theta=categories + [categories[0]],
-            fill='toself',
+            fill=color_map[model_name],
             name=model_name,
             hoverinfo='text',
             hovertext=hovertext,
