@@ -331,6 +331,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
         values += values[:1]  # Complete the circle
+
         hovertext = [
             f"{categories[j]}: {data[c][i]:.2f}"
             for j, c in enumerate(categories)
