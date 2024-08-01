@@ -335,7 +335,9 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             r=values,
             theta=categories + [categories[0]],
             fill='toself',
-            name=model_name
+            name=model_name,
+            hoverinfo='text',
+            hovertext=[f"{categories[j]}: {data[key][i]:.2f}" for j, key in enumerate(data.keys())]
         ))
     fig.update_traces(
         hoverlabel=dict(
