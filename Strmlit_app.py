@@ -345,6 +345,8 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             hoverinfo='text',
             hovertext=hovertext
         ))
+
+
     fig.update_traces(
         hoverlabel=dict(
             bgcolor='white',  # Background color of the hover label
