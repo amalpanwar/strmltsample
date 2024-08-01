@@ -330,7 +330,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
 
     # color_map = {player: f'rgba({np.random.randint(256)},{np.random.randint(256)},{np.random.randint(256)})' for player in ids}
 
-     for i, model_name in enumerate(ids):
+    for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
         values += values[:1]  # Complete the circle
 
