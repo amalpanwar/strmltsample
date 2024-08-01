@@ -366,7 +366,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             ),
         ),
         title=title,
-        width=900,  # Increased width for better clarity
+        width=1000,  # Increased width for better clarity
         height=300,  # Increased height for better clarity
         margin=dict(l=110, r=100, t=50, b=0),  # Increased bottom margin to accommodate the legend
         paper_bgcolor='black',  # Background color
