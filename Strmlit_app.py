@@ -331,13 +331,19 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
         values += values[:1]  # Complete the circle
+        hovertext = [
+            f"{categories[j]}: {data[key][i]:.2f}"
+            for j, key in enumerate(data.keys())
+        ]
+        hovertext += [hovertext[0]]  # Repeat the first item to complete the circle
+
         fig.add_trace(go.Scatterpolar(
             r=values,
             theta=categories + [categories[0]],
             fill='toself',
             name=model_name,
             hoverinfo='text',
-            hovertext=[f"{categories[j]}: {data[key][i]:.2f}" for j, key in enumerate(data.keys())]
+            hovertext=hovertext
         ))
     fig.update_traces(
         hoverlabel=dict(
