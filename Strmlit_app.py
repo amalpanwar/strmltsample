@@ -358,27 +358,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             )
         )
     )
-    num_categories = len(categories)
-    angles = np.linspace(0, 2 * np.pi, num_categories, endpoint=False)
-    angles += np.pi / 2  # Rotate so the first category is at the top
-
-    annotations = []
-    for i, (category, angle) in enumerate(zip(categories, angles)):
-        x = 0.5 * np.cos(angle)  # Adjust x position
-        y = 0.5 * np.sin(angle)  # Adjust y position
-        angle_deg = np.degrees(angle) % 360  # Convert angle to degrees for rotation
-
-        annotations.append(dict(
-            x=x,
-            y=y,
-            text=category,
-            showarrow=False,
-            xanchor='center',
-            yanchor='middle',
-            font=dict(size=12, color='white'),
-            align='center',
-            textangle=angle_deg  # Rotate label based on its angle
-        ))
+    
     fig.update_layout(
         polar=dict(
             radialaxis=dict(
@@ -404,8 +384,8 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 showgrid=True,
                 gridcolor='gray',
                 gridwidth=1,
-                # tickangle=theta,
-                # tickfont=dict(size=12, color='white'),
+                
+                tickfont=dict(size=12, color='white'),
             ),
         ),
         title=title,
@@ -423,8 +403,8 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             bgcolor='rgba(255, 255, 255, 0)', # Transparent background
             bordercolor='black',
             borderwidth=1
-        ),
-        annotations=annotations
+        )
+        
     )
 
     return fig
