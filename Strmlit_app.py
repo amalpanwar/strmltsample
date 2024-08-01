@@ -358,7 +358,8 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             )
         )
     )
-
+    num_categories = len(categories)
+    angle_step = 360 / num_categories
     fig.update_layout(
         polar=dict(
             radialaxis=dict(
@@ -384,6 +385,8 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 showgrid=True,
                 gridcolor='gray',
                 gridwidth=1,
+                tickangle=angle_step
+                tickfont=dict(size=12, color='black'),
             ),
         ),
         title=title,
