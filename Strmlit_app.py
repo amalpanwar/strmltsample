@@ -306,7 +306,7 @@ st.markdown(
 #     # cursor.connect("add", hover_annotation)
 #     return fig
 # @st.cache_data
-def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.15):
+def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
     df_selected = df.loc[players]
     categories = df_selected.columns.tolist()
     data = df_selected.to_dict(orient='list')
@@ -330,14 +330,14 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
 
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
-        actual_values = [data[key][i] for key in data.keys()]
-        values += values[:1]
+        values += values[:1]  # Complete the circle
         fig.add_trace(go.Scatterpolar(
             r=values,
             theta=categories + [categories[0]],
             fill='toself',
             name=model_name
         ))
+
     fig.update_layout(
         polar=dict(
             radialaxis=dict(
@@ -351,7 +351,6 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 showgrid=True,
                 gridcolor='gray',
                 gridwidth=1,
-                title=dict(text='Metrics', font=dict(size=14)),
             ),
             angularaxis=dict(
                 tickvals=list(range(len(categories))),
@@ -364,15 +363,15 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 showgrid=True,
                 gridcolor='gray',
                 gridwidth=1,
-                title=dict(text='Categories', font=dict(size=14)),
             ),
-          ),
-        showlegend=True,
+        ),
         title=title,
-        width=800,  # Adjust width as needed
-        height=800,  # Adjust height as needed
-        margin=dict(l=120, r=80, t=80, b=0),  # Adjust margins to ensure the chart is not clipped
-        )
+        width=900,  # Increased width for better clarity
+        height=900,  # Increased height for better clarity
+        margin=dict(l=100, r=100, t=100, b=100),  # Sufficient margins to avoid clipping
+        paper_bgcolor='white',  # Background color
+        plot_bgcolor='white'    # Plot area background color
+    )
 
     return fig
 
