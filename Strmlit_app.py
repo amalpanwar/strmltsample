@@ -385,12 +385,12 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 gridcolor='gray',
                 gridwidth=1,
                 
-                tickfont=dict(size=12, color='white'),
+                tickfont=dict(size=9, color='white'),
             ),
         ),
         title=dict(
             text=title,
-            font=dict(size=24)
+            font=dict(size=12)
         ),
         width=1000,  # Increased width for better clarity
         height=300,  # Increased height for better clarity
