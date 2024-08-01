@@ -378,7 +378,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 ticktext=categories + [categories[0]],
                 rotation=0,
                 direction="clockwise",
-                showticklabels=False,
+                showticklabels=True,
                 # ticks="",
                 showline=True,
                 showgrid=True,
