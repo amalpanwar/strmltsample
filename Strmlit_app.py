@@ -305,7 +305,7 @@ st.markdown(
 #     # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
 #     # cursor.connect("add", hover_annotation)
 #     return fig
-@st.cache_data
+# @st.cache_data
 def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.15):
     df_selected = df.loc[players]
     categories = df_selected.columns.tolist()
