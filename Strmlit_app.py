@@ -338,7 +338,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             fill='toself',
             name=model_name
         ))
-     fig.update_layout(
+    fig.update_layout(
         polar=dict(
             radialaxis=dict(
                 visible=True,
@@ -366,15 +366,15 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 gridwidth=1,
                 title=dict(text='Categories', font=dict(size=14)),
             ),
-        ),
+          ),
         showlegend=True,
         title=title,
         width=800,  # Adjust width as needed
         height=800,  # Adjust height as needed
         margin=dict(l=120, r=80, t=80, b=0),  # Adjust margins to ensure the chart is not clipped
-    )
+        )
 
-     return fig
+    return fig
 
 # def create_pizza_plot(df, players, categories, title, padding=1.25):
 #     N = len(categories)
