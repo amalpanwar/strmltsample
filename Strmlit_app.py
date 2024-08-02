@@ -347,7 +347,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             hovertext=hovertext,
             line=dict(
                 color=color_map[model_name],
-                width=2
+                width=1
             ),
             showlegend=True
         ))
