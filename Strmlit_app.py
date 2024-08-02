@@ -329,7 +329,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     
     fig = go.Figure()
 
-    # color_map = {player: f'rgba({np.random.randint(256)},{np.random.randint(256)},{np.random.randint(256)})' for player in ids}
+    color_map = {player: f'rgba({np.random.randint(256)},{np.random.randint(256)},{np.random.randint(256)})' for player in ids}
 
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
@@ -344,7 +344,12 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             fill='toself',
             name=model_name,
             hoverinfo='text',
-            hovertext=hovertext
+            hovertext=hovertext,
+            line=dict(
+                color=color_map[model_name],
+                width=2
+            ),
+            showlegend=True
         ))
 
 
