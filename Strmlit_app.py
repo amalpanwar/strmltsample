@@ -29,7 +29,8 @@ from langchain_core.runnables import RunnablePassthrough
 #from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceHubEmbeddings
 # from langchain_mistralai import ChatMistralAI
-from langchain_together import ChatTogether
+# from langchain_together import ChatTogether
+from langchain_ai21 import ChatAI21
 #from unstructured.partition.xlsx import partition_xlsx
 import networkx as nx
 #import pandas as pd
@@ -445,7 +446,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
 
 #     return fig
 # RAG Pipeline for Chatting
-Together_api_key = st.sidebar.text_input('Together API Key')
+AI21_api_key = st.sidebar.text_input('Together API Key')
 api_token = st.sidebar.text_input('API Key', type='password')
 
 
@@ -612,17 +613,20 @@ if position == 'CM':
         st.plotly_chart(fig3)
     # Input field for user prompt
    
-    if not Together_api_key or not api_token:
+    if not AI21_api_key or not api_token:
         st.error("Please provide both the TOGETHER API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
-            llm = ChatTogether(
-                      base_url="https://api.together.xyz/v1",
-                      api_key=Together_api_key,
-                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
-                      temperature=0
-                        )
+            llm = ChatAI21(
+                 model="jamba-instruct-preview",
+#     base_url="https://api.aimlapi.com/chat/completions",
+                 api_key=AI21_api_key,
+                 max_tokens=4096,
+                 temprature=0.7,
+                 top_p=1,
+                 stop=[],
+                  )
 
         # Loading document through loader
             loader = CSVLoader("CM_ElginFC.csv", encoding="windows-1252")
@@ -766,7 +770,7 @@ elif position == 'CB':
     # st.dataframe(styled_df, use_container_width=True)
     col1, col2 = st.columns(2)
     with col1:
-        st.pyplot(radar_fig)
+        st.plotly_chart(radar_fig)
     with col2:
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
@@ -803,12 +807,15 @@ elif position == 'CB':
     else:
         try:
             # Initialize the LLM model
-            llm = ChatTogether(
-                      base_url="https://api.together.xyz/v1",
-                      api_key=Together_api_key,
-                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
-                      temperature=0
-                        )
+            llm = ChatAI21(
+                 model="jamba-instruct-preview",
+#     base_url="https://api.aimlapi.com/chat/completions",
+                 api_key=AI21_api_key,
+                 max_tokens=4096,
+                 temprature=0.7,
+                 top_p=1,
+                 stop=[],
+                  )
 
         # Loading document through loader
             loader = CSVLoader("CB_ElginFC.csv", encoding="windows-1252")
@@ -964,7 +971,7 @@ elif position == 'Winger':
     # st.dataframe(styled_df, use_container_width=True)
     col1, col2 = st.columns(2)
     with col1:
-        st.pyplot(radar_fig)
+        st.plotly_chart(radar_fig)
     with col2:
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
@@ -1045,17 +1052,20 @@ elif position == 'Winger':
     st.plotly_chart(fig3)
 
     # Input for user query
-    if not Together_api_key or not api_token:
+    if not AI21_api_key or not api_token:
         st.error("Please provide both the TOGETHER API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
-            llm = ChatTogether(
-                      base_url="https://api.together.xyz/v1",
-                      api_key=Together_api_key,
-                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
-                      temperature=0
-                        )
+            llm = ChatAI21(
+                 model="jamba-instruct-preview",
+#     base_url="https://api.aimlapi.com/chat/completions",
+                 api_key=AI21_api_key,
+                 max_tokens=4096,
+                 temprature=0.7,
+                 top_p=1,
+                 stop=[],
+                  )
 
         # Loading document through loader
             loader = CSVLoader("Wing_ElginFC.csv", encoding="windows-1252")
@@ -1211,7 +1221,7 @@ elif position == 'CF':
     # st.dataframe(styled_df, use_container_width=True)
     col1, col2 = st.columns(2)
     with col1:
-        st.pyplot(radar_fig)
+        st.plotly_chart(radar_fig)
     with col2:
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
@@ -1247,17 +1257,20 @@ elif position == 'CF':
     
     # Input field for user prompt
     # user_prompt = st.text_input("Enter your query:")
-    if not Together_api_key or not api_token:
+    if not AI21_api_key or not api_token:
         st.error("Please provide both the TOGETHER API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
-            llm = ChatTogether(
-                      base_url="https://api.together.xyz/v1",
-                      api_key=Together_api_key,
-                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
-                      temperature=0
-                        )
+            llm = ChatAI21(
+                 model="jamba-instruct-preview",
+#     base_url="https://api.aimlapi.com/chat/completions",
+                 api_key=AI21_api_key,
+                 max_tokens=4096,
+                 temprature=0.7,
+                 top_p=1,
+                 stop=[],
+                  )
 
         # Loading document through loader
             loader = CSVLoader("CF_ElginFC.csv", encoding="windows-1252")
@@ -1413,7 +1426,7 @@ elif position == 'GK':
     # st.dataframe(styled_df, use_container_width=True)
     col1, col2 = st.columns(2)
     with col1:
-        st.pyplot(radar_fig)
+        st.plotly_chart(radar_fig)
     with col2:
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
@@ -1469,20 +1482,23 @@ elif position == 'GK':
     
     # Input field for user prompt
     # user_prompt = st.text_input("Enter your query:")
-    if not Together_api_key or not api_token:
+    if not AI21_api_key or not api_token:
         st.error("Please provide both the TOGETHER API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
-            llm = ChatTogether(
-                      base_url="https://api.together.xyz/v1",
-                      api_key=Together_api_key,
-                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
-                      temperature=0
-                        )
+            llm = ChatAI21(
+                 model="jamba-instruct-preview",
+#     base_url="https://api.aimlapi.com/chat/completions",
+                 api_key=AI21_api_key,
+                 max_tokens=4096,
+                 temprature=0.7,
+                 top_p=1,
+                 stop=[],
+                  )
 
         # Loading document through loader
-            loader = CSVLoader("CF_ElginFC.csv", encoding="windows-1252")
+            loader = CSVLoader("GK_ElginFC.csv", encoding="windows-1252")
             docs = loader.load()
         # st.write("Documents loaded successfully.")
   
@@ -1645,7 +1661,7 @@ elif position == 'FB':
     # st.dataframe(styled_df, use_container_width=True)
     col1, col2 = st.columns(2)
     with col1:
-        st.pyplot(radar_fig)
+        st.plotly_chart(radar_fig)
     with col2:
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
@@ -1681,20 +1697,23 @@ elif position == 'FB':
     #     st.plotly_chart(fig3)
     # Input field for user prompt
     # user_prompt = st.text_input("Enter your query:")
-    if not Together_api_key or not api_token:
+    if not AI21_api_key or not api_token:
         st.error("Please provide both the TOGETHER API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
-            llm = ChatTogether(
-                      base_url="https://api.together.xyz/v1",
-                      api_key=Together_api_key,
-                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
-                      temperature=0
-                        )
+            llm = ChatAI21(
+                 model="jamba-instruct-preview",
+#     base_url="https://api.aimlapi.com/chat/completions",
+                 api_key=AI21_api_key,
+                 max_tokens=4096,
+                 temprature=0.7,
+                 top_p=1,
+                 stop=[],
+                  )
 
         # Loading document through loader
-            loader = CSVLoader("CB_ElginFC.csv", encoding="windows-1252")
+            loader = CSVLoader("FB_ElginFC.csv", encoding="windows-1252")
             docs = loader.load()
         # st.write("Documents loaded successfully.")
   
@@ -1884,20 +1903,23 @@ elif position == 'CAM':
     
     # Input field for user prompt
     # user_prompt = st.text_input("Enter your query:")
-    if not Together_api_key or not api_token:
+    if not AI21_api_key or not api_token:
         st.error("Please provide both the TOGETHER API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
-            llm = ChatTogether(
-                      base_url="https://api.together.xyz/v1",
-                      api_key=Together_api_key,
-                      model="mistralai/Mixtral-8x22B-Instruct-v0.1",
-                      temperature=0
-                        )
+            llm = ChatAI21(
+                 model="jamba-instruct-preview",
+#     base_url="https://api.aimlapi.com/chat/completions",
+                 api_key=AI21_api_key,
+                 max_tokens=4096,
+                 temprature=0.7,
+                 top_p=1,
+                 stop=[],
+                  )
 
         # Loading document through loader
-            loader = CSVLoader("CF_ElginFC.csv", encoding="windows-1252")
+            loader = CSVLoader("CAM_ElginFC.csv", encoding="windows-1252")
             docs = loader.load()
         # st.write("Documents loaded successfully.")
   
