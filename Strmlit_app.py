@@ -1724,7 +1724,7 @@ elif position == 'FB':
         # Initialize Chroma vector store
             try:
                 vectorstore = FAISS.from_documents(documents=docs, embedding=embedding)
-                retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 20, 'fetch_k': 20})
+                retriever = vectorstore.as_retriever(search_type="mmr", search_kwargs={'k': 123, 'fetch_k': 123})
             # st.success("Chroma vector store initialized successfully.")
             except Exception as e:
                  logging.error(f"Error initializing Chroma vector store: {str(e)}")
