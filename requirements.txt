@@ -17,5 +17,5 @@ langchain
 faiss-cpu
 scipy
 seaborn
-langchain-together
+langchain-ai21
 mplcursors
