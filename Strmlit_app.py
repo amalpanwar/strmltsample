@@ -479,6 +479,7 @@ position = st.sidebar.selectbox('Select position:', options=["GK","FB","CB","CM"
 if position == 'CM':
     df_position = pvt_df_CM
 
+    # Assign weights to the metrics based on their importance
     original_metrics =[
        'Assists',
        'Successful defensive actions per 90', 'Aerial duels per 90',
@@ -510,12 +511,6 @@ if position == 'CM':
     df_position["CM Score(0-100)"] = (norm.cdf(df_position["CM zscore"]) * 100).round(2)
     df_position['Player Rank'] = df_position['CM Score(0-100)'].rank(ascending=False)
 
-    # df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
-    # original_mean = df_position["defensive zscore"].mean()
-    # original_std = df_position["defensive zscore"].std()
-    # df_position["defensive zscore"] = (df_position["defensive zscore"] - original_mean) / original_std
-    # df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
-    # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
     # Dropdown menu for player selection based on position
     if st.sidebar.button('Show Top 5 Players'):
         top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
@@ -527,15 +522,65 @@ if position == 'CM':
 
     # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     df_filtered = df_position.loc[players_CM]
-    # Dropdown menu for player selection based on position
-    # players_CM = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-    # df_filtered = df_position.loc[players_CM]
-    # Create point facet graph
-    # Create point facet graph
+
     
-    
+    df_filtered_new=df_position.reset_index()
+    league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
+
+# Extract league average values
+    league_avg_values = {
+    'Passes per 90': league_avg_row['Passes per 90'].values[0],
+    'Forward passes per 90': league_avg_row['Forward passes per 90'].values[0],
+    'Progressive passes per 90': league_avg_row['Progressive passes per 90'].values[0],
+    'Passes to final third per 90': league_avg_row['Passes to final third per 90'].values[0]
+      }
+# get max value for X and Y to create quadrants
+    x_max = df_filtered_new['Passes per 90'].max()
+    y_max_values = {
+    'Forward passes per 90': df_filtered_new['Forward passes per 90'].max(),
+    'Progressive passes per 90': df_filtered_new['Progressive passes per 90'].max(),
+    'Passes to final third per 90': df_filtered_new['Passes to final third per 90'].max()
+           }
+    y_max = max(y_max_values.values())
+   
+    # create Scatter plot
     fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Forward passes per 90','Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
                                 color='Player',title='Passing threats')
+    
+    
+
+# Add horizontal and vertical lines for each facet, this will provide the quadrant inside scatter plot
+    
+    for i, facet_name in enumerate(['Forward passes per 90', 'Progressive passes per 90', 'Passes to final third per 90']):
+        # Add horizontal line
+        fig.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=0,
+            y0=league_avg_values[facet_name],
+            x1=x_max,
+            y1=league_avg_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='red', width=1, dash='dash')
+              )
+          
+           )
+
+    # Add vertical line
+        fig.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=league_avg_values['Passes per 90'],
+            y0=0,
+            x1=league_avg_values['Passes per 90'],
+            y1=y_max,
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='blue', width=1, dash='dash')
+             )
+              
+              )
 
     fig.update_traces(textposition='top center')
     fig.update_traces(marker=dict(size=8))
@@ -544,21 +589,14 @@ if position == 'CM':
                         annotation.text = annotation.text.split('=')[1]
     st.plotly_chart(fig)
     
-    #st.plotly_chart(fig)
-    # Ensure 'League Two Average' is included in the list of selected players
-    # if 'League Two Average' not in players:
-    #     players.append('League Two Average')
+   # Dropping unnecessary column not require for radar chart
+    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'CM zscore','Player Rank','Age','Team', 'Matches played', 'Minutes played'])
 
-    # pizza_fig=create_pizza_plot(df_filtered, players_CM, categories=['Accurate forward passes, %', 'Accurate passes to final third, %', 'Accurate passes, %',
-    #                     'Accurate progressive passes, %','Aerial duels won, %'], title='Pizza Plot for Selected Players')
-
-    # Create radar chart for selected players
-    # st.write(f"Hover Text: {hovertext}")
-    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'CM zscore','Player Rank','Age','Team', 'Matches played','Contract Expiry \n(Trnsfmkt)', 'Minutes played'])
-                              
+    # Rdar chart
     radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-    
-    columns_to_display = ['Player','Team','Age', 'Matches played', 'Minutes played', 'CM Score(0-100)', 'Player Rank']
+
+    # Creating Player info table
+    columns_to_display = ['Player','Team','CM Score(0-100)', 'Player Rank','Age', 'Matches played', 'Minutes played' ]
     df_filtered_display=df_filtered.reset_index()
     df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
       'CM Score(0-100)': 'Rating (0-100)',
@@ -579,43 +617,115 @@ if position == 'CM':
     styled_df = style_dataframe(df_filtered_display)
 
 # Display styled DataFrame in Streamlit
-    # st.write("Players Info:")
-    # st.dataframe(styled_df, use_container_width=True)
+
     col1, col2 = st.columns(2)
     with col1:
         st.plotly_chart(radar_fig)
     with col2:
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
-
+        
+   # Calculating Assit per 90 for slected player and for league average 
     df_filtered2 = df_filtered.reset_index()
     df_filtered2['Assists per 90'] = ((df_filtered2['Assists'] / df_filtered2['Minutes played']) * 90).round(2)
-    
-    fig2 = px.scatter(df_filtered2, x='Key passes per 90', y='Assists per 90',
+    df_filtered_new['Assists per 90']=((df_filtered_new['Assists'] / df_filtered_new['Minutes played']) * 90).round(2)
+    league_avg_row2 = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
+    league_avg_values2 = {
+    'Key passes per 90': league_avg_row2['Key passes per 90'].values[0],
+    'Assists per 90': league_avg_row2['Assists per 90'].values[0],
+    'Interceptions per 90': league_avg_row2['Interceptions per 90'].values[0],
+          }
+
+    # calculate min, max for the quadrants
+    x_min, x_max = df_filtered_new['Key passes per 90'].min(), df_filtered_new['Key passes per 90'].max()
+    y_min, y_max = df_filtered_new['Assists per 90'].min(), df_filtered_new['Assists per 90'].max()
+    y_min_int, y_max_int = df_filtered_new['Interceptions per 90'].min(), df_filtered_new['Interceptions per 90'].max()
+
+    # creating scatter plot
+    fig2 = px.scatter(df_filtered2, x='Key passes per 90',y='Assists per 90',
                      color='Player', title=f'{position} Progression ability')
+    # Adding quadrants
+    fig2.add_shape(
+    go.layout.Shape(
+        type='line',
+        x0=x_min,
+        y0=league_avg_values2['Assists per 90'], 
+        x1=x_max,
+        y1=league_avg_values2['Assists per 90'],
+        line=dict(color='red', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+             )
+             )
+
+    fig2.add_shape(
+    go.layout.Shape(
+        type='line',
+        x0=league_avg_values2['Key passes per 90'], 
+        y0=y_min,
+        x1=league_avg_values2['Key passes per 90'],
+        y1=y_max,
+        line=dict(color='blue', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+              )
+           )
   
     fig2.update_traces(textposition='top center')
     fig2.update_traces(marker=dict(size=8))
+#Create scatter plot
+    fig22 = px.scatter(df_filtered2, x='Key passes per 90',y='Interceptions per 90',
+                     color='Player', title=f'{position} Attack vs Defensive ability')
+    # Add quadrants
+    fig22.add_shape(
+    go.layout.Shape(
+        type='line',
+        x0=x_min,
+        y0=league_avg_values2['Interceptions per 90'], 
+        x1=x_max,
+        y1=league_avg_values2['Interceptions per 90'],
+        line=dict(color='red', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+             )
+             )
 
-    # df_filtered2 = df_filtered.reset_index()
+    fig22.add_shape(
+    go.layout.Shape(
+        type='line',
+        x0=league_avg_values2['Key passes per 90'], 
+        y0=y_min_int,
+        x1=league_avg_values2['Key passes per 90'],
+        y1=y_max_int,
+        line=dict(color='blue', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+              )
+           )
+  
+    fig22.update_traces(textposition='top center')
+    fig22.update_traces(marker=dict(size=8))
+    col1, col2 = st.columns([1, 1])
+    # display visuals 
+    with col1:
+        st.plotly_chart(fig2)
+    with col2:
+        st.plotly_chart(fig22)
     
+    # Calculate Aerial duel won per 90 
 
     df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
 
-    df_filtered3 = df_filtered2.sort_values(by='Aerial duels won per 90', ascending=False)
+ # sort the vlaues by Aerial duel per 90 CM involved.
+    df_filtered3 = df_filtered2.sort_values(by='Aerial duels per 90', ascending=False)
 
     # Melt the dataframe to long format for stacking
     df_melted = df_filtered3.melt(id_vars='Player', value_vars=['Aerial duels per 90', 'Aerial duels won per 90'], var_name='Metric', value_name='Value')
 
     # Create stacked bar chart
-    fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', title=f'{position} Aerial ability (Stacked)')
+    fig3 = px.bar(df_melted, x='Value', y='Player', color='Metric',orientation='h', title=f'{position} Aerial ability (Stacked)')
+    st.plotly_chart(fig3)
     
-
-    col1, col2 = st.columns([1.5, 1])
-    with col1:
-        st.plotly_chart(fig2)
-    with col2:
-        st.plotly_chart(fig3)
     # Input field for user prompt
    
     if not AI21_api_key or not api_token:
