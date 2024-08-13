@@ -842,9 +842,61 @@ elif position == 'CB':
     # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     df_filtered = df_position.loc[players_CB]
 
-   
-    fig = px.scatter(df_filtered.reset_index(), x='Fouls per 90', y=['Interceptions per 90', 'PAdj Interceptions', 'PAdj Sliding tackles'], facet_col='variable',
-                 color='Player',  title='Defensive Clearance against Foul Committed')
+    df_filtered_new=df_position.reset_index()
+    league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
+
+# Extract league average values
+    league_avg_values = {
+    'Successful defensive actions per 90': league_avg_row['Successful defensive actions per 90'].values[0],
+    'Shots blocked per 90': league_avg_row['Shots blocked per 90'].values[0],
+    'PAdj Interceptions': league_avg_row['PAdj Interceptions'].values[0],
+    'PAdj Sliding tackles': league_avg_row['PAdj Sliding tackles'].values[0]
+      }
+# get max value for X and Y to create quadrants
+    x_max = df_filtered_new['Successful defensive actions per 90'].max()
+    y_max_values = {
+    'Shots blocked per 90': df_filtered_new['Shots blocked per 90'].max(),
+    'PAdj Interceptions': df_filtered_new['PAdj Interceptions'].max(),
+    'PAdj Sliding tackles': df_filtered_new['PAdj Sliding tackles'].max()
+           }
+    y_max = max(y_max_values.values())
+
+    df_filtered2=df_filtered.reset_index()
+
+    df_filtered2 = df_filtered2.rename(columns={'Successful defensive actions per 90': 'Successful def. Action/90'})
+    fig = px.scatter(df_filtered2, x='Successful def. Action/90', y=['Shots blocked per 90', 'PAdj Interceptions', 'PAdj Sliding tackles'], facet_col='variable',
+                 color='Player',  title='CM Defensive Actions')
+
+    for i, facet_name in enumerate(['Shots blocked per 90', 'PAdj Interceptions', 'PAdj Sliding tackles']):
+        # Add horizontal line
+        fig.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=0,
+            y0=league_avg_values[facet_name],
+            x1=x_max,
+            y1=league_avg_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='red', width=1, dash='dash')
+              )
+          
+           )
+
+    # Add vertical line
+        fig.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=league_avg_values['Successful defensive actions per 90'],
+            y0=0,
+            x1=league_avg_values['Successful defensive actions per 90'],
+            y1=y_max,
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='blue', width=1, dash='dash')
+             )
+              
+              )
 
     fig.update_traces(textposition='top center')
     fig.update_traces(marker=dict(size=8))
@@ -896,7 +948,7 @@ elif position == 'CB':
     fig2.update_traces(textposition='top center')
     fig2.update_traces(marker=dict(size=8))
 
-    df_filtered2=df_filtered.reset_index()
+    
     
 
     df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
