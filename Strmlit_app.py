@@ -859,7 +859,7 @@ elif position == 'CB':
     'PAdj Interceptions': df_filtered_new['PAdj Interceptions'].max(),
     'PAdj Sliding tackles': df_filtered_new['PAdj Sliding tackles'].max()
            }
-    y_max = max(y_max_values.values())
+    # y_max = max(y_max_values.values())
 
     df_filtered2=df_filtered.reset_index()
 
@@ -892,7 +892,7 @@ elif position == 'CB':
             x0=league_avg_values['Successful defensive actions per 90'],
             y0=0,
             x1=league_avg_values['Successful defensive actions per 90'],
-            y1=y_max,
+            y1=y_max_values,
             xref=f'x{i+1}',
             yref=f'y{i+1}',
             line=dict(color='blue', width=1, dash='dash')
