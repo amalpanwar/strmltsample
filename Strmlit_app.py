@@ -545,7 +545,7 @@ if position == 'CM':
    
     # create Scatter plot
     fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Forward passes per 90','Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
-                                facet_col_spacing=0.2, color='Player',title='Passing threats')
+                                facet_col_spacing=0.08, color='Player',title='Passing threats')
     
     
 
