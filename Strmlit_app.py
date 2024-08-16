@@ -864,8 +864,10 @@ elif position == 'CB':
     df_filtered2=df_filtered.reset_index()
 
     df_filtered2 = df_filtered2.rename(columns={'Successful defensive actions per 90': 'Successful def. Action/90'})
+   
+    
     fig = px.scatter(df_filtered2, x='Successful def. Action/90', y=['Shots blocked per 90', 'PAdj Interceptions', 'PAdj Sliding tackles'], facet_col='variable',
-                 color='Player',  title='CM Defensive Actions')
+                 color='Player',  title='CM Defensive Actions',boxmode="overlay")
 
     for i, facet_name in enumerate(['Shots blocked per 90', 'PAdj Interceptions', 'PAdj Sliding tackles']):
         # Add horizontal line
