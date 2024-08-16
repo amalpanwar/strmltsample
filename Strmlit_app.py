@@ -541,7 +541,7 @@ if position == 'CM':
     'Progressive passes per 90': df_filtered_new['Progressive passes per 90'].max(),
     'Passes to final third per 90': df_filtered_new['Passes to final third per 90'].max()
            }
-    y_max = max(y_max_values.values())
+    # y_max = max(y_max_values.values())
    
     # create Scatter plot
     fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Forward passes per 90','Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
@@ -574,7 +574,7 @@ if position == 'CM':
             x0=league_avg_values['Passes per 90'],
             y0=0,
             x1=league_avg_values['Passes per 90'],
-            y1=y_max,
+            y1=y_max[facet_name],
             xref=f'x{i+1}',
             yref=f'y{i+1}',
             line=dict(color='blue', width=1, dash='dash')
@@ -584,6 +584,8 @@ if position == 'CM':
 
     fig.update_traces(textposition='top center')
     fig.update_traces(marker=dict(size=8))
+    fig.update_yaxes(matches=None)
+    fig.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
     for annotation in fig.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
