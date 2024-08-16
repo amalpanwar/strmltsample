@@ -867,7 +867,7 @@ elif position == 'CB':
    
     
     fig = px.scatter(df_filtered2, x='Successful def. Action/90', y=['Shots blocked per 90', 'PAdj Interceptions', 'PAdj Sliding tackles'], facet_col='variable',
-                 color='Player',  title='CM Defensive Actions',boxmode="overlay")
+                 color='Player',  title='CM Defensive Actions')
 
     for i, facet_name in enumerate(['Shots blocked per 90', 'PAdj Interceptions', 'PAdj Sliding tackles']):
         # Add horizontal line
@@ -902,6 +902,8 @@ elif position == 'CB':
 
     fig.update_traces(textposition='top center')
     fig.update_traces(marker=dict(size=8))
+    fig.update_yaxes(matches=None)
+    fig.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
     for annotation in fig.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
