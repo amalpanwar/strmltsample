@@ -892,7 +892,7 @@ elif position == 'CB':
             x0=league_avg_values['Successful defensive actions per 90'],
             y0=0,
             x1=league_avg_values['Successful defensive actions per 90'],
-            y1=y_max_values,
+            y1=y_max_values[facet_name],
             xref=f'x{i+1}',
             yref=f'y{i+1}',
             line=dict(color='blue', width=1, dash='dash')
