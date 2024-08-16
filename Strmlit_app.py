@@ -545,7 +545,7 @@ if position == 'CM':
    
     # create Scatter plot
     fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Forward passes per 90','Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
-                                color='Player',title='Passing threats')
+                                facet_col_spacing=0.2, color='Player',title='Passing threats')
     
     
 
@@ -867,7 +867,7 @@ elif position == 'CB':
    
     
     fig = px.scatter(df_filtered2, x='Successful def. Action/90', y=['Shots blocked per 90', 'PAdj Interceptions', 'PAdj Sliding tackles'], facet_col='variable',
-                 color='Player',  title='CM Defensive Actions')
+                 facet_col_spacing=0.2, color='Player',  title='CM Defensive Actions')
 
     for i, facet_name in enumerate(['Shots blocked per 90', 'PAdj Interceptions', 'PAdj Sliding tackles']):
         # Add horizontal line
