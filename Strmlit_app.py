@@ -574,7 +574,7 @@ if position == 'CM':
             x0=league_avg_values['Passes per 90'],
             y0=0,
             x1=league_avg_values['Passes per 90'],
-            y1=y_max[facet_name],
+            y1=y_max_values[facet_name],
             xref=f'x{i+1}',
             yref=f'y{i+1}',
             line=dict(color='blue', width=1, dash='dash')
@@ -948,9 +948,45 @@ elif position == 'CB':
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
 
-    fig2 = px.scatter(df_filtered.reset_index(), x='Defensive duels per 90', y='Defensive duels won, %',
+    # league_avg_row2 = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
+    league_avg_values2 = {
+    'Defensive duels per 90': league_avg_row['Defensive duels per 90'].values[0],
+    'Defensive duels won, %': league_avg_row['Defensive duels won, %'].values[0]
+    # 'Interceptions per 90': league_avg_row2['Interceptions per 90'].values[0],
+          }
+    x_min, x_max = df_filtered_new['Defensive duels per 90'].min(), df_filtered_new['Defensive duels per 90'].max()
+    y_min, y_max = df_filtered_new['Defensive duels won, %'].min(), df_filtered_new['Defensive duels won, %'].max()
+    # y_min_int, y_max_int = df_filtered_new['Interceptions per 90'].min(), df_filtered_new['Interceptions per 90'].max()
+
+    fig2 = px.scatter(df_filtered2, x='Defensive duels per 90', y='Defensive duels won, %',
                      color='Player', title=f'{position} Defensive Strength')
   
+    fig2.add_shape(
+    go.layout.Shape(
+        type='line',
+        x0=x_min,
+        y0=league_avg_values2['Defensive duels won, %'], 
+        x1=x_max,
+        y1=league_avg_values2['Defensive duels won, %'],
+        line=dict(color='red', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+             )
+             )
+
+    fig2.add_shape(
+    go.layout.Shape(
+        type='line',
+        x0=league_avg_values2['Defensive duels per 90'], 
+        y0=y_min,
+        x1=league_avg_values2['Defensive duels per 90'],
+        y1=y_max,
+        line=dict(color='blue', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+              )
+           )
+    
     fig2.update_traces(textposition='top center')
     fig2.update_traces(marker=dict(size=8))
 
