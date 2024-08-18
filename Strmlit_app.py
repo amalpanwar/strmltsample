@@ -1251,7 +1251,7 @@ elif position == 'Winger':
     # Create the subplots
     fig_drib = make_subplots(
     rows=1, cols=2, shared_xaxes=True,
-    subplot_titles=['Pressing Ability per 90', 'Successful dribbles, %'],
+    subplot_titles=['Pressing Ability vs Foul suffered', 'Successful dribbles, % vs Foul suffered'],
     specs=[[{"secondary_y": True}, {"secondary_y": True}]]
      )
 
@@ -1323,8 +1323,8 @@ elif position == 'Winger':
     
     fig_drib.update_xaxes(title_text="Fouls suffered per 90")
 
-    fig_drib.update_xaxes(title_text="Pressing Ability per 90 vs Foul suffered", row=1, col=1)
-    fig_drib.update_xaxes(title_text="Successful dribbles, % vs Foul suffered", row=1, col=2)
+    fig_drib.update_yaxes(title_text="Pressing Ability per 90", row=1, col=1)
+    fig_drib.update_yaxes(title_text="Successful dribbles, %", row=1, col=2)
     fig_drib.update_traces(marker=dict(size=8))
 
 # Display the plot in Streamlit
