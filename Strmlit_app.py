@@ -1242,7 +1242,7 @@ elif position == 'Winger':
     
     league_avg_values2 = {
     'Fouls suffered per 90': league_avg_row['Fouls suffered per 90'].values[0],
-    'Pressing Ability per 90': league_avg_row['Pressing Ability per 90'].values[0]
+    'Pressing Ability per 90': league_avg_row['Pressing Ability per 90'].values[0],
     'Successful dribbles, %': league_avg_row['Successful dribbles, %'].values[0],
           }
     x_min, x_max = df_filtered_new['Fouls suffered per 90'].min(), df_filtered_new['Fouls suffered per 90'].max()
@@ -1328,7 +1328,7 @@ elif position == 'Winger':
     fig_drib.update_traces(marker=dict(size=8))
 
 # Display the plot in Streamlit
-    st.plotly_chart(fig)
+    st.plotly_chart(fig_drib)
     
 
     
