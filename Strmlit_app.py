@@ -1130,14 +1130,69 @@ elif position == 'Winger':
     df_filtered2['Shots on Target per 90'] = df_filtered2['Shots per 90'] * (df_filtered2['Shots on target, %'] / 100)
     df_filtered2['Offensive duels won per 90'] = df_filtered2['Offensive duels per 90'] * (df_filtered2['Offensive duels won, %'] / 100)
     df_filtered2['Pressing Ability per 90']= df_filtered2['Offensive duels won per 90'] + df_filtered2['Progressive runs per 90']
+
+    df_filtered_new=df_position.reset_index()
+    df_filtered_new['Shots on Target per 90'] = df_filtered_new['Shots per 90'] * (df_filtered_new['Shots on target, %'] / 100)
+    df_filtered_new['Offensive duels won per 90'] = df_filtered_new['Offensive duels per 90'] * (df_filtered_new['Offensive duels won, %'] / 100)
+    df_filtered_new['Pressing Ability per 90']= df_filtered_new['Offensive duels won per 90'] + df_filtered_new['Progressive runs per 90']
+    league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
+
+# Extract league average values
+    league_avg_values = {
+    'Pressing Ability per 90': league_avg_row['Pressing Ability per 90'].values[0],
+    'Shots on Target per 90': league_avg_row['Shots on Target per 90'].values[0],
+    'Goals per 90': league_avg_row['Goals per 90'].values[0],
+    'Assists per 90': league_avg_row['Assists per 90'].values[0]
+      }
+# get max value for X and Y to create quadrants
+    x_max = df_filtered_new['Pressing Ability per 90'].max()
+    y_max_values = {
+    'Shots on Target per 90': df_filtered_new['Shots on Target per 90'].max(),
+    'Goals per 90': df_filtered_new['Goals per 90'].max(),
+    'Assists per 90': df_filtered_new['Assists per 90'].max()
+           }
     
 
    
     fig = px.scatter(df_filtered2, x='Pressing Ability per 90', y=['Shots on Target per 90','Goals per 90', 'Assists per 90'], facet_col='variable',
                  color='Player', title='Pressing Threats vs Final Action')
 
+    for i, facet_name in enumerate(['Shots on Target per 90','Goals per 90', 'Assists per 90']):
+        # Add horizontal line
+        fig.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=0,
+            y0=league_avg_values[facet_name],
+            x1=x_max,
+            y1=league_avg_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='red', width=1, dash='dash')
+              )
+          
+           )
+
+    # Add vertical line
+        fig.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=league_avg_values['Pressing Ability per 90'],
+            y0=0,
+            x1=league_avg_values['Pressing Ability per 90'],
+            y1=y_max_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='blue', width=1, dash='dash')
+             )
+              
+              )
+
     fig.update_traces(textposition='top center')
     fig.update_traces(marker=dict(size=8))
+    fig.update_yaxes(matches=None)
+    fig.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
+    
     for annotation in fig.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
