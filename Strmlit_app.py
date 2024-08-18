@@ -1317,6 +1317,31 @@ elif position == 'Winger':
                   ),   
                row=1, col=2, secondary_y=False
                    )
+        fig_drib.add_shape(
+            go.layout.Shape(
+        type='line',
+        x0=x_min,
+        y0=league_avg_values2['Successful dribbles, %'], 
+        x1=x_max,
+        y1=league_avg_values2['Successful dribbles, %'],
+        line=dict(color='red', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+             )
+             )
+
+        fig_drib.add_shape(
+            go.layout.Shape(
+        type='line',
+        x0=league_avg_values2['Fouls suffered per 90'], 
+        y0=y_min_drib,
+        x1=league_avg_values2['Fouls suffered per 90'],
+        y1=y_max_drib,
+        line=dict(color='blue', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+              )
+           )
          
            
     
