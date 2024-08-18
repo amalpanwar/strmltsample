@@ -1240,9 +1240,16 @@ elif position == 'Winger':
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
     
-    
+    league_avg_values2 = {
+    'Fouls suffered per 90': league_avg_row['Fouls suffered per 90'].values[0],
+    'Pressing Ability per 90': league_avg_row['Pressing Ability per 90'].values[0]
+    'Successful dribbles, %': league_avg_row['Successful dribbles, %'].values[0],
+          }
+    x_min, x_max = df_filtered_new['Fouls suffered per 90'].min(), df_filtered_new['Fouls suffered per 90'].max()
+    y_min, y_max = df_filtered_new['Pressing Ability per 90'].min(), df_filtered_new['Pressing Ability per 90'].max()
+    y_min_drib, y_max_drib = df_filtered_new['Successful dribbles, %'].min(), df_filtered_new['Successful dribbles, %'].max()
     # Create the subplots
-    fig = make_subplots(
+    fig_drib = make_subplots(
     rows=1, cols=2, shared_xaxes=True,
     subplot_titles=['Pressing Ability per 90', 'Successful dribbles, %'],
     specs=[[{"secondary_y": True}, {"secondary_y": True}]]
@@ -1254,7 +1261,7 @@ elif position == 'Winger':
 # First subplot for Pressing Ability per 90
     for i, player in enumerate(df_filtered2['Player'].unique()):
         player_data = df_filtered2[df_filtered2['Player'] == player]
-        fig.add_trace(
+        fig_drib.add_trace(
             go.Scatter(
             x=player_data['Fouls suffered per 90'],
             y=player_data['Pressing Ability per 90'],
@@ -1267,12 +1274,37 @@ elif position == 'Winger':
                  ),
             row=1, col=1, secondary_y=False
                )
+        fig_drib.add_shape(
+            go.layout.Shape(
+        type='line',
+        x0=x_min,
+        y0=league_avg_values2['Pressing Ability per 90'], 
+        x1=x_max,
+        y1=league_avg_values2['Pressing Ability per 90'],
+        line=dict(color='red', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+             )
+             )
+
+        fig_drib.add_shape(
+            go.layout.Shape(
+        type='line',
+        x0=league_avg_values2['Fouls suffered per 90'], 
+        y0=y_min,
+        x1=league_avg_values2['Fouls suffered per 90'],
+        y1=y_max,
+        line=dict(color='blue', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+              )
+           )
             
 
 # Second subplot for Successful dribbles, %
     for i, player in enumerate(df_filtered2['Player'].unique()):
         player_data = df_filtered2[df_filtered2['Player'] == player]
-        fig.add_trace(
+        fig_drib.add_trace(
            go.Scatter(
                x=player_data['Fouls suffered per 90'],
                y=player_data['Successful dribbles, %'],
@@ -1287,12 +1319,13 @@ elif position == 'Winger':
                    )
          
            
+    
+    
+    fig_drib.update_xaxes(title_text="Fouls suffered per 90")
 
-    fig.update_xaxes(title_text="Fouls suffered per 90")
-
-    fig.update_yaxes(title_text="Pressing Ability per 90", row=1, col=1)
-    fig.update_yaxes(title_text="Successful dribbles, %", row=1, col=2)
-    fig.update_traces(marker=dict(size=8))
+    fig_drib.update_yaxes(title_text="Pressing Ability per 90", row=1, col=1)
+    fig_drib.update_yaxes(title_text="Successful dribbles, %", row=1, col=2)
+    fig_drib.update_traces(marker=dict(size=8))
 
 # Display the plot in Streamlit
     st.plotly_chart(fig)
