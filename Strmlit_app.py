@@ -1327,7 +1327,7 @@ elif position == 'Winger':
         line=dict(color='red', width=1, dash='dash'),
         xref='x',
         yref='y',
-             )
+             ),
             row=1, col=2
              )
 
@@ -1341,7 +1341,7 @@ elif position == 'Winger':
         line=dict(color='blue', width=1, dash='dash'),
         xref='x',
         yref='y',
-              )
+              ),
             row=1, col=2
            )
          
