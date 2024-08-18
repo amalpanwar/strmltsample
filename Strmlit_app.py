@@ -1328,6 +1328,7 @@ elif position == 'Winger':
         xref='x',
         yref='y',
              )
+            row=1, col=2
              )
 
         fig_drib.add_shape(
@@ -1341,6 +1342,7 @@ elif position == 'Winger':
         xref='x',
         yref='y',
               )
+            row=1, col=2
            )
          
            
