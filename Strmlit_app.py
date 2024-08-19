@@ -1499,14 +1499,65 @@ elif position == 'CF':
     df_filtered2['SuccSuccessful dribbles per 90'] = df_filtered2['Dribbles per 90'] * (df_filtered2['Successful dribbles, %'] / 100)
     
     # df_filtered2['Attacking skills']= df_filtered2['SuccSuccessful dribbles per 90'] + df_filtered2['Received passes per 90'] * 100
+    df_filtered_new=df_position.reset_index()
+    league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
+
+# Extract league average values
+    league_avg_values = {
+    'Shots per 90': league_avg_row['Shots per 90'].values[0],
+    'Shots on Target per 90': league_avg_row['Shots on Target per 90'].values[0],
+    'xG per 90': league_avg_row['xG per 90'].values[0],
+    'Goals per 90': league_avg_row['Goals per 90'].values[0]
+      }
+# get max value for X and Y to create quadrants
+    x_max = df_filtered_new['Shots per 90'].max()
+    y_max_values = {
+    'Shots on Target per 90': df_filtered_new['Shots on Target per 90'].max(),
+    'xG per 90': df_filtered_new['xG per 90'].max(),
+    'Goals per 90': df_filtered_new['Goals per 90'].max()
+           }
     
 
    
     fig = px.scatter(df_filtered2, x='Shots per 90', y=['Shots on Target per 90','xG per 90','Goals per 90'], facet_col='variable',
-                 color='Player', title='Threats on Goal')
+                 facet_col_spacing=0.08,color='Player', title='Threats on Goal')
+
+    for i, facet_name in enumerate(['Shots on Target per 90','xG per 90','Goals per 90']):
+        # Add horizontal line
+        fig.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=0,
+            y0=league_avg_values[facet_name],
+            x1=x_max,
+            y1=league_avg_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='red', width=1, dash='dash')
+              )
+          
+           )
+
+    # Add vertical line
+        fig.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=league_avg_values['Shots per 90'],
+            y0=0,
+            x1=league_avg_values['Shots per 90'],
+            y1=y_max_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='blue', width=1, dash='dash')
+             )
+              
+              )
 
     fig.update_traces(textposition='top center')
     fig.update_traces(marker=dict(size=8))
+    fig.update_yaxes(matches=None)
+    fig.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
+
     for annotation in fig.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
