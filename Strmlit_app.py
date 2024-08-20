@@ -1604,15 +1604,15 @@ elif position == 'CF':
         st.dataframe(styled_df, use_container_width=True)
     
 
-    league_avg_values = {
+    league_avg_values2 = {
     'Touches in box per 90': league_avg_row['Touches in box per 90'].values[0],
     'xG per 90': league_avg_row['xG per 90'].values[0],
     'Goals per 90': league_avg_row['Goals per 90'].values[0],
     'Fouls suffered per 90': league_avg_row['Fouls suffered per 90'].values[0],
       }
 # get max value for X and Y to create quadrants
-    x_max = df_filtered_new['Touches in box per 90'].max()
-    y_max_values = {
+    x_max2 = df_filtered_new['Touches in box per 90'].max()
+    y_max_values2 = {
     'xG per 90': df_filtered_new['xG per 90'].max(),
     'Goals per 90': df_filtered_new['Goals per 90'].max(),
     'Fouls suffered per 90': df_filtered_new['Fouls suffered per 90'].max()
@@ -1628,9 +1628,9 @@ elif position == 'CF':
         go.layout.Shape(
             type='line',
             x0=0,
-            y0=league_avg_values[facet_name],
-            x1=x_max,
-            y1=league_avg_values[facet_name],
+            y0=league_avg_values2[facet_name],
+            x1=x_max2,
+            y1=league_avg_values2[facet_name],
             xref=f'x{i+1}',
             yref=f'y{i+1}',
             line=dict(color='red', width=1, dash='dash')
@@ -1642,10 +1642,10 @@ elif position == 'CF':
         fig.add_shape(
         go.layout.Shape(
             type='line',
-            x0=league_avg_values['Touches in box per 90'],
+            x0=league_avg_values2['Touches in box per 90'],
             y0=0,
-            x1=league_avg_values['Touches in box per 90'],
-            y1=y_max_values[facet_name],
+            x1=league_avg_values2['Touches in box per 90'],
+            y1=y_max_values2[facet_name],
             xref=f'x{i+1}',
             yref=f'y{i+1}',
             line=dict(color='blue', width=1, dash='dash')
