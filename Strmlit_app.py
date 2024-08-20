@@ -1604,14 +1604,59 @@ elif position == 'CF':
         st.dataframe(styled_df, use_container_width=True)
     
 
-    
+    league_avg_values = {
+    'Touches in box per 90': league_avg_row['Touches in box per 90'].values[0],
+    'xG per 90': league_avg_row['xG per 90'].values[0],
+    'Goals per 90': league_avg_row['Goals per 90'].values[0],
+    'Fouls suffered per 90': league_avg_row['Fouls suffered per 90'].values[0],
+      }
+# get max value for X and Y to create quadrants
+    x_max = df_filtered_new['Touches in box per 90'].max()
+    y_max_values = {
+    'xG per 90': df_filtered_new['xG per 90'].max(),
+    'Goals per 90': df_filtered_new['Goals per 90'].max(),
+    'Fouls suffered per 90': df_filtered_new['Fouls suffered per 90'].max()
+           }
     
     
     fig2 = px.scatter(df_filtered2, x='Touches in box per 90', y=['xG per 90','Goals per 90','Fouls suffered per 90'],facet_col='variable',
                   color='Player',title=f'{position} Touches in box vs Goal threat vs Foul suffered')
   
-    fig2.update_traces(textposition='top center')
-    fig2.update_traces(marker=dict(size=8))
+    for i, facet_name in enumerate(['xG per 90','Goals per 90','Fouls suffered per 90']):
+        # Add horizontal line
+        fig.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=0,
+            y0=league_avg_values[facet_name],
+            x1=x_max,
+            y1=league_avg_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='red', width=1, dash='dash')
+              )
+          
+           )
+
+    # Add vertical line
+        fig.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=league_avg_values['Touches in box per 90'],
+            y0=0,
+            x1=league_avg_values['Touches in box per 90'],
+            y1=y_max_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='blue', width=1, dash='dash')
+             )
+              
+              )
+
+    fig.update_traces(textposition='top center')
+    fig.update_traces(marker=dict(size=8))
+    fig.update_yaxes(matches=None)
+    fig.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
     for annotation in fig2.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
