@@ -1500,6 +1500,9 @@ elif position == 'CF':
     
     # df_filtered2['Attacking skills']= df_filtered2['SuccSuccessful dribbles per 90'] + df_filtered2['Received passes per 90'] * 100
     df_filtered_new=df_position.reset_index()
+    df_filtered_new['Shots on Target per 90'] = df_filtered_new['Shots per 90'] * (df_filtered_new['Shots on target, %'] / 100)
+    df_filtered_new['SuccSuccessful dribbles per 90'] = df_filtered_new['Dribbles per 90'] * (df_filtered_new['Successful dribbles, %'] / 100)
+    
     league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
 
 # Extract league average values
