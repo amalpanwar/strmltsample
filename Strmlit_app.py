@@ -1505,7 +1505,6 @@ elif position == 'CF':
     
     league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
 
-# Extract league average values
     league_avg_values = {
     'Shots per 90': league_avg_row['Shots per 90'].values[0],
     'Shots on Target per 90': league_avg_row['Shots on Target per 90'].values[0],
