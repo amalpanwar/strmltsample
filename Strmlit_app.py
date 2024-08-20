@@ -1620,7 +1620,7 @@ elif position == 'CF':
     
     
     fig2 = px.scatter(df_filtered2, x='Touches in box per 90', y=['xG per 90','Goals per 90','Fouls suffered per 90'],facet_col='variable',
-                  color='Player',title=f'{position} Touches in box vs Goal threat vs Foul suffered')
+                  facet_col_spacing=0.08,color='Player',title=f'{position} Touches in box vs Goal threat vs Foul suffered')
   
     for i, facet_name in enumerate(['xG per 90','Goals per 90','Fouls suffered per 90']):
         # Add horizontal line
