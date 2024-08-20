@@ -1624,7 +1624,7 @@ elif position == 'CF':
   
     for i, facet_name in enumerate(['xG per 90','Goals per 90','Fouls suffered per 90']):
         # Add horizontal line
-        fig.add_shape(
+        fig2.add_shape(
         go.layout.Shape(
             type='line',
             x0=0,
@@ -1639,7 +1639,7 @@ elif position == 'CF':
            )
 
     # Add vertical line
-        fig.add_shape(
+        fig2.add_shape(
         go.layout.Shape(
             type='line',
             x0=league_avg_values2['Touches in box per 90'],
@@ -1653,10 +1653,10 @@ elif position == 'CF':
               
               )
 
-    fig.update_traces(textposition='top center')
-    fig.update_traces(marker=dict(size=8))
-    fig.update_yaxes(matches=None)
-    fig.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
+    fig2.update_traces(textposition='top center')
+    fig2.update_traces(marker=dict(size=8))
+    fig2.update_yaxes(matches=None)
+    fig2.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
     for annotation in fig2.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
