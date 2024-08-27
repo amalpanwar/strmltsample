@@ -1968,7 +1968,7 @@ elif position == 'GK':
     
     
   
-     fig3.add_shape(
+    fig3.add_shape(
     go.layout.Shape(
         type='line',
         x0=x_min_mp,
