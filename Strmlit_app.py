@@ -1824,7 +1824,7 @@ elif position == 'GK':
 
    
     fig = px.scatter(df_filtered2, x='Shots against per 90', y=['xG against per 90','Conceded goals per 90','Prevented goals per 90'], facet_col='variable',
-                 color='Player', title='GK Stats against Shots')
+                 facet_col_spacing=0.08, color='Player', title='GK Stats against Shots')
 
     for i, facet_name in enumerate(['xG against per 90','Conceded goals per 90','Prevented goals per 90']):
         # Add horizontal line
