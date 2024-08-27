@@ -1912,11 +1912,49 @@ elif position == 'GK':
 
     
     
-    
+    league_avg_values2 = {
+    'Key passes per 90': league_avg_row['Shots against'].values[0],
+    'Assists per 90': league_avg_row['Save rate, %'].values[0],
+    'Matches played': league_avg_row['Matches played'].values[0],
+    'Clean sheets': league_avg_row['Clean sheets'].values[0]
+          }
+
+    # calculate min, max for the quadrants
+    x_min, x_max = df_filtered_new['Shots against'].min(), df_filtered_new['Shots against'].max()
+    y_min, y_max = df_filtered_new['Save rate, %'].min(), df_filtered_new['Save rate, %'].max()
+    x_min_mp, x_max_mp = df_filtered_new['Matches played'].min(), df_filtered_new['Matches played'].max()
+    y_min_cs, y_max_cs = df_filtered_new['Clean sheets'].min(), df_filtered_new['Clean sheets'].max()
+
     fig2 = px.scatter(df_filtered.reset_index(), x='Shots against', y='Save rate, %',
                      color='Player', title=f'{position} Saving Strength')
     
     
+  
+    fig2.add_shape(
+    go.layout.Shape(
+        type='line',
+        x0=x_min,
+        y0=league_avg_values2['Save rate, %'], 
+        x1=x_max,
+        y1=league_avg_values2['Save rate, %'],
+        line=dict(color='red', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+             )
+             )
+
+    fig2.add_shape(
+    go.layout.Shape(
+        type='line',
+        x0=league_avg_values2['Shots against'], 
+        y0=y_min,
+        x1=league_avg_values2['Shots against'],
+        y1=y_max,
+        line=dict(color='blue', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+              )
+           )
   
     fig2.update_traces(textposition='top center')
     fig2.update_traces(marker=dict(size=8))
@@ -1930,6 +1968,31 @@ elif position == 'GK':
     
     
   
+     fig3.add_shape(
+    go.layout.Shape(
+        type='line',
+        x0=x_min_mp,
+        y0=league_avg_values2['Clean sheets'], 
+        x1=x_max_mp,
+        y1=league_avg_values2['Clean sheets'],
+        line=dict(color='red', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+             )
+             )
+
+    fig3.add_shape(
+    go.layout.Shape(
+        type='line',
+        x0=league_avg_values2['Matches played'], 
+        y0=y_min_cs,
+        x1=league_avg_values2['Matches played'],
+        y1=y_max_cs,
+        line=dict(color='blue', width=1, dash='dash'),
+        xref='x',
+        yref='y',
+              )
+           )
     fig3.update_traces(textposition='top center')
     fig3.update_traces(marker=dict(size=8))
     # for annotation in fig3.layout.annotations:
