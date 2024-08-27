@@ -1913,8 +1913,8 @@ elif position == 'GK':
     
     
     league_avg_values2 = {
-    'Key passes per 90': league_avg_row['Shots against'].values[0],
-    'Assists per 90': league_avg_row['Save rate, %'].values[0],
+    'Shots against': league_avg_row['Shots against'].values[0],
+    'Save rate, %': league_avg_row['Save rate, %'].values[0],
     'Matches played': league_avg_row['Matches played'].values[0],
     'Clean sheets': league_avg_row['Clean sheets'].values[0]
           }
