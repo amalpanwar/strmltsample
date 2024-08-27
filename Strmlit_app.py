@@ -1820,6 +1820,7 @@ elif position == 'GK':
     'Conceded goals per 90': df_filtered_new['Conceded goals per 90'].max(),
     'Prevented goals per 90': df_filtered_new['Prevented goals per 90'].max()
            }
+    y_min_prevt= df_filtered_new['Prevented goals per 90'].min()
     
 
    
@@ -1847,7 +1848,7 @@ elif position == 'GK':
         go.layout.Shape(
             type='line',
             x0=league_avg_values['Shots against per 90'],
-            y0=0,
+            y0=y_min_prevt,
             x1=league_avg_values['Shots against per 90'],
             y1=y_max_values[facet_name],
             xref=f'x{i+1}',
