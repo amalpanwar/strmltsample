@@ -1805,7 +1805,7 @@ elif position == 'GK':
      # df_filtered2['Attacking skills']= df_filtered2['SuccSuccessful dribbles per 90'] + df_filtered2['Received passes per 90'] * 100
     df_filtered_new=df_position.reset_index()
     
-    league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
+    league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'L1 & L2 Average']
 
     league_avg_values = {
     'Shots against per 90': league_avg_row['Shots against per 90'].values[0],
