@@ -2190,7 +2190,7 @@ elif position == 'FB':
 
    
     fig = px.scatter(df_filtered2, x='Successful def. Action/90', y=['Defensive duels won per 90', 'Interceptions per 90', 'Aerial duels won per 90'], facet_col='variable',
-                 color='Player',  title='Defensive Action')
+                facet_col_spacing=0.08,  color='Player',  title='Defensive Action')
 
     for i, facet_name in enumerate(['Defensive duels won per 90', 'Interceptions per 90', 'Aerial duels won per 90']):
         # Add horizontal line
@@ -2269,11 +2269,61 @@ elif position == 'FB':
         st.write("Players Info:")
         st.dataframe(styled_df, use_container_width=True)
 
+    league_avg_values = {
+    'Accurate forward passes, %': league_avg_row['Accurate forward passes, %'].values[0],
+    'Accurate long passes, %': league_avg_row['Accurate long passes, %'].values[0],
+    'Accurate passes to final third, %': league_avg_row['Accurate passes to final third, %'].values[0]
+      }
+# get max value for X and Y to create quadrants
+    x_max = df_filtered_new['Accurate forward passes, %'].max()
+    y_max_values = {
+    'Accurate long passes, %': df_filtered_new['Accurate long passes, %'].max(),
+    'Accurate passes to final third, %': df_filtered_new['Accurate passes to final third, %'].max()
+           }
+    # y_min_values = {
+    # 'Defensive duels won per 90': df_filtered_new['Defensive duels won per 90'].min(),
+    # 'Interceptions per 90': df_filtered_new['Interceptions per 90'].min(),
+    # 'Aerial duels won per 90': df_filtered_new['Aerial duels won per 90'].min()
+    #        }
+    
     fig2 = px.scatter(df_filtered2, x='Accurate forward passes, %', y=['Accurate long passes, %', 'Accurate passes to final third, %'], facet_col='variable',
-                 color='Player',  title='FB Passing Skills')
+                 facet_col_spacing=0.08, color='Player',  title='FB Passing Skills')
+
+    for i, facet_name in enumerate(['Accurate long passes, %', 'Accurate passes to final third, %']):
+        # Add horizontal line
+        fig2.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=0,
+            y0=league_avg_values[facet_name],
+            x1=x_max,
+            y1=league_avg_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='red', width=1, dash='dash')
+              )
+          
+           )
+
+    # Add vertical line
+        fig2.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=league_avg_values['Accurate forward passes, %'],
+            y0=0,
+            x1=league_avg_values['Accurate forward passes, %'],
+            y1=y_max_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='blue', width=1, dash='dash')
+             )
+              
+              )
 
     fig2.update_traces(textposition='top center')
     fig2.update_traces(marker=dict(size=8))
+    fig2.update_yaxes(matches=None)
+    fig2.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
     for annotation in fig2.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
