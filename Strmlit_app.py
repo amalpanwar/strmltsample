@@ -2172,16 +2172,21 @@ elif position == 'FB':
     'Interceptions per 90': df_filtered_new['Interceptions per 90'].max(),
     'Aerial duels won per 90': df_filtered_new['Aerial duels won per 90'].max()
            }
+     y_min_values = {
+    'Defensive duels won per 90': df_filtered_new['Defensive duels won per 90'].min(),
+    'Interceptions per 90': df_filtered_new['Interceptions per 90'].min(),
+    'Aerial duels won per 90': df_filtered_new['Aerial duels won per 90'].min()
+           }
     # y_max = max(y_max_values.values())
 
-    df_filtered2=df_filtered.reset_index()
+    # df_filtered2=df_filtered.reset_index()
 
     df_filtered2 = df_filtered2.rename(columns={'Successful defensive actions per 90': 'Successful def. Action/90'})
    
 
     df_filtered2['Defensive duels won per 90'] = df_filtered2['Defensive duels per 90'] * (df_filtered2['Defensive duels won, %'] / 100)
     df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
-    df_filtered2 = df_filtered2.rename(columns={'Successful defensive actions per 90': 'Successful def. Action/90'})
+    # df_filtered2 = df_filtered2.rename(columns={'Successful defensive actions per 90': 'Successful def. Action/90'})
 
    
     fig = px.scatter(df_filtered2, x='Successful def. Action/90', y=['Defensive duels won per 90', 'Interceptions per 90', 'Aerial duels won per 90'], facet_col='variable',
@@ -2208,7 +2213,7 @@ elif position == 'FB':
         go.layout.Shape(
             type='line',
             x0=league_avg_values['Successful defensive actions per 90'],
-            y0=0,
+            y0=y_min_values[facet_name],
             x1=league_avg_values['Successful defensive actions per 90'],
             y1=y_max_values[facet_name],
             xref=f'x{i+1}',
