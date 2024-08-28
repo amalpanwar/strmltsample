@@ -2280,11 +2280,10 @@ elif position == 'FB':
     'Accurate long passes, %': df_filtered_new['Accurate long passes, %'].max(),
     'Accurate passes to final third, %': df_filtered_new['Accurate passes to final third, %'].max()
            }
-    # y_min_values = {
-    # 'Defensive duels won per 90': df_filtered_new['Defensive duels won per 90'].min(),
-    # 'Interceptions per 90': df_filtered_new['Interceptions per 90'].min(),
-    # 'Aerial duels won per 90': df_filtered_new['Aerial duels won per 90'].min()
-    #        }
+    y_min_values = {
+    'Accurate long passes, %': df_filtered_new['Accurate long passes, %'].min(),
+    'Accurate passes to final third, %': df_filtered_new['Accurate passes to final third, %'].min()
+           }
     
     fig2 = px.scatter(df_filtered2, x='Accurate forward passes, %', y=['Accurate long passes, %', 'Accurate passes to final third, %'], facet_col='variable',
                  facet_col_spacing=0.08, color='Player',  title='FB Passing Skills')
@@ -2310,7 +2309,7 @@ elif position == 'FB':
         go.layout.Shape(
             type='line',
             x0=league_avg_values['Accurate forward passes, %'],
-            y0=0,
+            y0=y_min_values[facet_name],
             x1=league_avg_values['Accurate forward passes, %'],
             y1=y_max_values[facet_name],
             xref=f'x{i+1}',
