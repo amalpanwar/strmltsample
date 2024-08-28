@@ -2172,7 +2172,7 @@ elif position == 'FB':
     'Interceptions per 90': df_filtered_new['Interceptions per 90'].max(),
     'Aerial duels won per 90': df_filtered_new['Aerial duels won per 90'].max()
            }
-     y_min_values = {
+    y_min_values = {
     'Defensive duels won per 90': df_filtered_new['Defensive duels won per 90'].min(),
     'Interceptions per 90': df_filtered_new['Interceptions per 90'].min(),
     'Aerial duels won per 90': df_filtered_new['Aerial duels won per 90'].min()
