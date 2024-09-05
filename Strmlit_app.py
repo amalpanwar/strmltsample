@@ -307,41 +307,148 @@ st.markdown(
 #     # cursor.connect("add", hover_annotation)
 #     return fig
 # @st.cache_data
+# def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
+#     df_selected = df.loc[players]
+#     categories = df_selected.columns.tolist()
+#     data = df_selected.to_dict(orient='list')
+#     ids = df_selected.index.tolist()
+    
+#     if max_values is None:
+#         max_values = {key: padding * max(value) for key, value in data.items()}
+#     else:
+#         for key, max_val in max_values.items():
+#             if max_val == 0 or np.isnan(max_val):
+#                 max_values[key] = padding * max(data[key])
+                
+#     normalized_data = {}
+#     for key, value in data.items():
+#         if max_values[key] != 0:
+#             normalized_data[key] = np.array(value) / max_values[key]
+#         else:
+#             normalized_data[key] = np.zeros(len(value))
+
+#     # global_min = min(min(value) for value in data.values())
+#     # global_max = max(max(value) for value in data.values())
+
+#     # # Ensure the global_max is larger than global_min to avoid division by zero
+#     # if global_max == global_min:
+#     #     global_max += 1e-9  # Small number to avoid zero division
+    
+#     # # Normalize the data using global min-max normalization
+#     # normalized_data = {}
+#     # for key, value in data.items():
+#     #     # Apply global min-max normalization
+#     #     normalized_data[key] = (np.array(value) - global_min) / (global_max - global_min)
+#     fig = go.Figure()
+
+#     # color_map = {player: f'rgba({np.random.randint(256)},{np.random.randint(256)},{np.random.randint(256)})' for player in ids}
+
+#     for i, model_name in enumerate(ids):
+#         values = [normalized_data[key][i] for key in data.keys()]
+#         values += values[:1]  # Complete the circle
+
+#         hovertext = [f"{categories[j]}: {data[c][i]:.2f}" for j, c in enumerate(categories)]
+#         hovertext += [hovertext[0]]  # Complete the circle for hovertext
+
+#         fig.add_trace(go.Scatterpolar(
+#             r=values,
+#             theta=categories + [categories[0]],
+#             fill='toself',
+#             name=model_name,
+#             hoverinfo='text',
+#             hovertext=hovertext
+#             # line=dict(
+#             #     color=color_map[model_name],
+#             #     width=1
+#             # ),
+#             # showlegend=True
+#         ))
+
+
+#     fig.update_traces(
+#         hoverlabel=dict(
+#             bgcolor='white',  # Background color of the hover label
+#             font=dict(
+#                 color='black'  # Text color of the hover label
+#             )
+#         )
+#     )
+    
+#     fig.update_layout(
+#         polar=dict(
+#             radialaxis=dict(
+#                 visible=True,
+#                 range=[0, 1],
+#                 # tickvals=[0, 0.5, 1],
+#                 # ticktext=['0', '0.5', '1'],
+#                 showticklabels=False,
+#                 ticks="",
+#                 showline=True,
+#                 showgrid=True,
+#                 gridcolor='gray',
+#                 gridwidth=1,
+#             ),
+#             angularaxis=dict(
+#                 tickvals=list(range(len(categories))),
+#                 ticktext=categories + [categories[0]],
+#                 rotation=0,
+#                 direction="clockwise",
+#                 showticklabels=True,
+#                 ticks="",
+#                 showline=True,
+#                 showgrid=True,
+#                 gridcolor='gray',
+#                 gridwidth=1,
+                
+#                 tickfont=dict(size=8, color='white'),
+#             ),
+#         ),
+#         title=dict(
+#             text=title,
+#             font=dict(size=12)
+#         ),
+#         width=1000,  # Increased width for better clarity
+#         height=300,  # Increased height for better clarity
+#         margin=dict(l=100, r=125, t=18, b=0),  # Increased bottom margin to accommodate the legend
+#         paper_bgcolor='black',  # Background color
+#         plot_bgcolor='white',    # Plot area background color
+#         legend=dict(
+#             orientation="v",  # Horizontal orientation
+#             yanchor="top",    # Position the legend above the plot area
+#             y=-0.1,           # Vertical position (below the plot area)
+#             xanchor="right", # Center the legend horizontally
+#             x=0.5,            # Horizontal position (centered)
+#             bgcolor='white', # Transparent background
+#             bordercolor='white',
+#             borderwidth=1,
+#             font=dict(size=10, color='black')
+#         )
+        
+#     )
+
+#     return fig
 def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
+    # Select data for the chosen players
     df_selected = df.loc[players]
     categories = df_selected.columns.tolist()
     data = df_selected.to_dict(orient='list')
     ids = df_selected.index.tolist()
-    
+
+    # Define max values for normalization
     if max_values is None:
-        max_values = {key: padding * max(value) for key, value in data.items()}
+        max_values = {key: padding * max(np.abs(value)) for key, value in data.items()}  # Use absolute max for both positive and negative values
     else:
         for key, max_val in max_values.items():
             if max_val == 0 or np.isnan(max_val):
-                max_values[key] = padding * max(data[key])
-                
+                max_values[key] = padding * max(np.abs(data[key]))  # Ensure to account for negative values too
+
+    # Normalize data to range [-1, 1] for negative and positive values
     normalized_data = {}
     for key, value in data.items():
-        if max_values[key] != 0:
-            normalized_data[key] = np.array(value) / max_values[key]
-        else:
-            normalized_data[key] = np.zeros(len(value))
+        normalized_data[key] = np.array(value) / max_values[key]  # This will normalize negative values to the range [-1, 0] and positive values to [0, 1]
 
-    # global_min = min(min(value) for value in data.values())
-    # global_max = max(max(value) for value in data.values())
-
-    # # Ensure the global_max is larger than global_min to avoid division by zero
-    # if global_max == global_min:
-    #     global_max += 1e-9  # Small number to avoid zero division
-    
-    # # Normalize the data using global min-max normalization
-    # normalized_data = {}
-    # for key, value in data.items():
-    #     # Apply global min-max normalization
-    #     normalized_data[key] = (np.array(value) - global_min) / (global_max - global_min)
+    # Create radar chart using Plotly
     fig = go.Figure()
-
-    # color_map = {player: f'rgba({np.random.randint(256)},{np.random.randint(256)},{np.random.randint(256)})' for player in ids}
 
     for i, model_name in enumerate(ids):
         values = [normalized_data[key][i] for key in data.keys()]
@@ -357,14 +464,9 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             name=model_name,
             hoverinfo='text',
             hovertext=hovertext
-            # line=dict(
-            #     color=color_map[model_name],
-            #     width=1
-            # ),
-            # showlegend=True
         ))
 
-
+    # Customize layout with range [-1, 1] for the radial axis
     fig.update_traces(
         hoverlabel=dict(
             bgcolor='white',  # Background color of the hover label
@@ -378,11 +480,10 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         polar=dict(
             radialaxis=dict(
                 visible=True,
-                range=[0, 1],
-                # tickvals=[0, 0.5, 1],
-                # ticktext=['0', '0.5', '1'],
-                showticklabels=False,
-                ticks="",
+                range=[-1, 1],  # Adjust the radial axis range to [-1, 1]
+                showticklabels=True,
+                tickvals=[-1, -0.5, 0, 0.5, 1],  # Add ticks for negative values
+                ticktext=['-1', '-0.5', '0', '0.5', '1'],
                 showline=True,
                 showgrid=True,
                 gridcolor='gray',
@@ -394,12 +495,10 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 rotation=0,
                 direction="clockwise",
                 showticklabels=True,
-                ticks="",
                 showline=True,
                 showgrid=True,
                 gridcolor='gray',
                 gridwidth=1,
-                
                 tickfont=dict(size=8, color='white'),
             ),
         ),
@@ -409,21 +508,20 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         ),
         width=1000,  # Increased width for better clarity
         height=300,  # Increased height for better clarity
-        margin=dict(l=100, r=125, t=18, b=0),  # Increased bottom margin to accommodate the legend
+        margin=dict(l=100, r=125, t=18, b=0),
         paper_bgcolor='black',  # Background color
-        plot_bgcolor='white',    # Plot area background color
+        plot_bgcolor='white',   # Plot area background color
         legend=dict(
             orientation="v",  # Horizontal orientation
-            yanchor="top",    # Position the legend above the plot area
-            y=-0.1,           # Vertical position (below the plot area)
-            xanchor="right", # Center the legend horizontally
-            x=0.5,            # Horizontal position (centered)
-            bgcolor='white', # Transparent background
+            yanchor="top",
+            y=-0.1, 
+            xanchor="right",
+            x=0.5,
+            bgcolor='white',
             bordercolor='white',
             borderwidth=1,
             font=dict(size=10, color='black')
         )
-        
     )
 
     return fig
