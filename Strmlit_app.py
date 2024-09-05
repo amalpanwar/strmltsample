@@ -320,7 +320,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             if max_val == 0 or np.isnan(max_val):
                 max_values[key] = padding * max(data[key])
                 
-    # normalized_data = {}
+    normalized_data = {}
     # for key, value in data.items():
     #     if max_values[key] != 0:
     #         normalized_data[key] = np.array(value) / max_values[key]
