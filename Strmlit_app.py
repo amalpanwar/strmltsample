@@ -313,29 +313,32 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     data = df_selected.to_dict(orient='list')
     ids = df_selected.index.tolist()
     
-    if max_values is None:
-        max_values = {key: padding * max(value) for key, value in data.items()}
-    else:
-        for key, max_val in max_values.items():
-            if max_val == 0 or np.isnan(max_val):
-                max_values[key] = padding * max(data[key])
+    # if max_values is None:
+    #     max_values = {key: padding * max(value) for key, value in data.items()}
+    # else:
+    #     for key, max_val in max_values.items():
+    #         if max_val == 0 or np.isnan(max_val):
+    #             max_values[key] = padding * max(data[key])
                 
-    normalized_data = {}
+    # normalized_data = {}
     # for key, value in data.items():
     #     if max_values[key] != 0:
     #         normalized_data[key] = np.array(value) / max_values[key]
     #     else:
     #         normalized_data[key] = np.zeros(len(value))
 
+    global_min = min(min(value) for value in data.values())
+    global_max = max(max(value) for value in data.values())
+
+    # Ensure the global_max is larger than global_min to avoid division by zero
+    if global_max == global_min:
+        global_max += 1e-9  # Small number to avoid zero division
+    
+    # Normalize the data using global min-max normalization
+    normalized_data = {}
     for key, value in data.items():
-        min_val = min(value)
-        max_val = max(value)
-        if max_val - min_val != 0:
-            # Apply min-max normalization
-            normalized_data[key] = (np.array(value) - min_val) / (max_val - min_val)
-        else:
-            # Handle case where max_val equals min_val (all values are the same)
-            normalized_data[key] = np.zeros(len(value))
+        # Apply global min-max normalization
+        normalized_data[key] = (np.array(value) - global_min) / (global_max - global_min)
     fig = go.Figure()
 
     # color_map = {player: f'rgba({np.random.randint(256)},{np.random.randint(256)},{np.random.randint(256)})' for player in ids}
