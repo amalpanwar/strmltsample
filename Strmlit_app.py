@@ -434,7 +434,10 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     data = df_selected.to_dict(orient='list')
     ids = df_selected.index.tolist()
 
-    # Define max values for normalization
+    # Determine if there are any negative values
+    has_negative_values = any(min(value) < 0 for value in data.values())
+
+    # Define max values for normalization (handling both positive and negative values)
     if max_values is None:
         max_values = {key: padding * max(np.abs(value)) for key, value in data.items()}  # Use absolute max for both positive and negative values
     else:
@@ -442,10 +445,10 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             if max_val == 0 or np.isnan(max_val):
                 max_values[key] = padding * max(np.abs(data[key]))  # Ensure to account for negative values too
 
-    # Normalize data to range [-1, 1] for negative and positive values
+    # Normalize data based on max_values
     normalized_data = {}
     for key, value in data.items():
-        normalized_data[key] = np.array(value) / max_values[key]  # This will normalize negative values to the range [-1, 0] and positive values to [0, 1]
+        normalized_data[key] = np.array(value) / max_values[key]  # Normalize all values
 
     # Create radar chart using Plotly
     fig = go.Figure()
@@ -466,7 +469,10 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             hovertext=hovertext
         ))
 
-    # Customize layout with range [-1, 1] for the radial axis
+    # Determine the radial axis range dynamically
+    radial_range = [-1, 1] if has_negative_values else [0, 1]
+
+    # Customize layout with dynamic radial axis range
     fig.update_traces(
         hoverlabel=dict(
             bgcolor='white',  # Background color of the hover label
@@ -480,10 +486,10 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         polar=dict(
             radialaxis=dict(
                 visible=True,
-                range=[-1, 1],  # Adjust the radial axis range to [-1, 1]
+                range=radial_range,  # Dynamic range: [-1, 1] for negative values, [0, 1] otherwise
                 showticklabels=True,
-                tickvals=[-1, -0.5, 0, 0.5, 1],  # Add ticks for negative values
-                # ticktext=['-1', '-0.5', '0', '0.5', '1'],
+                tickvals=[-1, -0.5, 0, 0.5, 1] if has_negative_values else [0, 0.5, 1],  # Adjust ticks based on the range
+                ticktext=['-1', '-0.5', '0', '0.5', '1'] if has_negative_values else ['0', '0.5', '1'],
                 showline=True,
                 showgrid=True,
                 gridcolor='gray',
