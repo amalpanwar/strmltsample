@@ -490,7 +490,8 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 showticklabels=False,
                 # tickvals=[-1, -0.5, 0, 0.5, 1] if has_negative_values else [0, 0.5, 1],  # Adjust ticks based on the range
                 # ticktext=['-1', '-0.5', '0', '0.5', '1'] if has_negative_values else ['0', '0.5', '1'],
-                showline=True,
+                showline=False,
+                ticks="",
                 showgrid=True,
                 gridcolor='gray',
                 gridwidth=1,
