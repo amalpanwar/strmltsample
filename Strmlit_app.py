@@ -320,13 +320,26 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             if max_val == 0 or np.isnan(max_val):
                 max_values[key] = padding * max(data[key])
                 
+    # normalized_data = {}
+    # for key, value in data.items():
+    #     if max_values[key] != 0:
+    #         normalized_data[key] = np.array(value) / max_values[key]
+    #     else:
+    #         normalized_data[key] = np.zeros(len(value))
+
+    min_value = min(min(value) for value in data.values())
+    if min_value < 0:
+        shift_value = abs(min_value)
+        for key, value in data.items():
+            data[key] = [v + shift_value for v in value]
+
+# Now normalize the shifted data
     normalized_data = {}
     for key, value in data.items():
         if max_values[key] != 0:
             normalized_data[key] = np.array(value) / max_values[key]
         else:
-            normalized_data[key] = np.zeros(len(value))
-    
+            normalized_data[key] = np.zeros(len(value)) 
     fig = go.Figure()
 
     # color_map = {player: f'rgba({np.random.randint(256)},{np.random.randint(256)},{np.random.randint(256)})' for player in ids}
@@ -366,7 +379,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         polar=dict(
             radialaxis=dict(
                 visible=True,
-                range=[-1, 1],
+                range=[0, 1],
                 # tickvals=[0, 0.5, 1],
                 # ticktext=['0', '0.5', '1'],
                 showticklabels=False,
