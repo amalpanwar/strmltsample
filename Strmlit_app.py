@@ -483,7 +483,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 range=[-1, 1],  # Adjust the radial axis range to [-1, 1]
                 showticklabels=True,
                 tickvals=[-1, -0.5, 0, 0.5, 1],  # Add ticks for negative values
-                ticktext=['-1', '-0.5', '0', '0.5', '1'],
+                # ticktext=['-1', '-0.5', '0', '0.5', '1'],
                 showline=True,
                 showgrid=True,
                 gridcolor='gray',
