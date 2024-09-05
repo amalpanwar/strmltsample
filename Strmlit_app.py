@@ -327,19 +327,15 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     #     else:
     #         normalized_data[key] = np.zeros(len(value))
 
-    min_value = min(min(value) for value in data.values())
-    if min_value < 0:
-        shift_value = abs(min_value)
-        for key, value in data.items():
-            data[key] = [v + shift_value for v in value]
-
-# Now normalize the shifted data
-    normalized_data = {}
     for key, value in data.items():
-        if max_values[key] != 0:
-            normalized_data[key] = np.array(value) / max_values[key]
+        min_val = min(value)
+        max_val = max(value)
+        if max_val - min_val != 0:
+            # Apply min-max normalization
+            normalized_data[key] = (np.array(value) - min_val) / (max_val - min_val)
         else:
-            normalized_data[key] = np.zeros(len(value)) 
+            # Handle case where max_val equals min_val (all values are the same)
+            normalized_data[key] = np.zeros(len(value))
     fig = go.Figure()
 
     # color_map = {player: f'rgba({np.random.randint(256)},{np.random.randint(256)},{np.random.randint(256)})' for player in ids}
