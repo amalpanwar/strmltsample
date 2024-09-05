@@ -366,7 +366,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         polar=dict(
             radialaxis=dict(
                 visible=True,
-                range=[0, 1],
+                range=[-1, 1],
                 # tickvals=[0, 0.5, 1],
                 # ticktext=['0', '0.5', '1'],
                 showticklabels=False,
