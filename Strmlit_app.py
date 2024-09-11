@@ -506,7 +506,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 showgrid=True,
                 gridcolor='gray',
                 gridwidth=1,
-                tickfont=dict(size=8, color='white'),
+                tickfont=dict(size=10, color='white'),
             ),
         ),
         title=dict(
@@ -712,7 +712,7 @@ if position == 'CM':
     df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'Contract Expiry \n(Trnsfmkt)','CM zscore','Player Rank','Age','Team', 'Matches played', 'Minutes played'])
 
     # Rdar chart
-    radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+    radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for {position} (Default: League Average)')
     st.plotly_chart(radar_fig)
     # Creating Player info table
     columns_to_display = ['Player','Team','CM Score(0-100)', 'Player Rank','Age', 'Matches played', 'Minutes played' ]
