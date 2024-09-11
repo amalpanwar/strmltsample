@@ -71,24 +71,40 @@ pvt_df_CF = pd.DataFrame(df_CF).set_index('Player')
 pvt_df_GK = pd.DataFrame(df_GK).set_index('Player')
 pvt_df_FB = pd.DataFrame(df_FB).set_index('Player')
 
-def get_base64(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
+def get_base64_image(image_path):
+    with open(image_path, "rb") as file:
+        image_bytes = file.read()
+        base64_image = base64.b64encode(image_bytes).decode()
+    return base64_image
 
+# Get base64 version of your image
+image_base64 = get_base64_image("image/Scotinage.jpg")
 
-# Set the background image
-# Set the background image
-background_image = """
+# Add the base64 image to the background using CSS
+background_image = f"""
 <style>
-[data-testid="stAppViewContainer"] > .main {
-    background-image: url("image/Scotinage.jpg");
-    background-size: 100vw 100vh;  # This sets the size to cover 100% of the viewport width and height
-    background-position: center;  
+[data-testid="stAppViewContainer"] {{
+    background-image: url("data:image/jpeg;base64,{image_base64}");
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
-}
+}}
 </style>
 """
+
+
+# Set the background image
+# Set the background image
+# background_image = """
+# <style>
+# [data-testid="stAppViewContainer"] > .main {
+#     background-image: url("image/Scotinage.jpg");
+#     background-size: 100vw 100vh;  # This sets the size to cover 100% of the viewport width and height
+#     background-position: center;  
+#     background-repeat: no-repeat;
+# }
+# </style>
+# """
 
 st.markdown(background_image, unsafe_allow_html=True)
 
