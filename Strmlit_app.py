@@ -520,10 +520,10 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         plot_bgcolor='white',   # Plot area background color
         legend=dict(
             orientation="v",  # Horizontal orientation
-            yanchor="top",
+            yanchor="bottom",
             y=-0.1, 
             xanchor="right",
-            x=0.5,
+            x=0.1,
             bgcolor='white',
             bordercolor='white',
             borderwidth=1,
