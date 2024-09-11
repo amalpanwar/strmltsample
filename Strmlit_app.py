@@ -36,6 +36,7 @@ import networkx as nx
 #import pandas as pd
 import json
 import bs4
+import base64
 #from langchain_community.document_loaders.unstructured import UnstructuredFileLoader
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
