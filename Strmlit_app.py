@@ -515,7 +515,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
         ),
         width=1000,  # Increased width for better clarity
         height=300,  # Increased height for better clarity
-        margin=dict(l=100, r=125, t=20, b=10),
+        margin=dict(l=100, r=125, t=20, b=20),
         paper_bgcolor='black',  # Background color
         plot_bgcolor='white',   # Plot area background color
         legend=dict(
@@ -523,7 +523,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
             yanchor="bottom",
             y=-0.1, 
             xanchor="right",
-            x=0.1,
+            x=0.08,
             bgcolor='white',
             bordercolor='white',
             borderwidth=1,
