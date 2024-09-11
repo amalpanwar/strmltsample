@@ -78,10 +78,11 @@ def get_base64(bin_file):
 
 
 # Set the background image
+# Set the background image
 background_image = """
 <style>
 [data-testid="stAppViewContainer"] > .main {
-    background-image: url("./image/Scotinage.jpg");
+    background-image: url("https://images.unsplash.com/photo-1542281286-9e0a16bb7366");
     background-size: 100vw 100vh;  # This sets the size to cover 100% of the viewport width and height
     background-position: center;  
     background-repeat: no-repeat;
@@ -90,6 +91,7 @@ background_image = """
 """
 
 st.markdown(background_image, unsafe_allow_html=True)
+
 # Pivot the dataframe
 # pivot_df = df.pivot(index='Player', columns='Attribute', values='Value')
 
