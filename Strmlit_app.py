@@ -89,7 +89,7 @@ def set_background(png_file):
     ''' % bin_str
     st.markdown(page_bg_img, unsafe_allow_html=True)
 
-set_background('./images/background.png')
+set_background('./image/Scotinage.jpg')
 
 # Pivot the dataframe
 # pivot_df = df.pivot(index='Player', columns='Attribute', values='Value')
