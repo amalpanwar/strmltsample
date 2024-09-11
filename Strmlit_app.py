@@ -709,11 +709,11 @@ if position == 'CM':
     st.plotly_chart(fig)
     
    # Dropping unnecessary column not require for radar chart
-    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'CM zscore','Player Rank','Age','Team', 'Matches played', 'Minutes played'])
+    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'Contract Expiry (Trnsfmkt)','CM zscore','Player Rank','Age','Team', 'Matches played', 'Minutes played'])
 
     # Rdar chart
     radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-
+    st.plotly_chart(radar_fig)
     # Creating Player info table
     columns_to_display = ['Player','Team','CM Score(0-100)', 'Player Rank','Age', 'Matches played', 'Minutes played' ]
     df_filtered_display=df_filtered.reset_index()
@@ -734,15 +734,17 @@ if position == 'CM':
           ).hide(axis="index")
 
     styled_df = style_dataframe(df_filtered_display)
+    st.write("Players Info:")
+    st.dataframe(styled_df, use_container_width=True)
 
 # Display styled DataFrame in Streamlit
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.plotly_chart(radar_fig)
-    with col2:
-        st.write("Players Info:")
-        st.dataframe(styled_df, use_container_width=True)
+    # col1, col2 = st.columns(2)
+    # with col1:
+    #     st.plotly_chart(radar_fig)
+    # with col2:
+    #     st.write("Players Info:")
+    #     st.dataframe(styled_df, use_container_width=True)
         
    # Calculating Assit per 90 for slected player and for league average 
     df_filtered2 = df_filtered.reset_index()
