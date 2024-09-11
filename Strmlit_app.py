@@ -709,7 +709,7 @@ if position == 'CM':
     st.plotly_chart(fig)
     
    # Dropping unnecessary column not require for radar chart
-    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'Contract Expiry (Trnsfmkt)','CM zscore','Player Rank','Age','Team', 'Matches played', 'Minutes played'])
+    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'Contract Expiry \n(Trnsfmkt)','CM zscore','Player Rank','Age','Team', 'Matches played', 'Minutes played'])
 
     # Rdar chart
     radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
