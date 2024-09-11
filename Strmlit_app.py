@@ -506,7 +506,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
                 showgrid=True,
                 gridcolor='gray',
                 gridwidth=1,
-                tickfont=dict(size=10, color='white'),
+                tickfont=dict(size=9.5, color='white'),
             ),
         ),
         title=dict(
