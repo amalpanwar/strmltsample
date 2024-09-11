@@ -82,7 +82,7 @@ def get_base64(bin_file):
 background_image = """
 <style>
 [data-testid="stAppViewContainer"] > .main {
-    background-image: url("image/Scotinage.jpg");
+    background-image: "image/Scotinage.jpg";
     background-size: 100vw 100vh;  # This sets the size to cover 100% of the viewport width and height
     background-position: center;  
     background-repeat: no-repeat;
