@@ -79,7 +79,7 @@ def get_base64_image(image_path):
     return base64_image
 
 # Get base64 version of your image
-image_base64 = get_base64_image("image/Scotinage.jpg")
+image_base64 = get_base64_image("image/Footballimg.jpg")
 
 # Add the base64 image to the background using CSS
 background_image = f"""
@@ -779,27 +779,27 @@ if position == 'CM':
     radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for {position} (Default: League Average)')
     st.plotly_chart(radar_fig)
     # Creating Player info table
-    columns_to_display = ['Player','Team','CM Score(0-100)', 'Player Rank','Age', 'Matches played', 'Minutes played' ]
-    df_filtered_display=df_filtered.reset_index()
-    df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
-      'CM Score(0-100)': 'Rating (0-100)',
-      'Matches played': 'Matches played (2023/24)'
-         })
-    df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
+#     columns_to_display = ['Player','Team','CM Score(0-100)', 'Player Rank','Age', 'Matches played', 'Minutes played' ]
+#     df_filtered_display=df_filtered.reset_index()
+#     df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
+#       'CM Score(0-100)': 'Rating (0-100)',
+#       'Matches played': 'Matches played (2023/24)'
+#          })
+#     df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
 
-# Style the DataFrame
-    def style_dataframe(df):
-        return df.style.set_table_styles(
-        [
-            {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
-            {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-            {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-        ]
-          ).hide(axis="index")
+# # Style the DataFrame
+#     def style_dataframe(df):
+#         return df.style.set_table_styles(
+#         [
+#             {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
+#             {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
+#             {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
+#         ]
+#           ).hide(axis="index")
 
-    styled_df = style_dataframe(df_filtered_display)
-    st.write("Players Info:")
-    st.dataframe(styled_df, use_container_width=True)
+#     styled_df = style_dataframe(df_filtered_display)
+#     st.write("Players Info:")
+#     st.dataframe(styled_df, use_container_width=True)
 
     st.write("Player Ratings Gauge Chart")
     df_filtered_guage=df_filtered.reset_index()
