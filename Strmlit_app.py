@@ -583,6 +583,7 @@ def create_gauge_chart(player_name, rating, rank, age, team, matches_played, min
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=rating,
+        number={'valueformat': '.2f'},
         title={'text': title_text, 'font': {'size': 16}},  # Reduce the font size
         gauge={
             'axis': {'range': [0, 100]},
