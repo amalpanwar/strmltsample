@@ -571,6 +571,18 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
 
     return fig
 
+def create_gauge_chart(player_name, rating, rank):
+    fig = go.Figure(go.Indicator(
+        mode="gauge+number",
+        value=rating,
+        title={'text': f"{player_name} (Rank: {rank})"},
+        gauge={
+            'axis': {'range': [0, 100]},
+            'bar': {'color': "green"},
+        }
+    ))
+    fig.update_layout(height=250, width=250, margin=dict(t=0, b=0, l=0, r=0))
+    return fig
 # def create_pizza_plot(df, players, categories, title, padding=1.25):
 #     N = len(categories)
 #     angles = np.linspace(0, 2 * pi, N, endpoint=False).tolist()
@@ -774,6 +786,19 @@ if position == 'CM':
     styled_df = style_dataframe(df_filtered_display)
     st.write("Players Info:")
     st.dataframe(styled_df, use_container_width=True)
+
+    st.write("Player Ratings Gauge Chart")
+    players = df_filtered_display['Player'].tolist()
+    ratings = df_filtered_display['Rating (0-100)'].tolist()
+    ranks = df_filtered_display['Player Rank'].tolist()
+
+    for i in range(0, len(players), 3):  # 3 charts per row
+        cols = st.columns(3)
+        for j in range(3):
+            if i + j < len(players):
+                with cols[j]:
+                    fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j])
+                     st.plotly_chart(fig)
 
 # Display styled DataFrame in Streamlit
 
