@@ -79,7 +79,7 @@ def get_base64_image(image_path):
     return base64_image
 
 # Get base64 version of your image
-image_base64 = get_base64_image("image/soocerPlayer.jpg")
+image_base64 = get_base64_image("image/soccerplayer5.webp")
 
 # Add the base64 image to the background using CSS
 background_image = f"""
