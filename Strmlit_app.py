@@ -571,17 +571,30 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
 
     return fig
 
-def create_gauge_chart(player_name, rating, rank):
+def create_gauge_chart(player_name, rating, rank, age, team, matches_played, minutes_played):
+    # Format the title text with HTML to include additional information
+    title_text = f"""
+    <span style="font-size:16px"><b>{player_name}</b></span><br>
+    <span style="font-size:12px">Rank: {rank}</span><br>
+    <span style="font-size:10px">Team: {team}</span><br>
+    <span style="font-size:10px">Age: {age} | Matches: {matches_played} | Minutes: {minutes_played}</span>
+    """
+    
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=rating,
-        title={'text': f"{player_name} (Rank: {rank})"},
+        title={'text': title_text, 'font': {'size': 16}},  # Reduce the font size
         gauge={
             'axis': {'range': [0, 100]},
             'bar': {'color': "green"},
         }
     ))
-    fig.update_layout(height=250, width=250, margin=dict(t=0, b=0, l=0, r=0))
+    # Adjust layout to handle the extra text and space
+    fig.update_layout(
+        height=300,  # Adjust height to accommodate more text
+        width=300, 
+        margin=dict(t=50, b=0, l=0, r=0)  # Top margin to give space for title
+    )
     return fig
 # def create_pizza_plot(df, players, categories, title, padding=1.25):
 #     N = len(categories)
@@ -792,13 +805,17 @@ if position == 'CM':
     players = df_filtered_guage['Player'].tolist()
     ratings = df_filtered_guage['CM Score(0-100)'].tolist()
     ranks = df_filtered_guage['Player Rank'].tolist()
+    Age = df_filtered_guage['Age'].tolist()
+    Team = df_filtered_guage['Team'].tolist()
+    Matches=df_filtered_guage['Matches played'].tolist()
+    Minutes=df_filtered_guage['Minutes played'].tolist()
 
     for i in range(0, len(players), 3):  # 3 charts per row
         cols = st.columns(3)
         for j in range(3):
             if i + j < len(players):
                 with cols[j]:
-                    fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j])
+                    fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j],Age[i + j], Team[i + j], Matches[i + j], Minutes[i + j])
                     st.plotly_chart(fig)
 
 # Display styled DataFrame in Streamlit
