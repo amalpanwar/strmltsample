@@ -798,7 +798,7 @@ if position == 'CM':
             if i + j < len(players):
                 with cols[j]:
                     fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j])
-                     st.plotly_chart(fig)
+                    st.plotly_chart(fig)
 
 # Display styled DataFrame in Streamlit
 
