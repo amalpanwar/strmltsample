@@ -788,9 +788,9 @@ if position == 'CM':
     st.dataframe(styled_df, use_container_width=True)
 
     st.write("Player Ratings Gauge Chart")
-    players = df_filtered_display['Player'].tolist()
-    ratings = df_filtered_display['Rating (0-100)'].tolist()
-    ranks = df_filtered_display['Player Rank'].tolist()
+    players = df_filtered['Player'].tolist()
+    ratings = df_filtered['CM Score(0-100)'].tolist()
+    ranks = df_filtered['Player Rank'].tolist()
 
     for i in range(0, len(players), 3):  # 3 charts per row
         cols = st.columns(3)
