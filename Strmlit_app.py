@@ -581,7 +581,7 @@ def create_gauge_chart(player_name, rating, rank, age, team, matches_played, min
     """
     
     fig = go.Figure(go.Indicator(
-        mode="gauge+number",
+        mode="gauge+number+delta",
         value=rating,
         delta={'reference': league_average_rating, 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}, 
         number={'valueformat': '.2f'},
