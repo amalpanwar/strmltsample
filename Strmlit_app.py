@@ -381,7 +381,7 @@ if position == 'CM':
     st.plotly_chart(fig)
     
    # Dropping unnecessary column not require for radar chart
-    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'Contract Expiry \n(Trnsfmkt)','CM zscore','Player Rank','Age','Team', 'Matches played', 'Minutes played'
+    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'Contract Expiry \n(Trnsfmkt)','CM zscore','Player Rank','Age','Team', 'Matches played', 'Minutes played',
                                           'Assists','Aerial duels per 90','Aerial duels won, %', 'Passes per 90','Accurate passes, %', 'Forward passes per 90',
                                           'Accurate forward passes, %','Passes to final third per 90', 'Accurate passes to final third, %',
                                           'Progressive passes per 90', 'Accurate progressive passes, %'])
