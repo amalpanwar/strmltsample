@@ -414,8 +414,6 @@ if position == 'CM':
         
    # Calculating Assit per 90 for slected player and for league average 
     df_filtered2 = df_filtered.reset_index()
-    df_filtered2['Assists per 90'] = ((df_filtered2['Assists'] / df_filtered2['Minutes played']) * 90).round(2)
-    df_filtered_new['Assists per 90']=((df_filtered_new['Assists'] / df_filtered_new['Minutes played']) * 90).round(2)
     league_avg_row2 = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
     league_avg_values2 = {
     'Key passes per 90': league_avg_row2['Key passes per 90'].values[0],
@@ -499,18 +497,22 @@ if position == 'CM':
     with col2:
         st.plotly_chart(fig22)
     
-    # Calculate Aerial duel won per 90 
-
-    df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
 
  # sort the vlaues by Aerial duel per 90 CM involved.
-    df_filtered3 = df_filtered2.sort_values(by='Aerial duels per 90', ascending=False)
+    df_filtered3 = df_filtered2.sort_values(by='Aerial duels won per 90', ascending=False)
 
-    # Melt the dataframe to long format for stacking
-    df_melted = df_filtered3.melt(id_vars='Player', value_vars=['Aerial duels per 90', 'Aerial duels won per 90'], var_name='Metric', value_name='Value')
+    fig3 = px.bar(
+    df_filtered3, 
+    x='Aerial duels won per 90', 
+    y='Player', 
+    orientation='h', 
+    title=f'{position} Aerial Duels Won per 90',
+    color='Aerial duels won per 90',  # Color based on 'Aerial duels won per 90'
+    color_continuous_scale='Blues'  # Color scale from dark to light
+         )
 
-    # Create stacked bar chart
-    fig3 = px.bar(df_melted, x='Value', y='Player', color='Metric',orientation='h', title=f'{position} Aerial ability (Stacked)')
+# Reverse the color scale so that higher values are darker
+    fig3.update_layout(coloraxis_colorbar=dict(title="Aerial duels won per 90"))
     st.plotly_chart(fig3)
     
     # Input field for user prompt
