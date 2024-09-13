@@ -571,7 +571,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
 
     return fig
 
-def create_gauge_chart(player_name, rating, rank, age, team, matches_played, minutes_played):
+def create_gauge_chart(player_name, rating, rank, age, team, matches_played, minutes_played,league_average_rating):
     # Format the title text with HTML to include additional information
     title_text = f"""
     <span style="font-size:16px"><b>{player_name}</b></span><br>
@@ -583,6 +583,7 @@ def create_gauge_chart(player_name, rating, rank, age, team, matches_played, min
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=rating,
+        delta={'reference': league_average_rating, 'increasing': {'color': 'green'}, 'decreasing': {'color': 'red'}}, 
         number={'valueformat': '.2f'},
         title={'text': title_text, 'font': {'size': 16}},  # Reduce the font size
         gauge={
@@ -803,6 +804,7 @@ if position == 'CM':
 
     st.write("Player Ratings Gauge Chart")
     df_filtered_guage=df_filtered.reset_index()
+    league_average_rating = df_filtered_guage.loc[df_filtered_guage['Player'] == 'League Two Average', 'CM Score(0-100)'].values[0]
     players = df_filtered_guage['Player'].tolist()
     ratings = df_filtered_guage['CM Score(0-100)'].tolist()
     ranks = df_filtered_guage['Player Rank'].tolist()
@@ -816,7 +818,7 @@ if position == 'CM':
         for j in range(3):
             if i + j < len(players):
                 with cols[j]:
-                    fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j],Age[i + j], Team[i + j], Matches[i + j], Minutes[i + j])
+                    fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j],Age[i + j], Team[i + j], Matches[i + j], Minutes[i + j],league_average_rating)
                     st.plotly_chart(fig)
 
 # Display styled DataFrame in Streamlit
