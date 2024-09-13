@@ -271,7 +271,7 @@ if position == 'CM':
        'Shots per 90', 'Recieved Passes P/90', 'Accurate passes per 90',
        'Accurate forward passes per 90', 'Key passes per 90', 'Accurate passes to final third per 90', 
        'Accurate progressive passes per 90']
-    weights=[1.25,1,0.9,1,-1.25,0.9,0.8,0.9,1,1.25,1,1]
+    weights=[1,1,0.9,1,-1.25,0.9,0.8,0.9,1,1.25,1,1]
     weighted_metrics = pd.DataFrame()
     df_position['Assists per 90'] = ((df_position['Assists'] / df_position['Minutes played']) * 90).round(2)
     df_position['Aerial duels won per 90'] = df_position['Aerial duels per 90'] * (df_position['Aerial duels won, %'] / 100)
@@ -381,7 +381,10 @@ if position == 'CM':
     st.plotly_chart(fig)
     
    # Dropping unnecessary column not require for radar chart
-    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'Contract Expiry \n(Trnsfmkt)','CM zscore','Player Rank','Age','Team', 'Matches played', 'Minutes played'])
+    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'Contract Expiry \n(Trnsfmkt)','CM zscore','Player Rank','Age','Team', 'Matches played', 'Minutes played'
+                                          'Assists','Aerial duels per 90','Aerial duels won, %', 'Passes per 90','Accurate passes, %', 'Forward passes per 90',
+                                          'Accurate forward passes, %','Passes to final third per 90', 'Accurate passes to final third, %',
+                                          'Progressive passes per 90', 'Accurate progressive passes, %'])
 
     # Rdar chart
     radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for {position} (Default: League Average)')
