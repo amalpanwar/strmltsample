@@ -93,79 +93,9 @@ background_image = f"""
 </style>
 """
 
-
-# Set the background image
-# Set the background image
-# background_image = """
-# <style>
-# [data-testid="stAppViewContainer"] > .main {
-#     background-image: url("image/Scotinage.jpg");
-#     background-size: 100vw 100vh;  # This sets the size to cover 100% of the viewport width and height
-#     background-position: center;  
-#     background-repeat: no-repeat;
-# }
-# </style>
-# """
-
 st.markdown(background_image, unsafe_allow_html=True)
 
-# Pivot the dataframe
-# pivot_df = df.pivot(index='Player', columns='Attribute', values='Value')
 
-
-# def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
-#     df_selected = df.loc[players]
-#     categories = df_selected.columns.tolist()
-#     data = df_selected.to_dict(orient='list')
-#     ids = df_selected.index.tolist()
-    
-#     # Check and handle zero division or NaNs in max_values
-#     if max_values is None:
-#         max_values = {key: padding * max(value) for key, value in data.items()}
-#     else:
-#         for key, max_val in max_values.items():
-#             if max_val == 0 or np.isnan(max_val):
-#                 max_values[key] = padding * max(data[key])
-                
-#     # Normalize the data
-#     normalized_data = {}
-#     for key, value in data.items():
-#         if max_values[key] != 0:  # Avoid division by zero
-#             normalized_data[key] = np.array(value) / max_values[key]
-#         else:
-#             normalized_data[key] = np.zeros(len(value))  # Handle zero division case
-    
-#     num_vars = len(data.keys())
-#     ticks = list(data.keys())
-#     ticks += ticks[:1]
-#     angles = np.linspace(0, 2 * np.pi, num_vars, endpoint=False).tolist() + [0]
-    
-#     # Plotting radar chart
-#     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
-#     fig.patch.set_facecolor('black')  # Set figure background to black
-#     ax.set_facecolor('grey') 
-#     for i, model_name in enumerate(ids):
-#         values = [normalized_data[key][i] for key in data.keys()]
-#         actual_values = [data[key][i] for key in data.keys()]
-#         values += values[:1]  # Close the plot for a better look
-#         ax.plot(angles, values, label=model_name)
-#         ax.fill(angles, values, alpha=0.15)
-#         for angle, value, actual_value in zip(angles, values, actual_values):
-#             ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
-            
-#     ax.fill(angles, np.ones(num_vars + 1), alpha=0.05)
-    
-#     ax.set_yticklabels([])
-#     ax.set_xticks(angles)
-#     ax.set_xticklabels(ticks, color='white',fontsize=10)
-#     ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), facecolor='black', edgecolor='white', labelcolor='white')
-
-#     if title is not None:
-#         plt.suptitle(title,color='white',fontsize=14)
-    
-#     return fig
-
-# Custom CSS to adjust the sidebar size
 st.markdown(
     """
     <style>
@@ -180,291 +110,7 @@ st.markdown(
     unsafe_allow_html=True
     )
 
-# def create_radar_chart(df, players,id_column, title=None, padding=1.15):
-#     # Ensure the players list is indexing correctly
-#     df_selected = df.loc[players]
-#     categories = df_selected.columns.tolist()
-#     N = len(categories)
-    
-#     # Convert all data to numeric, coercing errors and filling NaNs with zeros
-#     df_selected = df_selected.apply(pd.to_numeric, errors='coerce').fillna(0)
-    
-#     data = df_selected.to_dict(orient='list')
-#     ids = df_selected.index.tolist()
-
-#     max_values = {}
-#     for key, value in data.items():
-#         max_values[key] = padding * max(value) if max(value) != 0 else 1  # Avoid zero division
-
-#     # Normalize the data
-#     normalized_data = {}
-#     for key, value in data.items():
-#         normalized_data[key] = np.array(value) / max_values[key]
-
-#     # Create radar chart
-#     fig = go.Figure()
-
-#     for i, model_name in enumerate(ids):
-#         values = [normalized_data[key][i] for key in data.keys()]
-#         actual_values = [data[key][i] for key in data.keys()]
-#         values += values[:1]  # Close the plot for a better look
-#         actual_values += actual_values[:1]
-#         angles = [n / float(N) * 2 * np.pi for n in range(N)]
-#         angles += angles[:1]  # Complete the circle
-
-#         fig.add_trace(go.Scatterpolar(
-#             r=values,
-#             theta=[categories[j] for j in range(len(categories))] + [categories[0]],
-#             mode='lines+markers',
-#             name=model_name,
-#             hovertemplate='<b>%{theta}</b>: %{r:.1f}<extra></extra>'
-#         ))
-
-#     fig.update_layout(
-#         polar=dict(
-#             radialaxis=dict(visible=True),
-#             angularaxis=dict(ticks=''),
-#         ),
-#         showlegend=True,
-#         title='Radar Chart'
-#     )
-
-#     return fig
-
-
-# def create_radar_chart(df, players, id_column, title=None, padding=1.15):
-#     # Ensure the players list is indexing correctly
-#     df_selected = df.loc[players]
-#     categories = df_selected.columns.tolist()
-#     N = len(categories)
-    
-#     # Convert all data to numeric, coercing errors and filling NaNs with zeros
-#     df_selected = df_selected.apply(pd.to_numeric, errors='coerce').fillna(0)
-    
-#     data = df_selected.to_dict(orient='list')
-#     ids = df_selected.index.tolist()
-
-#     max_values = {}
-#     for key, value in data.items():
-#         if any(pd.isna(value)):
-#             data[key] = [0 if pd.isna(v) else v for v in value]
-#         max_values[key] = padding * max(value) if max(value) != 0 else 1  # Avoid zero division
-
-#     # Normalize the data
-#     normalized_data = {}
-#     for key, value in data.items():
-#         normalized_data[key] = np.array(value) / max_values[key]
-
-#     angles = [n / float(N) * 2 * np.pi for n in range(N)]
-#     angles += angles[:1]  # Complete the circle
-
-#     # Plotting radar chart
-#     fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
-#     fig.patch.set_facecolor('black')  # Set figure background to black
-#     ax.set_facecolor('white')
-#     subplot_df_dict[ax] = df_selected
-#     # lines = []
-#     for i, model_name in enumerate(ids):
-#         values = [normalized_data[key][i] for key in data.keys()]
-#         actual_values = [data[key][i] for key in data.keys()]
-#         values += values[:1]  # Close the plot for a better look
-#         angles_with_end = angles
-#         line, = ax.plot(angles_with_end, values, label=model_name)
-#         # ax.plot(angles, values, label=model_name)
-#         ax.fill(angles_with_end, values, alpha=0.15)
-#         # lines.append((line, model_name, actual_values))
-#         # def get_tooltip_text(index):
-#         #     player = ids[index]
-#         #     values_text = ', '.join([f'{cat}: {val:.1f}' for cat, val in zip(categories, actual_values)])
-#         #     return f'{player}\n{values_text}'
-
-#         # # Use show_hover_panel for tooltips
-#         # cursor = show_hover_panel(df_selected, get_text_func=get_tooltip_text)
-#         # cursor.connect("add", lambda sel: sel.annotation.set_text(get_tooltip_text(sel.index)))
-#         # for angle, value, actual_value in zip(angles, values, actual_values):
-#         #     ax.text(angle, value, f'{actual_value:.1f}', ha='center', va='bottom', fontsize=10, color='black')
-
-#     ax.fill(angles, np.ones(N + 1), alpha=0.05)
-
-#     ax.set_theta_offset(np.pi/2)
-#     ax.set_theta_direction(-1)
-    
-#     ticks = categories
-#     ticks += ticks[:1]  # Add the first category to the end to close the circle
-#     ax.set_xticks(angles)
-#     ax.set_xticklabels(ticks, color='white', fontsize=10)
-
-#     for label, angle_rad in zip(ax.get_xticklabels(), angles):
-#         if angle_rad <= pi/2:
-#             ha = 'left'
-#             va = "bottom"
-#             angle_text = angle_rad * (-180 / pi) + 90
-#         elif pi/2 < angle_rad <= pi:
-#             ha = 'left'
-#             va = "top"
-#             angle_text = angle_rad * (-180 / pi) + 90
-#         elif pi < angle_rad <= (3 * pi / 2):
-#             ha = 'right'
-#             va = "top"
-#             angle_text = angle_rad * (-180 / pi) - 90
-#         else:
-#             ha = 'right'
-#             va = "bottom"
-#             angle_text = angle_rad * (-180 / pi) - 90
-#         label.set_rotation(angle_text)
-#         label.set_verticalalignment(va)
-#         label.set_horizontalalignment(ha)
-#         label.set_color('white') 
-
-#     # Add tooltips
-#     # def hover_annotation(sel):
-#     #     line, player_name, actual_values = lines[sel.index]
-#     #     angle_idx = np.argmin(np.abs(np.array(angles) - sel.artist.get_data()[0][sel.index]))
-#     #     value = actual_values[angle_idx]
-#     #     sel.annotation.set_text(f'{player_name}\n{categories[angle_idx]}: {value:.1f}')
-    
-#     # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
-#     # cursor.connect("add", hover_annotation)
-
-#     # Draw y-labels
-#     # ax.set_rlabel_position(0)
-#     ax.legend(loc='upper right', bbox_to_anchor=(0.05, 0.05), facecolor='white', edgecolor='black', labelcolor='black')
-#     show_hover_panel(show_annotation)
-
-#     if title is not None:
-#         plt.suptitle(title, color='white', fontsize=14)
-
-#     # def hover_annotation(sel):
-#     #     index = sel.index
-#     #     angle_idx = int(index % len(angles))  # Determine the index of the angle
-#     #     player_name = lines[index][1]
-#     #     actual_value = lines[index][2][angle_idx]
-#     #     sel.annotation.set_text(f'{player_name}\n{ticks[angle_idx]}: {actual_value:.1f}')
-    
-#     # cursor = mplcursors.cursor([line for line, _, _ in lines], hover=True)
-#     # cursor.connect("add", hover_annotation)
-#     return fig
-# @st.cache_data
-# def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
-#     df_selected = df.loc[players]
-#     categories = df_selected.columns.tolist()
-#     data = df_selected.to_dict(orient='list')
-#     ids = df_selected.index.tolist()
-    
-#     if max_values is None:
-#         max_values = {key: padding * max(value) for key, value in data.items()}
-#     else:
-#         for key, max_val in max_values.items():
-#             if max_val == 0 or np.isnan(max_val):
-#                 max_values[key] = padding * max(data[key])
-                
-#     normalized_data = {}
-#     for key, value in data.items():
-#         if max_values[key] != 0:
-#             normalized_data[key] = np.array(value) / max_values[key]
-#         else:
-#             normalized_data[key] = np.zeros(len(value))
-
-#     # global_min = min(min(value) for value in data.values())
-#     # global_max = max(max(value) for value in data.values())
-
-#     # # Ensure the global_max is larger than global_min to avoid division by zero
-#     # if global_max == global_min:
-#     #     global_max += 1e-9  # Small number to avoid zero division
-    
-#     # # Normalize the data using global min-max normalization
-#     # normalized_data = {}
-#     # for key, value in data.items():
-#     #     # Apply global min-max normalization
-#     #     normalized_data[key] = (np.array(value) - global_min) / (global_max - global_min)
-#     fig = go.Figure()
-
-#     # color_map = {player: f'rgba({np.random.randint(256)},{np.random.randint(256)},{np.random.randint(256)})' for player in ids}
-
-#     for i, model_name in enumerate(ids):
-#         values = [normalized_data[key][i] for key in data.keys()]
-#         values += values[:1]  # Complete the circle
-
-#         hovertext = [f"{categories[j]}: {data[c][i]:.2f}" for j, c in enumerate(categories)]
-#         hovertext += [hovertext[0]]  # Complete the circle for hovertext
-
-#         fig.add_trace(go.Scatterpolar(
-#             r=values,
-#             theta=categories + [categories[0]],
-#             fill='toself',
-#             name=model_name,
-#             hoverinfo='text',
-#             hovertext=hovertext
-#             # line=dict(
-#             #     color=color_map[model_name],
-#             #     width=1
-#             # ),
-#             # showlegend=True
-#         ))
-
-
-#     fig.update_traces(
-#         hoverlabel=dict(
-#             bgcolor='white',  # Background color of the hover label
-#             font=dict(
-#                 color='black'  # Text color of the hover label
-#             )
-#         )
-#     )
-    
-#     fig.update_layout(
-#         polar=dict(
-#             radialaxis=dict(
-#                 visible=True,
-#                 range=[0, 1],
-#                 # tickvals=[0, 0.5, 1],
-#                 # ticktext=['0', '0.5', '1'],
-#                 showticklabels=False,
-#                 ticks="",
-#                 showline=True,
-#                 showgrid=True,
-#                 gridcolor='gray',
-#                 gridwidth=1,
-#             ),
-#             angularaxis=dict(
-#                 tickvals=list(range(len(categories))),
-#                 ticktext=categories + [categories[0]],
-#                 rotation=0,
-#                 direction="clockwise",
-#                 showticklabels=True,
-#                 ticks="",
-#                 showline=True,
-#                 showgrid=True,
-#                 gridcolor='gray',
-#                 gridwidth=1,
-                
-#                 tickfont=dict(size=8, color='white'),
-#             ),
-#         ),
-#         title=dict(
-#             text=title,
-#             font=dict(size=12)
-#         ),
-#         width=1000,  # Increased width for better clarity
-#         height=300,  # Increased height for better clarity
-#         margin=dict(l=100, r=125, t=18, b=0),  # Increased bottom margin to accommodate the legend
-#         paper_bgcolor='black',  # Background color
-#         plot_bgcolor='white',    # Plot area background color
-#         legend=dict(
-#             orientation="v",  # Horizontal orientation
-#             yanchor="top",    # Position the legend above the plot area
-#             y=-0.1,           # Vertical position (below the plot area)
-#             xanchor="right", # Center the legend horizontally
-#             x=0.5,            # Horizontal position (centered)
-#             bgcolor='white', # Transparent background
-#             bordercolor='white',
-#             borderwidth=1,
-#             font=dict(size=10, color='black')
-#         )
-        
-#     )
-
-#     return fig
+##*********************** Radar Chart ***************************************************************************************
 def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
     # Select data for the chosen players
     df_selected = df.loc[players]
@@ -571,6 +217,7 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
 
     return fig
 
+##*********************** Guage Chart ***************************************************************************************
 def create_gauge_chart(player_name, rating, rank, age, team, matches_played, minutes_played,league_average_rating):
     # Format the title text with HTML to include additional information
     title_text = f"""
@@ -598,45 +245,10 @@ def create_gauge_chart(player_name, rating, rank, age, team, matches_played, min
         margin=dict(t=50, b=0, l=0, r=0)  # Top margin to give space for title
     )
     return fig
-# def create_pizza_plot(df, players, categories, title, padding=1.25):
-#     N = len(categories)
-#     angles = np.linspace(0, 2 * pi, N, endpoint=False).tolist()
-#     angles_mids = np.linspace(0, 2 * pi, N, endpoint=False) + (angles[1] / 2)  # Complete the loop
 
-#     fig, ax = plt.subplots(figsize=(10, 8), subplot_kw=dict(polar=True))
-#     # ax = plt.subplot(111, polar=True)
-#     fig.patch.set_facecolor('black')  # Set figure background to black
-#     ax.set_facecolor('grey') 
-#     ax.set_theta_offset(pi / 2)
-#     ax.set_theta_direction(-1)
-#     ax.set_xticks(angles_mids)
-#     ax.set_xticklabels(categories, color='white', fontsize=14)
-#     # ax.xaxis.set_minor_locator(plt.FixedLocator(angles))
-
-#     # Draw ylabels
-#     ax.set_rlabel_position(0)
-#     ax.set_yticks([20, 40, 60, 80, 100])
-#     ax.set_yticklabels(["20", "40", "60", "80", "100"], color="white", size=8)
-#     ax.set_ylim(0, 100)
-#     width = angles[1] - angles[0]
-
-
-#     for player in players:
-#         values = df.loc[player, categories].values.flatten().tolist()
-#         ax.bar(angles_mids, values, width=width, alpha=0.5, edgecolor='k', linewidth=1,label=player)
-
-#     ax.grid(True, axis='x', which='minor')
-#     ax.grid(False, axis='x', which='major')
-#     ax.grid(True, axis='y', which='major')
-#     ax.legend(loc='upper right', bbox_to_anchor=(0.1, 0.1), fontsize=14, facecolor='white', edgecolor='black', labelcolor='black')
-#     plt.title(title,color='white', fontsize=14)
-
-#     return fig
 # RAG Pipeline for Chatting
 AI21_api_key = st.sidebar.text_input('Together API Key')
 api_token = st.sidebar.text_input('API Key', type='password')
-
-
 
 
 
@@ -646,33 +258,28 @@ st.title('Player Performance Dashboard')
 default_position_index = ["GK","FB","CB","CM","CAM","Winger","CF"].index('CM')
 position = st.sidebar.selectbox('Select position:', options=["GK","FB","CB","CM","CAM","Winger","CF"],index=default_position_index)
 
-# Initialize df_position and default player list
-# Initialize df_position and default player list
-# df_position = None
-
-# Determine the dataframe to use based on selected position
-# if position == 'CM':
-#     df_position = pivot_df
-# elif position == 'CB':
-#     df_position_CB = pvt_df_CB
-# # Add other positions here with elif statements
 
 # Ensure df_position is selected
+##******************************** CM  - Center Midfielder **************************************************************************
 if position == 'CM':
     df_position = pvt_df_CM
 
     # Assign weights to the metrics based on their importance
     original_metrics =[
-       'Assists',
-       'Successful defensive actions per 90', 'Aerial duels per 90',
-       'Aerial duels won, %', 'Interceptions per 90', 'Fouls per 90',
-       'Shots per 90', 'Recieved Passes P/90', 'Passes per 90',
-       'Accurate passes, %', 'Forward passes per 90',
-       'Accurate forward passes, %', 'Key passes per 90',
-       'Passes to final third per 90', 'Accurate passes to final third, %',
-       'Progressive passes per 90', 'Accurate progressive passes, %']
-    weights=[0.8,1,0.9,0.9,1,-1.25,0.8,1,0.9,1,0.9,1,1,0.9,1,0.9,1]
+       'Assists per 90',
+       'Successful defensive actions per 90', 'Aerial duels won per 90', 'Interceptions per 90', 'Fouls per 90',
+       'Shots per 90', 'Recieved Passes P/90', 'Accurate passes per 90',
+       'Accurate forward passes per 90', 'Key passes per 90', 'Accurate passes to final third per 90', 
+       'Accurate progressive passes per 90']
+    weights=[1.25,1,0.9,1,-1.25,0.9,0.8,0.9,1,1.25,1,1]
     weighted_metrics = pd.DataFrame()
+    df_position['Assists per 90'] = ((df_position['Assists'] / df_position['Minutes played']) * 90).round(2)
+    df_position['Aerial duels won per 90'] = df_position['Aerial duels per 90'] * (df_position['Aerial duels won, %'] / 100)
+    df_position['Accurate passes per 90'] = df_position['Passes per 90'] * (df_position['Accurate passes, %'] / 100)
+    df_position['Accurate forward passes per 90'] = df_position['Forward passes per 90'] * (df_position['Accurate forward passes, %'] / 100)
+    df_position['Accurate progressive passes per 90'] = df_position['Progressive passes per 90'] * (df_position['Accurate progressive passes, %'] / 100)
+    df_position['Accurate passes to final third per 90'] = df_position['Passes to final third per 90'] * (df_position['Accurate passes to final third, %'] / 100)
+   
     for metric, weight in zip(original_metrics, weights):
         weighted_metrics[metric] = df_position[metric] * weight
     
@@ -779,28 +386,7 @@ if position == 'CM':
     # Rdar chart
     radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for {position} (Default: League Average)')
     st.plotly_chart(radar_fig)
-    # Creating Player info table
-#     columns_to_display = ['Player','Team','CM Score(0-100)', 'Player Rank','Age', 'Matches played', 'Minutes played' ]
-#     df_filtered_display=df_filtered.reset_index()
-#     df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
-#       'CM Score(0-100)': 'Rating (0-100)',
-#       'Matches played': 'Matches played (2023/24)'
-#          })
-#     df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
-
-# # Style the DataFrame
-#     def style_dataframe(df):
-#         return df.style.set_table_styles(
-#         [
-#             {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
-#             {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-#             {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-#         ]
-#           ).hide(axis="index")
-
-#     styled_df = style_dataframe(df_filtered_display)
-#     st.write("Players Info:")
-#     st.dataframe(styled_df, use_container_width=True)
+   
 
     st.write("Player Ratings Gauge Chart")
     df_filtered_guage=df_filtered.reset_index()
@@ -821,14 +407,7 @@ if position == 'CM':
                     fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j],Age[i + j], Team[i + j], Matches[i + j], Minutes[i + j],league_average_rating)
                     st.plotly_chart(fig)
 
-# Display styled DataFrame in Streamlit
 
-    # col1, col2 = st.columns(2)
-    # with col1:
-    #     st.plotly_chart(radar_fig)
-    # with col2:
-    #     st.write("Players Info:")
-    #     st.dataframe(styled_df, use_container_width=True)
         
    # Calculating Assit per 90 for slected player and for league average 
     df_filtered2 = df_filtered.reset_index()
@@ -970,7 +549,7 @@ if position == 'CM':
              "You are an assistant for question-answering tasks. "
              "Use the following pieces of retrieved context to answer "
              "the question. If you don't know the answer, say that you "
-             "don't know. Use three sentences maximum and keep the "
+             "don't know. Use three sentences minimum and keep the "
              "answer concise."
              "\n\n"
              "{context}"
@@ -1029,13 +608,6 @@ elif position == 'CB':
     df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
     df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
 
-    # df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
-    # original_mean = df_position["defensive zscore"].mean()
-    # original_std = df_position["defensive zscore"].std()
-    # df_position["defensive zscore"] = (df_position["defensive zscore"] - original_mean) / original_std
-    # df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
-    # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
-    # Dropdown menu for player selection based on position
     if st.sidebar.button('Show Top 5 Players'):
         top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
     # Multiselect only includes top 5 players
