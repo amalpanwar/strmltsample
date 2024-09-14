@@ -750,9 +750,15 @@ elif position == 'CB':
     'Defensive duels won, %': league_avg_row['Defensive duels won, %'].values[0],
     'Fouls per 90': league_avg_row['Fouls per 90'].values[0],
           }
-    x_min, x_max = df_filtered_new['Defensive duels per 90'].min(), df_filtered_new['Defensive duels per 90'].max()
-    y_min, y_max = df_filtered_new['Defensive duels won, %'].min(), df_filtered_new['Defensive duels won, %'].max()
-    y_min_Foul, y_max_Foul = df_filtered_new['Fouls per 90'].min(), df_filtered_new['Fouls per 90'].max()
+    x_max = df_filtered_new['Defensive duels per 90'].max()
+    y_max_values = {
+    'Defensive duels won, %': df_filtered_new['Defensive duels won, %'].max(),
+    'Fouls per 90': df_filtered_new['Fouls per 90'].max()
+           }
+    y_min_values = {
+    'Defensive duels won, %': df_filtered_new['Defensive duels won, %'].min(),
+    'Fouls per 90': df_filtered_new['Fouls per 90'].min()
+           }
 
     fig2 = px.scatter(df_filtered2, x='Defensive duels per 90', y=['Defensive duels won, %','Fouls per 90'],facet_col='variable',
                  facet_col_spacing=0.08,color='Player', title=f'{position} Defensive Strength')
@@ -763,9 +769,9 @@ elif position == 'CB':
         go.layout.Shape(
             type='line',
             x0=0,
-            y0=league_avg_values[facet_name],
+            y0=league_avg_values2[facet_name],
             x1=x_max,
-            y1=league_avg_values[facet_name],
+            y1=league_avg_values2[facet_name],
             xref=f'x{i+1}',
             yref=f'y{i+1}',
             line=dict(color='red', width=1, dash='dash')
@@ -777,9 +783,9 @@ elif position == 'CB':
         fig2.add_shape(
         go.layout.Shape(
             type='line',
-            x0=league_avg_values['Defensive duels per 90'],
+            x0=league_avg_values2['Defensive duels per 90'],
             y0=y_min_values[facet_name],
-            x1=league_avg_values['Defensive duels per 90'],
+            x1=league_avg_values2['Defensive duels per 90'],
             y1=y_max_values[facet_name],
             xref=f'x{i+1}',
             yref=f'y{i+1}',
