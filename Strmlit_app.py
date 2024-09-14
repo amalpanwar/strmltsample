@@ -509,7 +509,7 @@ if position == 'CM':
     orientation='h', 
     title=f'{position} Aerial wining ability',
     color='Aerial duels won per 90',  # Color based on 'Aerial duels won per 90'
-    color_continuous_scale='greens'  # Color scale from dark to light
+    color_continuous_scale='oranges'  # Color scale from dark to light
     # range_color=[0, max_aerial_duels_won]    
          )
 
