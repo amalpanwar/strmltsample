@@ -618,15 +618,32 @@ elif position == 'CB':
     df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
 
     if st.sidebar.button('Show Top 5 Players'):
-        top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
+        df_position_reset = df_position.reset_index()
+        df_position_sorted = df_position_reset.sort_values(by='Defender Score(0-100)', ascending=False)  # Assuming higher score is better
+
+# Remove duplicates, keeping the one with the highest 'Defender Score(0-100)'
+        df_position_unique = df_position_sorted.drop_duplicates(subset='Player', keep='first')
+
+# Step 2: Get the top 5 players
+        top_5_df = df_position_unique.head(5) 
+        # Extract top 5 player names and their unique identifiers
+        top_5_players = top_5_df[['Player', 'Defender Score(0-100)']].set_index('Player').to_dict()['Defender Score(0-100)']
+        top_5_player_names = list(top_5_players.keys())
+    
     # Multiselect only includes top 5 players
-        players_CB = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
+        players_FB = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
+        df_filtered2 = df_position_reset[df_position_reset['Player'].isin(players_FB)]
+    
+    # To ensure only the best rank is retained for each player
+        df_filtered2 = df_filtered2.sort_values(by='Defender Score(0-100)', ascending=False)
+        df_filtered2 = df_filtered2.drop_duplicates(subset='Player', keep='first')
+
     else:
     # Multiselect includes all players
         players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+        df_filtered = df_position.loc[players_CB]
+        df_filtered2=df_filtered.reset_index()
 
-    # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-    df_filtered = df_position.loc[players_CB]
 
     df_filtered_new=df_position.reset_index()
     league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
@@ -647,7 +664,7 @@ elif position == 'CB':
            }
     # y_max = max(y_max_values.values())
 
-    df_filtered2=df_filtered.reset_index()
+    # df_filtered2=df_filtered.reset_index()
 
     df_filtered2 = df_filtered2.rename(columns={'Successful defensive actions per 90': 'Successful def. Action/90'})
    
@@ -697,7 +714,7 @@ elif position == 'CB':
   
 
     # Create radar chart for selected players
-    df_position2=df_filtered.drop(columns=[ 'defensive zscore','Defender Score(0-100)','Player Rank','Team','Contract Expiry \n(Trnsfmkt)','Age',
+    df_position2=df_filtered2.drop(columns=[ 'defensive zscore','Defender Score(0-100)','Player Rank','Team','Contract Expiry \n(Trnsfmkt)','Age',
                         'Matches played\n(23/24)','Minutes played','Defensive duels per 90', 'Defensive duels won, %',
        'Aerial duels per 90', 'Aerial duels won, %', 'Passes to final third per 90',
        'Accurate passes to final third, %', 'Progressive passes per 90',
@@ -707,7 +724,7 @@ elif position == 'CB':
     st.plotly_chart(radar_fig)
     # Create Guage chart for selected players
     st.write("Player Ratings Gauge Chart")
-    df_filtered_guage=df_filtered.reset_index()
+    df_filtered_guage=df_filtered2
     league_average_rating = df_filtered_new.loc[df_filtered_new['Player'] == 'League Two Average', 'Defender Score(0-100)'].values[0]
     players = df_filtered_guage['Player'].tolist()
     ratings = df_filtered_guage['Defender Score(0-100)'].tolist()
