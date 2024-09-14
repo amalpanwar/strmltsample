@@ -520,7 +520,7 @@ if position == 'CM':
     # Input field for user prompt
    
     if not AI21_api_key or not api_token:
-        st.error("Please provide both the TOGETHER API Key and the API Key.")
+        st.error("Please provide both the AI21 API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
@@ -748,67 +748,81 @@ elif position == 'CB':
     league_avg_values2 = {
     'Defensive duels per 90': league_avg_row['Defensive duels per 90'].values[0],
     'Defensive duels won, %': league_avg_row['Defensive duels won, %'].values[0]
-    # 'Interceptions per 90': league_avg_row2['Interceptions per 90'].values[0],
+    'Fouls per 90': league_avg_row['Fouls per 90'].values[0],
           }
     x_min, x_max = df_filtered_new['Defensive duels per 90'].min(), df_filtered_new['Defensive duels per 90'].max()
     y_min, y_max = df_filtered_new['Defensive duels won, %'].min(), df_filtered_new['Defensive duels won, %'].max()
-    # y_min_int, y_max_int = df_filtered_new['Interceptions per 90'].min(), df_filtered_new['Interceptions per 90'].max()
+    y_min_Foul, y_max_Foul = df_filtered_new['Fouls per 90'].min(), df_filtered_new['Fouls per 90'].max()
 
-    fig2 = px.scatter(df_filtered2, x='Defensive duels per 90', y='Defensive duels won, %',
-                     color='Player', title=f'{position} Defensive Strength')
+    fig2 = px.scatter(df_filtered2, x='Defensive duels per 90', y=['Defensive duels won, %','Fouls per 90'],facet_col='variable',
+                 facet_col_spacing=0.08,color='Player', title=f'{position} Defensive Strength')
   
-    fig2.add_shape(
-    go.layout.Shape(
-        type='line',
-        x0=x_min,
-        y0=league_avg_values2['Defensive duels won, %'], 
-        x1=x_max,
-        y1=league_avg_values2['Defensive duels won, %'],
-        line=dict(color='red', width=1, dash='dash'),
-        xref='x',
-        yref='y',
-             )
-             )
-
-    fig2.add_shape(
-    go.layout.Shape(
-        type='line',
-        x0=league_avg_values2['Defensive duels per 90'], 
-        y0=y_min,
-        x1=league_avg_values2['Defensive duels per 90'],
-        y1=y_max,
-        line=dict(color='blue', width=1, dash='dash'),
-        xref='x',
-        yref='y',
+    for i, facet_name in enumerate(['Defensive duels won, %','Fouls per 90']):
+        # Add horizontal line
+        fig2.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=0,
+            y0=league_avg_values[facet_name],
+            x1=x_max,
+            y1=league_avg_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='red', width=1, dash='dash')
               )
+          
            )
-    
+
+    # Add vertical line
+        fig2.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=league_avg_values['Defensive duels per 90'],
+            y0=y_min_values[facet_name],
+            x1=league_avg_values['Defensive duels per 90'],
+            y1=y_max_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='blue', width=1, dash='dash')
+             )
+              
+              )
+
     fig2.update_traces(textposition='top center')
     fig2.update_traces(marker=dict(size=8))
+    fig2.update_yaxes(matches=None)
+    fig2.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
+    for annotation in fig2.layout.annotations:
+             if 'variable=' in annotation.text:
+                        annotation.text = annotation.text.split('=')[1]
+
+    st.plotly_chart(fig2)
 
     
     
 
     df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
 
-    df_filtered2 = df_filtered2.sort_values(by='Aerial duels won, %', ascending=False)
+    df_filtered2 = df_filtered2.sort_values(by='Aerial duels won per 90', ascending=False)
 
-    # Melt the dataframe to long format for stacking
-    df_melted = df_filtered2.melt(id_vars='Player', value_vars=['Aerial duels per 90', 'Aerial duels won per 90'], var_name='Metric', value_name='Value')
+    fig3 = px.bar(
+    df_filtered2, 
+    x='Aerial duels won per 90', 
+    y='Player', 
+    orientation='h', 
+    title=f'{position} Aerial wining ability',
+    color='Aerial duels won per 90',  # Color based on 'Aerial duels won per 90'
+    color_continuous_scale='oranges'  # Color scale from dark to light
+    # range_color=[0, max_aerial_duels_won]    
+         )
 
-    # Create stacked bar chart
-    fig3 = px.bar(df_melted, x='Player', y='Value', color='Metric', title=f'{position} Aerial ability (Stacked)')
+# Reverse the color scale so that higher values are darker
+    fig3.update_layout(coloraxis_colorbar=dict(title="Aerial duels won per 90"))
+    st.plotly_chart(fig3)
     
 
-    col1, col2 = st.columns([1.5, 1])
-    with col1:
-        st.plotly_chart(fig2)
-    with col2:
-        st.plotly_chart(fig3)
-    # Input field for user prompt
-    # user_prompt = st.text_input("Enter your query:")
-    if not Together_api_key or not api_token:
-        st.error("Please provide both the TOGETHER API Key and the API Key.")
+    if not AI21_api_key or not api_token:
+        st.error("Please provide both the AI21 API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
