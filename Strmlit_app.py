@@ -587,13 +587,10 @@ elif position == 'CB':
     df_position = pvt_df_CB
 
     original_metrics =[
-       'Successful defensive actions per 90', 'Defensive duels per 90',
-       'Defensive duels won, %', 'Aerial duels per 90', 'Aerial duels won, %',
-       'PAdj Sliding tackles', 'Shots blocked per 90', 'Interceptions per 90',
-       'PAdj Interceptions', 'Fouls per 90', 'Passes to final third per 90',
-       'Accurate passes to final third, %', 'Progressive passes per 90',
-       'Accurate progressive passes, %']
-    weights=[1,1,1,1,1,1,1,1,1,-1.25,0.75,0.9,0.8,0.9]
+       'Successful defensive actions per 90', 'Defensive duels won per 90',
+        'Aerial duels won per 90','PAdj Sliding tackles', 'Shots blocked per 90', 'Interceptions per 90',
+       'PAdj Interceptions', 'Fouls per 90', 'Accurate passes to final third/90','Accurate progressive passes/90']
+    weights=[1,1.25,1,1,1,1,1,-1.25,0.8,0.8]
     weighted_metrics = pd.DataFrame()
     df_position['Aerial duels won per 90'] = df_position['Aerial duels per 90'] * (df_position['Aerial duels won, %'] / 100)
     df_position['Defensive duels won per 90'] = df_position['Defensive duels per 90'] * (df_position['Defensive duels won, %'] / 100)
@@ -701,10 +698,13 @@ elif position == 'CB':
 
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'defensive zscore','Defender Score(0-100)','Player Rank','Team','Contract Expiry \n(Trnsfmkt)','Age',
-                        'Matches played\n(23/24)','Minutes played'])
+                        'Matches played\n(23/24)','Minutes played','Defensive duels per 90', 'Defensive duels won, %',
+       'Aerial duels per 90', 'Aerial duels won, %', 'Passes to final third per 90',
+       'Accurate passes to final third, %', 'Progressive passes per 90',
+       'Accurate progressive passes, %'])
                               
-    radar_fig =create_radar_chart(df_position2, players_CB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-    st.pyplot(radar_fig)
+    radar_fig =create_radar_chart(df_position2, players_CB, id_column='Player', title=f'Radar Chart for Selected {position} (Default: League Average)')
+    st.plotly_chart(radar_fig)
     # Create Guage chart for selected players
     st.write("Player Ratings Gauge Chart")
     df_filtered_guage=df_filtered.reset_index()
