@@ -720,7 +720,7 @@ elif position == 'CB':
        'Accurate passes to final third, %', 'Progressive passes per 90',
        'Accurate progressive passes, %'])
                               
-    radar_fig =create_radar_chart(df_position2, players_CB, id_column='Player', title=f'Radar Chart for Selected {position} (Default: League Average)')
+    radar_fig =create_radar_chart(df_position2.set_index('Player'), players_CB, id_column='Player', title=f'Radar Chart for Selected {position} (Default: League Average)')
     st.plotly_chart(radar_fig)
     # Create Guage chart for selected players
     st.write("Player Ratings Gauge Chart")
