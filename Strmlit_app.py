@@ -500,7 +500,7 @@ if position == 'CM':
 
  # sort the vlaues by Aerial duel per 90 CM involved.
     df_filtered3 = df_filtered2.sort_values(by='Aerial duels won per 90', ascending=False)
-    max_aerial_duels_won = df_filtered_new['Aerial duels won per 90'].max()
+    # max_aerial_duels_won = df_filtered_new['Aerial duels won per 90'].max()
     
     fig3 = px.bar(
     df_filtered3, 
@@ -509,8 +509,8 @@ if position == 'CM':
     orientation='h', 
     title=f'{position} Aerial wining ability',
     color='Aerial duels won per 90',  # Color based on 'Aerial duels won per 90'
-    color_continuous_scale='Blues',  # Color scale from dark to light
-    range_color=[0, max_aerial_duels_won]    
+    color_continuous_scale='Green'  # Color scale from dark to light
+    # range_color=[0, max_aerial_duels_won]    
          )
 
 # Reverse the color scale so that higher values are darker
