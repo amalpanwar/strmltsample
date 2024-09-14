@@ -631,8 +631,8 @@ elif position == 'CB':
         top_5_player_names = list(top_5_players.keys())
     
     # Multiselect only includes top 5 players
-        players_FB = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
-        df_filtered2 = df_position_reset[df_position_reset['Player'].isin(players_FB)]
+        players_CB = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
+        df_filtered2 = df_position_reset[df_position_reset['Player'].isin(players_CB)]
     
     # To ensure only the best rank is retained for each player
         df_filtered2 = df_filtered2.sort_values(by='Defender Score(0-100)', ascending=False)
