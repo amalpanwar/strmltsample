@@ -714,7 +714,7 @@ elif position == 'CB':
     ranks = df_filtered_guage['Player Rank'].tolist()
     Age = df_filtered_guage['Age'].tolist()
     Team = df_filtered_guage['Team'].tolist()
-    Matches=df_filtered_guage['Matches played'].tolist()
+    Matches=df_filtered_guage['Matches played\n(23/24)'].tolist()
     Minutes=df_filtered_guage['Minutes played'].tolist()
 
     for i in range(0, len(players), 3):  # 3 charts per row
