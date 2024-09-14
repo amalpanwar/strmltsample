@@ -595,6 +595,11 @@ elif position == 'CB':
        'Accurate progressive passes, %']
     weights=[1,1,1,1,1,1,1,1,1,-1.25,0.75,0.9,0.8,0.9]
     weighted_metrics = pd.DataFrame()
+    df_position['Aerial duels won per 90'] = df_position['Aerial duels per 90'] * (df_position['Aerial duels won, %'] / 100)
+    df_position['Defensive duels won per 90'] = df_position['Defensive duels per 90'] * (df_position['Defensive duels won, %'] / 100)
+    df_position['Accurate passes to final third/90'] = df_position['Passes to final third per 90'] * (df_position['Accurate passes to final third, %'] / 100)
+    df_position['Accurate progressive passes/90'] = df_position['Progressive passes per 90'] * (df_position['Accurate progressive passes, %'] / 100)
+    
     for metric, weight in zip(original_metrics, weights):
         weighted_metrics[metric] = df_position[metric] * weight
     
@@ -699,36 +704,28 @@ elif position == 'CB':
                         'Matches played\n(23/24)','Minutes played'])
                               
     radar_fig =create_radar_chart(df_position2, players_CB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-    # st.pyplot(radar_fig)
-    columns_to_display = ['Player','Team','Age', 'Matches played\n(23/24)', 'Minutes played', 'Defender Score(0-100)', 'Player Rank']
-    df_filtered_display=df_filtered.reset_index()
-    df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
-      'Defender Score(0-100)': 'Rating (0-100)',
-      'Matches played\n(23/24)': 'Matches played (2023/24)'
-         })
-    df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
+    st.pyplot(radar_fig)
+    # Create Guage chart for selected players
+    st.write("Player Ratings Gauge Chart")
+    df_filtered_guage=df_filtered.reset_index()
+    league_average_rating = df_filtered_new.loc[df_filtered_new['Player'] == 'League Two Average', 'CM Score(0-100)'].values[0]
+    players = df_filtered_guage['Player'].tolist()
+    ratings = df_filtered_guage['CM Score(0-100)'].tolist()
+    ranks = df_filtered_guage['Player Rank'].tolist()
+    Age = df_filtered_guage['Age'].tolist()
+    Team = df_filtered_guage['Team'].tolist()
+    Matches=df_filtered_guage['Matches played'].tolist()
+    Minutes=df_filtered_guage['Minutes played'].tolist()
 
-# Style the DataFrame
-    def style_dataframe(df):
-        return df.style.set_table_styles(
-        [
-            {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
-            {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-            {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-        ]
-          ).hide(axis="index")
+    for i in range(0, len(players), 3):  # 3 charts per row
+        cols = st.columns(3)
+        for j in range(3):
+            if i + j < len(players):
+                with cols[j]:
+                    fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j],Age[i + j], Team[i + j], Matches[i + j], Minutes[i + j],league_average_rating)
+                    st.plotly_chart(fig)
 
-    styled_df = style_dataframe(df_filtered_display)
 
-# Display styled DataFrame in Streamlit
-    # st.write("Players Info:")
-    # st.dataframe(styled_df, use_container_width=True)
-    col1, col2 = st.columns(2)
-    with col1:
-        st.plotly_chart(radar_fig)
-    with col2:
-        st.write("Players Info:")
-        st.dataframe(styled_df, use_container_width=True)
 
     # league_avg_row2 = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
     league_avg_values2 = {
