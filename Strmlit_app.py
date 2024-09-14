@@ -747,7 +747,7 @@ elif position == 'CB':
     # league_avg_row2 = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
     league_avg_values2 = {
     'Defensive duels per 90': league_avg_row['Defensive duels per 90'].values[0],
-    'Defensive duels won, %': league_avg_row['Defensive duels won, %'].values[0]
+    'Defensive duels won, %': league_avg_row['Defensive duels won, %'].values[0],
     'Fouls per 90': league_avg_row['Fouls per 90'].values[0],
           }
     x_min, x_max = df_filtered_new['Defensive duels per 90'].min(), df_filtered_new['Defensive duels per 90'].max()
