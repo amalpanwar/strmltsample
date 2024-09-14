@@ -386,11 +386,11 @@ if position == 'CM':
                                           'Accurate forward passes, %','Passes to final third per 90', 'Accurate passes to final third, %',
                                           'Progressive passes per 90', 'Accurate progressive passes, %'])
 
-    # Rdar chart
+    # Radar chart
     radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for {position} (Default: League Average)')
     st.plotly_chart(radar_fig)
    
-
+    # Gauge Chart
     st.write("Player Ratings Gauge Chart")
     df_filtered_guage=df_filtered.reset_index()
     league_average_rating = df_filtered_new.loc[df_filtered_new['Player'] == 'League Two Average', 'CM Score(0-100)'].values[0]
@@ -500,15 +500,17 @@ if position == 'CM':
 
  # sort the vlaues by Aerial duel per 90 CM involved.
     df_filtered3 = df_filtered2.sort_values(by='Aerial duels won per 90', ascending=False)
-
+    max_aerial_duels_won = df_filtered3['Aerial duels won per 90'].max()
+    
     fig3 = px.bar(
     df_filtered3, 
     x='Aerial duels won per 90', 
     y='Player', 
     orientation='h', 
-    title=f'{position} Aerial Duels Won per 90',
+    title=f'{position} Aerial wining ability',
     color='Aerial duels won per 90',  # Color based on 'Aerial duels won per 90'
-    color_continuous_scale='Blues'  # Color scale from dark to light
+    color_continuous_scale='Blues',  # Color scale from dark to light
+    range_color=[0, max_aerial_duels_won]    
          )
 
 # Reverse the color scale so that higher values are darker
