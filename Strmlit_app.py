@@ -500,7 +500,7 @@ if position == 'CM':
 
  # sort the vlaues by Aerial duel per 90 CM involved.
     df_filtered3 = df_filtered2.sort_values(by='Aerial duels won per 90', ascending=False)
-    max_aerial_duels_won = df_filtered3['Aerial duels won per 90'].max()
+    max_aerial_duels_won = df_filtered_new['Aerial duels won per 90'].max()
     
     fig3 = px.bar(
     df_filtered3, 
