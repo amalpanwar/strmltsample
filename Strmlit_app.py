@@ -1391,7 +1391,7 @@ elif position == 'CF':
     
     # Create Gauge chart for selected players
     st.write("Player Ratings Gauge Chart")
-    df_filtered_guage=df_filtered2.reset_index()
+    df_filtered_guage=df_filtered2
     league_average_rating = df_filtered_new.loc[df_filtered_new['Player'] == 'League Two Average', 'CF Score(0-100)'].values[0]
     players = df_filtered_guage['Player'].tolist()
     ratings = df_filtered_guage['CF Score(0-100)'].tolist()
