@@ -1251,14 +1251,14 @@ elif position == 'CF':
     original_metrics =[
        'Aerial duels won per 90',
        'Successful attacking actions per 90', 'Goals per 90', 'xG per 90',
-       'Shots on target per 90', 'Successful dribbles per 90', 'Touches in box per 90',
+       'Shots on Target per 90', 'Successful dribbles per 90', 'Touches in box per 90',
        'Recieve long pass, %','Goal threat per 90',
        'Fouls suffered per 90']
     weights=[1,1,1.25,1.1,1,1,1.1,0.9,1,0.9]
     weighted_metrics = pd.DataFrame()
     
     df_position['Aerial duels won per 90'] = df_position['Aerial duels per 90'] * (df_position['Aerial duels won, %'] / 100)
-    df_position['Shots on target per 90'] = df_position['Shots per 90'] * (df_position['Shots on target, %'] / 100)
+    df_position['Shots on Target per 90'] = df_position['Shots per 90'] * (df_position['Shots on target, %'] / 100)
     df_position['Successful dribbles per 90']= df_position['Dribbles per 90'] + df_position['Successful dribbles, %']
     df_position['Recieve long pass, %']= (df_position['Received long passes per 90'] / df_position['Received passes per 90']) * 100
     df_position['Goal threat per 90'] = 2 * ((df_position['Touches in box per 90'] + 1) * (df_position['Shots on target per 90'] + 1)) / ((df_position['Touches in box per 90'] + 1) + (df_position['Shots on target per 90'] + 1))
