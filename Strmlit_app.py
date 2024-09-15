@@ -1173,7 +1173,7 @@ elif position == 'Winger':
 
     
 
-    df_filtered2['Overall attacking strength'] = df_filtered2['Goals per 90'] + df_filtered2['Assists per 90'] + df_filtered2['Successful attacking actions per 90']
+    df_filtered2['Overall attacking strength'] = df_filtered2['Goals per 90'] + df_filtered2['Assists per 90'] + df_filtered2['Accurate Crosses per 90']
 
 # Sorting the DataFrame by 'Goals + Assists per 90', 'Goals per 90', and 'Assists per 90' in descending order
     df_filtered3 = df_filtered2.sort_values(by=['Overall attacking strength'], ascending=False)
@@ -1182,7 +1182,7 @@ elif position == 'Winger':
     # df_filtered2 = df_filtered2.sort_values(by=('Aerial duels won, %', ascending=False)
 
     # Melt the dataframe to long format for stacking
-    df_melted = df_filtered3.melt(id_vars='Player', value_vars=['Successful attacking actions per 90', 'Assists per 90','Goals per 90'], var_name='Metric', value_name='Value')
+    df_melted = df_filtered3.melt(id_vars='Player', value_vars=['Accurate Crosses per 90', 'Assists per 90','Goals per 90'], var_name='Metric', value_name='Value')
 
     # Create stacked bar chart
     fig3 = px.bar(df_melted, x='Value', y='Player', color='Metric', orientation='h', title=f'{position} Attacking Action')
@@ -1190,7 +1190,7 @@ elif position == 'Winger':
 
     # Input for user query
     if not AI21_api_key or not api_token:
-        st.error("Please provide both the TOGETHER API Key and the API Key.")
+        st.error("Please provide both the AI21 API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
