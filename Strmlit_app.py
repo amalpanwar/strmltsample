@@ -1412,13 +1412,13 @@ elif position == 'CF':
 
 
     league_avg_values2 = {
-    'Touches in box per 90': league_avg_row['Touches in box per 90'].values[0],
+    'Goal threat per 90': league_avg_row['Goal threat per 90'].values[0],
     'xG per 90': league_avg_row['xG per 90'].values[0],
     'Goals per 90': league_avg_row['Goals per 90'].values[0],
     'Fouls suffered per 90': league_avg_row['Fouls suffered per 90'].values[0],
       }
 # get max value for X and Y to create quadrants
-    x_max2 = df_filtered_new['Touches in box per 90'].max()
+    x_max2 = df_filtered_new['Goal threat per 90'].max()
     y_max_values2 = {
     'xG per 90': df_filtered_new['xG per 90'].max(),
     'Goals per 90': df_filtered_new['Goals per 90'].max(),
@@ -1426,7 +1426,7 @@ elif position == 'CF':
            }
     
     
-    fig2 = px.scatter(df_filtered2, x='Touches in box per 90', y=['xG per 90','Goals per 90','Fouls suffered per 90'],facet_col='variable',
+    fig2 = px.scatter(df_filtered2, x='Goal threat per 90', y=['xG per 90','Goals per 90','Fouls suffered per 90'],facet_col='variable',
                   facet_col_spacing=0.08,color='Player',title=f'{position} Touches in box vs Goal/xGoal vs Foul suffered')
   
     for i, facet_name in enumerate(['xG per 90','Goals per 90','Fouls suffered per 90']):
@@ -1449,9 +1449,9 @@ elif position == 'CF':
         fig2.add_shape(
         go.layout.Shape(
             type='line',
-            x0=league_avg_values2['Touches in box per 90'],
+            x0=league_avg_values2['Goal threat per 90'],
             y0=0,
-            x1=league_avg_values2['Touches in box per 90'],
+            x1=league_avg_values2['Goal threat per 90'],
             y1=y_max_values2[facet_name],
             xref=f'x{i+1}',
             yref=f'y{i+1}',
@@ -1471,7 +1471,7 @@ elif position == 'CF':
 
     
 
-    df_filtered2['Overall Goal Threat'] = df_filtered2['Goals per 90'] + df_filtered2['xG per 90'] + df_filtered2['Successful attacking actions per 90']
+    df_filtered2['Overall Goal Threat'] = df_filtered2['Goals per 90'] + df_filtered2['Goal threat per 90'] + df_filtered2['Successful attacking actions per 90']
 
 # Sorting the DataFrame by 'Goals + Assists per 90', 'Goals per 90', and 'Assists per 90' in descending order
     df_filtered3 = df_filtered2.sort_values(by=['Overall Goal Threat'], ascending=False)
