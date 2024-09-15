@@ -1285,17 +1285,32 @@ elif position == 'CF':
     df_position['Player Rank'] = df_position['CF Score(0-100)'].rank(ascending=False)
 
     if st.sidebar.button('Show Top 5 Players'):
-        top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
+        df_position_reset = df_position.reset_index()
+        df_position_sorted = df_position_reset.sort_values(by='CF Score(0-100)', ascending=False)  # Assuming higher score is better
+
+# Remove duplicates, keeping the one with the highest 'Defender Score(0-100)'
+        df_position_unique = df_position_sorted.drop_duplicates(subset='Player', keep='first')
+
+# Step 2: Get the top 5 players
+        top_5_df = df_position_unique.head(5) 
+        # Extract top 5 player names and their unique identifiers
+        top_5_players = top_5_df[['Player', 'CF Score(0-100)']].set_index('Player').to_dict()['CF Score(0-100)']
+        top_5_player_names = list(top_5_players.keys())
+    
     # Multiselect only includes top 5 players
         players_CF = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
+        df_filtered2 = df_position_reset[df_position_reset['Player'].isin(players_CF)]
+    
+    # To ensure only the best rank is retained for each player
+        df_filtered2 = df_filtered2.sort_values(by='CF Score(0-100)', ascending=False)
+        df_filtered2 = df_filtered2.drop_duplicates(subset='Player', keep='first')
+
     else:
     # Multiselect includes all players
         players_CF = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-
-    # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-    df_filtered = df_position.loc[players_CF]
+        df_filtered = df_position.loc[players_CF]
+        df_filtered2=df_filtered.reset_index()
     
-    df_filtered2=df_filtered.reset_index()
     df_filtered_new=df_position.reset_index()
    
     league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
