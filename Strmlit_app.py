@@ -1377,7 +1377,7 @@ elif position == 'CF':
     
 
     # Create radar chart for selected players
-    df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
+    df_position2=df_filtered2.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
                         'Matches played', 'Minutes played','Age',
                        'CF Score(0-100)', 'Player Rank', 'CF zscore','Goals', 'Aerial duels per 90', 'Aerial duels won, %',
        'Shots per 90','Shots on target, %', 'Dribbles per 90',
@@ -1386,12 +1386,12 @@ elif position == 'CF':
        'Fouls suffered per 90'
                                           ])
                               
-    radar_fig =create_radar_chart(df_position2, players_CF, id_column='Player', title=f'Radar Chart for Selected {position} (Default: League Average)')
+    radar_fig =create_radar_chart(df_position2.set_index('Player'), players_CF, id_column='Player', title=f'Radar Chart for Selected {position} (Default: League Average)')
     st.plotly_chart(radar_fig)
     
     # Create Gauge chart for selected players
     st.write("Player Ratings Gauge Chart")
-    df_filtered_guage=df_filtered.reset_index()
+    df_filtered_guage=df_filtered2.reset_index()
     league_average_rating = df_filtered_new.loc[df_filtered_new['Player'] == 'League Two Average', 'CF Score(0-100)'].values[0]
     players = df_filtered_guage['Player'].tolist()
     ratings = df_filtered_guage['CF Score(0-100)'].tolist()
