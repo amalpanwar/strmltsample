@@ -662,9 +662,7 @@ elif position == 'CB':
     'PAdj Interceptions': df_filtered_new['PAdj Interceptions'].max(),
     'PAdj Sliding tackles': df_filtered_new['PAdj Sliding tackles'].max()
            }
-    # y_max = max(y_max_values.values())
-
-    # df_filtered2=df_filtered.reset_index()
+   
 
     df_filtered2 = df_filtered2.rename(columns={'Successful defensive actions per 90': 'Successful def. Action/90'})
    
@@ -826,7 +824,7 @@ elif position == 'CB':
     fig3.update_layout(coloraxis_colorbar=dict(title="Aerial duels won per 90"))
     st.plotly_chart(fig3)
     
-
+# AI model
     if not AI21_api_key or not api_token:
         st.error("Please provide both the AI21 API Key and the API Key.")
     else:
@@ -894,14 +892,20 @@ elif position == 'Winger':
     # Dropdown menu for player selection based on position
 
     original_metrics =[
-       'Assists', 'Successful attacking actions per 90',
-       'Goals per 90', 'Shots per 90', 'Shots on target, %', 'Assists per 90',
-       'Crosses per 90', 'Accurate crosses, %', 'Successful dribbles, %',
-       'Offensive duels per 90', 'Offensive duels won, %',
-       'Progressive runs per 90', 'Fouls suffered per 90', 'Passes per 90',
-       'Accurate passes, %', 'Accurate passes to penalty area, %']
-    weights=[1,1,0.9,0.9,0.9,1,1,1,1,1,1,1,1,1,1,1]    
+       'Successful attacking actions per 90',
+       'Goals per 90', 'Shots on Target per 90', 'Assists per 90',
+       'Accurate Crosses per 90', 'Successful dribbles, %',
+       'Pressing Ability per 90', 'Fouls suffered per 90', 'Accurate Passes per 90',
+       'Accurate passes to penalty area, %']
+    weights=[1,1.25,1,1.25,1,1.1,1.2,1,1,1]    
     weighted_metrics = pd.DataFrame()
+    df_position['Shots on Target per 90'] = df_position['Shots per 90'] * (df_position['Shots on target, %'] / 100)
+    df_position['Offensive duels won per 90'] = df_position['Offensive duels per 90'] * (df_position['Offensive duels won, %'] / 100)
+    df_position['Pressing Ability per 90']= df_position['Offensive duels won per 90'] + df_position['Progressive runs per 90']
+    df_position['Accurate Passes per 90'] = df_position['Passes per 90'] * (df_position['Accurate passes, %'] / 100)
+    df_position['Accurate Crosses per 90'] = df_position['Crosses per 90'] * (df_position['Accurate crosses, %'] / 100)
+    
+    
     for metric, weight in zip(original_metrics, weights):
         weighted_metrics[metric] = df_position[metric] * weight
     
@@ -1014,47 +1018,40 @@ elif position == 'Winger':
                         annotation.text = annotation.text.split('=')[1]
     st.plotly_chart(fig)
     
-    #st.plotly_chart(fig)
-    # Ensure 'League Two Average' is included in the list of selected players
-    # if 'League Two Average' not in players:
-    #     players.append('League Two Average')
-
    
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'Contract Expiry \n(Trnsfmkt)', 'Age', 'Matches played','Team',
-       'Minutes played', 'wing zscore','wing Score(0-100)', 'Player Rank'])
+       'Minutes played', 'wing zscore','wing Score(0-100)', 'Player Rank',
+        'Assists','Shots per 90', 'Shots on target, %', 
+       'Crosses per 90', 'Accurate crosses, %', 'Successful dribbles, %',
+       'Offensive duels per 90', 'Offensive duels won, %',
+       'Progressive runs per 90',  'Passes per 90',
+       'Accurate passes, %' ])
                               
-    radar_fig =create_radar_chart(df_position2, players_Wing, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-    
-    columns_to_display = ['Player','Team','Age', 'Matches played', 'Minutes played', 'wing Score(0-100)', 'Player Rank']
-    df_filtered_display=df_filtered.reset_index()
-    df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
-      'wing Score(0-100)': 'Rating (0-100)',
-      'Matches played': 'Matches played (2023/24)'
-         })
-    df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
+    radar_fig =create_radar_chart(df_position2, players_Wing, id_column='Player', title=f'Radar Chart for Selected {position} (Default: League Average)')
+    st.plotly_chart(radar_fig)
 
-# Style the DataFrame
-    def style_dataframe(df):
-        return df.style.set_table_styles(
-        [
-            {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
-            {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-            {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-        ]
-          ).hide(axis="index")
+    # Create Gauge chart for selected players
+    st.write("Player Ratings Gauge Chart")
+    df_filtered_guage=df_filtered.reset_index()
+    league_average_rating = df_filtered_new.loc[df_filtered_new['Player'] == 'League Two Average', 'wing Score(0-100)'].values[0]
+    players = df_filtered_guage['Player'].tolist()
+    ratings = df_filtered_guage['wing Score(0-100)'].tolist()
+    ranks = df_filtered_guage['Player Rank'].tolist()
+    Age = df_filtered_guage['Age'].tolist()
+    Team = df_filtered_guage['Team'].tolist()
+    Matches=df_filtered_guage['Matches played'].tolist()
+    Minutes=df_filtered_guage['Minutes played'].tolist()
 
-    styled_df = style_dataframe(df_filtered_display)
+    for i in range(0, len(players), 3):  # 3 charts per row
+        cols = st.columns(3)
+        for j in range(3):
+            if i + j < len(players):
+                with cols[j]:
+                    fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j],Age[i + j], Team[i + j], Matches[i + j], Minutes[i + j],league_average_rating)
+                    st.plotly_chart(fig)
 
-# Display styled DataFrame in Streamlit
-    # st.write("Players Info:")
-    # st.dataframe(styled_df, use_container_width=True)
-    col1, col2 = st.columns(2)
-    with col1:
-        st.plotly_chart(radar_fig)
-    with col2:
-        st.write("Players Info:")
-        st.dataframe(styled_df, use_container_width=True)
+
     
     league_avg_values2 = {
     'Fouls suffered per 90': league_avg_row['Fouls suffered per 90'].values[0],
