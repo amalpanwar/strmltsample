@@ -1677,9 +1677,9 @@ elif position == 'GK':
     # Create Gauge chart for selected players
     st.write("Player Ratings Gauge Chart")
     df_filtered_guage=df_filtered2
-    league_average_rating = df_filtered_new.loc[df_filtered_new['Player'] == 'League Two Average', 'CF Score(0-100)'].values[0]
+    league_average_rating = df_filtered_new.loc[df_filtered_new['Player'] == 'L1 & L2 Average', 'GK Score(0-100)'].values[0]
     players = df_filtered_guage['Player'].tolist()
-    ratings = df_filtered_guage['CF Score(0-100)'].tolist()
+    ratings = df_filtered_guage['GK Score(0-100)'].tolist()
     ranks = df_filtered_guage['Player Rank'].tolist()
     Age = df_filtered_guage['Age'].tolist()
     Team = df_filtered_guage['Team'].tolist()
