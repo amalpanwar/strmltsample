@@ -1555,12 +1555,13 @@ elif position == 'GK':
     # Dropdown menu for player selection based on position
 
     original_metrics =[
-       'Conceded goals', 'Conceded goals per 90',
-       'xG against', 'xG against per 90', 'Prevented goals',
-       'Prevented goals per 90',
+       'Conceded goals per 90','xG against per 90','Prevented goals per 90',
        'Clean sheets', 'Save rate, %', 'Exits per 90', 'Aerial duels per 90']
-    weights=[-1,-1.25,-0.9,-0.9,1,1,1.25,1,1,1]
+    weights=[-1.25,-1,1.2,1.25,1,1,1]
     weighted_metrics = pd.DataFrame()
+    df_position['Saved Goal']= df_position['Shots against'] - df_position['Conceded goals']
+    df_position['Saved Goal per 90']= (df_position['Saved Goal'] / df_position['Minutes played']) * 90
+    
     for metric, weight in zip(original_metrics, weights):
         weighted_metrics[metric] = df_position[metric] * weight
     
@@ -1581,13 +1582,6 @@ elif position == 'GK':
     df_position["GK Score(0-100)"] = (norm.cdf(df_position["GK zscore"]) * 100).round(2)
     df_position['Player Rank'] = df_position['GK Score(0-100)'].rank(ascending=False)
 
-    # df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
-    # original_mean = df_position["defensive zscore"].mean()
-    # original_std = df_position["defensive zscore"].std()
-    # df_position["defensive zscore"] = (df_position["defensive zscore"] - original_mean) / original_std
-    # df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
-    # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
-    # Dropdown menu for player selection based on position
     if st.sidebar.button('Show Top 5 Players'):
         top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
     # Multiselect only includes top 5 players
@@ -1599,17 +1593,8 @@ elif position == 'GK':
     # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     df_filtered = df_position.loc[players_GK]
     
-    # players_CF = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-    # df_filtered = df_position.loc[players_CF]
-
-    # df_filtered['Recieve long pass, %']= (df_filtered['Received long passes per 90'] / df_filtered['Received passes per 90']) * 100
-
     df_filtered2=df_filtered.reset_index()
-    # df_filtered2['Shots on Target per 90'] = df_filtered2['Shots per 90'] * (df_filtered2['Shots on target, %'] / 100)
-    # df_filtered2['SuccSuccessful dribbles per 90'] = df_filtered2['Dribbles per 90'] * (df_filtered2['Successful dribbles, %'] / 100)
     
-    # df_filtered2['Attacking skills']= df_filtered2['SuccSuccessful dribbles per 90'] + df_filtered2['Received passes per 90'] * 100
-     # df_filtered2['Attacking skills']= df_filtered2['SuccSuccessful dribbles per 90'] + df_filtered2['Received passes per 90'] * 100
     df_filtered_new=df_position.reset_index()
     
     league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'L1 & L2 Average']
@@ -1618,27 +1603,27 @@ elif position == 'GK':
     'Shots against per 90': league_avg_row['Shots against per 90'].values[0],
     'xG against per 90': league_avg_row['xG against per 90'].values[0],
     'Conceded goals per 90': league_avg_row['Conceded goals per 90'].values[0],
-    'Prevented goals per 90': league_avg_row['Prevented goals per 90'].values[0]
+    'Saved Goal per 90': league_avg_row['Saved Goal per 90'].values[0]
       }
 # get max value for X and Y to create quadrants
     x_max = df_filtered_new['Shots against per 90'].max()
     y_max_values = {
     'xG against per 90': df_filtered_new['xG against per 90'].max(),
     'Conceded goals per 90': df_filtered_new['Conceded goals per 90'].max(),
-    'Prevented goals per 90': df_filtered_new['Prevented goals per 90'].max()
+    'Saved Goal per 90': df_filtered_new['Saved Goal per 90'].max()
            }
     y_min_values= {
     'xG against per 90': 0,
     'Conceded goals per 90': 0,
-    'Prevented goals per 90': df_filtered_new['Prevented goals per 90'].min()
+    'Saved Goal per 90':0,# df_filtered_new['Saved Goal per 90'].min()
            }
     
 
    
-    fig = px.scatter(df_filtered2, x='Shots against per 90', y=['xG against per 90','Conceded goals per 90','Prevented goals per 90'], facet_col='variable',
+    fig = px.scatter(df_filtered2, x='Shots against per 90', y=['xG against per 90','Conceded goals per 90','Saved Goal per 90'], facet_col='variable',
                  facet_col_spacing=0.08, color='Player', title='GK Stats against Shots')
 
-    for i, facet_name in enumerate(['xG against per 90','Conceded goals per 90','Prevented goals per 90']):
+    for i, facet_name in enumerate(['xG against per 90','Conceded goals per 90','Saved Goal per 90']):
         # Add horizontal line
         fig.add_shape(
         go.layout.Shape(
@@ -1682,57 +1667,51 @@ elif position == 'GK':
     # Create radar chart for selected players
     df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
                         'Matches played', 'Minutes played','Age',
-                       'GK Score(0-100)', 'Player Rank', 'GK zscore'])
+                       'GK Score(0-100)', 'Player Rank', 'GK zscore',
+                            'Saved Goal per 90', 'Saved Goal','Conceded goals', 
+       'xG against',  'Prevented goals',
+       'Shots against' ])
                               
-    radar_fig =create_radar_chart(df_position2, players_GK, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-    
-    columns_to_display = ['Player','Team','Age', 'Matches played', 'Minutes played', 'GK Score(0-100)', 'Player Rank']
-    df_filtered_display=df_filtered.reset_index()
-    df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
-      'GK Score(0-100)': 'Rating (0-100)',
-      'Matches played': 'Matches played (2023/24)'
-         })
-    df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
+    radar_fig =create_radar_chart(df_position2, players_GK, id_column='Player', title=f'Radar Chart for Selected {position} (Default:League Average)')
+    st.plotly_chart(radar_fig)
+    # Create Gauge chart for selected players
+    st.write("Player Ratings Gauge Chart")
+    df_filtered_guage=df_filtered2
+    league_average_rating = df_filtered_new.loc[df_filtered_new['Player'] == 'League Two Average', 'CF Score(0-100)'].values[0]
+    players = df_filtered_guage['Player'].tolist()
+    ratings = df_filtered_guage['CF Score(0-100)'].tolist()
+    ranks = df_filtered_guage['Player Rank'].tolist()
+    Age = df_filtered_guage['Age'].tolist()
+    Team = df_filtered_guage['Team'].tolist()
+    Matches=df_filtered_guage['Matches played'].tolist()
+    Minutes=df_filtered_guage['Minutes played'].tolist()
 
-# Style the DataFrame
-    def style_dataframe(df):
-        return df.style.set_table_styles(
-        [
-            {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
-            {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-            {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-        ]
-          ).hide(axis="index")
+    for i in range(0, len(players), 3):  # 3 charts per row
+        cols = st.columns(3)
+        for j in range(3):
+            if i + j < len(players):
+                with cols[j]:
+                    fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j],Age[i + j], Team[i + j], Matches[i + j], Minutes[i + j],league_average_rating)
+                    st.plotly_chart(fig)
 
-    styled_df = style_dataframe(df_filtered_display)
 
-# Display styled DataFrame in Streamlit
-    # st.write("Players Info:")
-    # st.dataframe(styled_df, use_container_width=True)
-    col1, col2 = st.columns(2)
-    with col1:
-        st.plotly_chart(radar_fig)
-    with col2:
-        st.write("Players Info:")
-        st.dataframe(styled_df, use_container_width=True)
-    
 
     
     
     league_avg_values2 = {
-    'Shots against': league_avg_row['Shots against'].values[0],
+    'Prevented goals per 90': league_avg_row['Prevented goals per 90'].values[0],
     'Save rate, %': league_avg_row['Save rate, %'].values[0],
     'Matches played': league_avg_row['Matches played'].values[0],
     'Clean sheets': league_avg_row['Clean sheets'].values[0]
           }
 
     # calculate min, max for the quadrants
-    x_min, x_max = df_filtered_new['Shots against'].min(), df_filtered_new['Shots against'].max()
+    x_min, x_max = df_filtered_new['Prevented goals per 90'].min(), df_filtered_new['Prevented goals per 90'].max()
     y_min, y_max = df_filtered_new['Save rate, %'].min(), df_filtered_new['Save rate, %'].max()
     x_min_mp, x_max_mp = df_filtered_new['Matches played'].min(), df_filtered_new['Matches played'].max()
     y_min_cs, y_max_cs = df_filtered_new['Clean sheets'].min(), df_filtered_new['Clean sheets'].max()
 
-    fig2 = px.scatter(df_filtered.reset_index(), x='Shots against', y='Save rate, %',
+    fig2 = px.scatter(df_filtered.reset_index(), x='Prevented goals per 90', y='Save rate, %',
                      color='Player', title=f'{position} Saving Strength')
     
     
@@ -1753,9 +1732,9 @@ elif position == 'GK':
     fig2.add_shape(
     go.layout.Shape(
         type='line',
-        x0=league_avg_values2['Shots against'], 
+        x0=league_avg_values2['Prevented goals per 90'], 
         y0=y_min,
-        x1=league_avg_values2['Shots against'],
+        x1=league_avg_values2['Prevented goals per 90'],
         y1=y_max,
         line=dict(color='blue', width=1, dash='dash'),
         xref='x',
@@ -1831,7 +1810,7 @@ elif position == 'GK':
     # Input field for user prompt
     # user_prompt = st.text_input("Enter your query:")
     if not AI21_api_key or not api_token:
-        st.error("Please provide both the TOGETHER API Key and the API Key.")
+        st.error("Please provide both the AI21 API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
