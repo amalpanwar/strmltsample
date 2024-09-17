@@ -2013,7 +2013,7 @@ elif position == 'FB':
                         'Defensive duels per 90','Defensive duels won, %', 'Aerial duels per 90', 'Aerial duels won, %',
         'Crosses per 90','Passes to final third per 90'])
                               
-    radar_fig =create_radar_chart(df_position2.set_index('Player'), players_FB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+    radar_fig =create_radar_chart(df_position2.set_index('Player'), players_FB, id_column='Player', title=f'Radar Chart for Selected {position} (Default: League Average)')
     st.plotly_chart(radar_fig)
     
     # Create Gauge chart for selected players
