@@ -2009,7 +2009,7 @@ elif position == 'FB':
     # Create radar chart for selected players
     df_position2=df_filtered2.drop(columns=[ 'FB zscore','FB Score(0-100)','Player Rank','Team','Contract Expiry \n(Trnsfmkt)','Age',
                         'Matches played','Minutes played',
-                        'Accurate crosses passes/90', 'Accurate passes to final third/90',
+                        'Accurate crosses per 90', 'Accurate passes to final third/90',
                         'Defensive duels per 90','Defensive duels won, %', 'Aerial duels per 90', 'Aerial duels won, %',
         'Crosses per 90','Passes to final third per 90'])
                               
