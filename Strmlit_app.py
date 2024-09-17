@@ -2184,15 +2184,21 @@ elif position == 'CAM':
     df_position = pvt_df_CAM
 
     original_metrics =[
-       'Assists', 'Defensive duels per 90',
-       'Defensive duels won, %', 'Successful attacking actions per 90',
-       'Shots per 90', 'Shots on target, %', 'Successful dribbles, %',
+       'Assists per 90', 'Defensive duels won per 90', 'Successful attacking actions per 90',
+       'Shots on Target per 90', 'Successful dribbles, %',
        'Offensive duels won, %', 'Progressive runs per 90',
-       'Received passes per 90', 'Passes per 90', 'Accurate passes, %',
+       'Received passes per 90', 'Accurate passes, %',
        'Accurate forward passes, %', 'Accurate passes to final third, %',
        'Accurate passes to penalty area, %', 'Accurate progressive passes, %']
-    weights=[1,0.8,0.8,1,0.9,0.9,0.8,1,1,1,1,1,1,1,1,1]
+    weights=[1.25,0.6,1,1,0.9,0.9,0.9,0.8,1,1,1,1.25,1]
     weighted_metrics = pd.DataFrame()
+    
+    df_position['Assists per 90'] = ((df_position['Assists'] / df_position['Minutes played']) * 90).round(2)
+    df_position['Defensive duels won per 90'] = df_position['Defensive duels per 90'] * (df_position['Defensive duels won, %'] / 100)
+    df_position['Shots on Target per 90'] = df_position['Shots per 90'] * (df_position['Shots on target, %'] / 100)
+    df_position['Overall Passing Skills %'] = df_position['Accurate forward passes, %'] * 0.2 +df_position['Accurate passes to final third, %'] * 0.3 +
+    df_position['Accurate passes to penalty area, %'] * 0.3 + df_position['Accurate progressive passes, %'] * 0.2
+    
     for metric, weight in zip(original_metrics, weights):
         weighted_metrics[metric] = df_position[metric] * weight
     
@@ -2204,51 +2210,101 @@ elif position == 'CAM':
         z_scores[f'{metric} zscore'] = (weighted_metrics[metric] - mean) / std
 
 # Aggregate the z-scores to get a final z-score
-    df_position["CAM zscore"] = z_scores.mean(axis=1)
+    df_position["CF zscore"] = z_scores.mean(axis=1)
 
 # Calculate final z-score and score
-    original_mean = df_position["CAM zscore"].mean()
-    original_std = df_position["CAM zscore"].std()
-    df_position["CAM zscore"] = (df_position["CAM zscore"] - original_mean) / original_std
-    df_position["CAM Score(0-100)"] = (norm.cdf(df_position["CAM zscore"]) * 100).round(2)
-    df_position['Player Rank'] = df_position['CAM Score(0-100)'].rank(ascending=False)
+    original_mean = df_position["CF zscore"].mean()
+    original_std = df_position["CF zscore"].std()
+    df_position["CF zscore"] = (df_position["CF zscore"] - original_mean) / original_std
+    df_position["CF Score(0-100)"] = (norm.cdf(df_position["CF zscore"]) * 100).round(2)
+    df_position['Player Rank'] = df_position['CF Score(0-100)'].rank(ascending=False)
 
-    # df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
-    # original_mean = df_position["defensive zscore"].mean()
-    # original_std = df_position["defensive zscore"].std()
-    # df_position["defensive zscore"] = (df_position["defensive zscore"] - original_mean) / original_std
-    # df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
-    # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
-    # Dropdown menu for player selection based on position
     if st.sidebar.button('Show Top 5 Players'):
-        top_5_players = df_position.nsmallest(5, 'Player Rank').index.tolist()
+        df_position_reset = df_position.reset_index()
+        df_position_sorted = df_position_reset.sort_values(by='CF Score(0-100)', ascending=False)  # Assuming higher score is better
+
+# Remove duplicates, keeping the one with the highest 'Defender Score(0-100)'
+        df_position_unique = df_position_sorted.drop_duplicates(subset='Player', keep='first')
+
+# Step 2: Get the top 5 players
+        top_5_df = df_position_unique.head(5) 
+        # Extract top 5 player names and their unique identifiers
+        top_5_players = top_5_df[['Player', 'CF Score(0-100)']].set_index('Player').to_dict()['CF Score(0-100)']
+        top_5_player_names = list(top_5_players.keys())
+    
     # Multiselect only includes top 5 players
-        players_CAM = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
+        players_CF = st.sidebar.multiselect('Select players:', options=top_5_players, default=top_5_players)
+        df_filtered2 = df_position_reset[df_position_reset['Player'].isin(players_CF)]
+    
+    # To ensure only the best rank is retained for each player
+        df_filtered2 = df_filtered2.sort_values(by='CF Score(0-100)', ascending=False)
+        df_filtered2 = df_filtered2.drop_duplicates(subset='Player', keep='first')
+
     else:
     # Multiselect includes all players
-        players_CAM = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-
-    # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-    df_filtered = df_position.loc[players_CAM]
+        players_CF = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
+        df_filtered = df_position.loc[players_CF]
+        df_filtered2=df_filtered.reset_index()
     
-    # players_CF = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
-    # df_filtered = df_position.loc[players_CF]
+    df_filtered_new=df_position.reset_index()
+   
+    league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
 
-    df_filtered['Recieve long pass, %']= (df_filtered['Received long passes per 90'] / df_filtered['Received passes per 90']) * 100
-
-    df_filtered2=df_filtered.reset_index()
-    df_filtered2['Shots on Target per 90'] = df_filtered2['Shots per 90'] * (df_filtered2['Shots on target, %'] / 100)
-    df_filtered2['SuccSuccessful dribbles per 90'] = df_filtered2['Dribbles per 90'] * (df_filtered2['Successful dribbles, %'] / 100)
-    
-    # df_filtered2['Attacking skills']= df_filtered2['SuccSuccessful dribbles per 90'] + df_filtered2['Received passes per 90'] * 100
+    league_avg_values = {
+    'Shots per 90': league_avg_row['Shots per 90'].values[0],
+    'Shots on Target per 90': league_avg_row['Shots on Target per 90'].values[0],
+    'xG per 90': league_avg_row['xG per 90'].values[0],
+    'Goals per 90': league_avg_row['Goals per 90'].values[0]
+      }
+# get max value for X and Y to create quadrants
+    x_max = df_filtered_new['Shots per 90'].max()
+    y_max_values = {
+    'Shots on Target per 90': df_filtered_new['Shots on Target per 90'].max(),
+    'xG per 90': df_filtered_new['xG per 90'].max(),
+    'Goals per 90': df_filtered_new['Goals per 90'].max()
+           }
     
 
    
     fig = px.scatter(df_filtered2, x='Shots per 90', y=['Shots on Target per 90','xG per 90','Goals per 90'], facet_col='variable',
-                 color='Player', title='Threats on Goal')
+                 facet_col_spacing=0.08,color='Player', title='CF Attacking Skills')
+
+    for i, facet_name in enumerate(['Shots on Target per 90','xG per 90','Goals per 90']):
+        # Add horizontal line
+        fig.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=0,
+            y0=league_avg_values[facet_name],
+            x1=x_max,
+            y1=league_avg_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='red', width=1, dash='dash')
+              )
+          
+           )
+
+    # Add vertical line
+        fig.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=league_avg_values['Shots per 90'],
+            y0=0,
+            x1=league_avg_values['Shots per 90'],
+            y1=y_max_values[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='blue', width=1, dash='dash')
+             )
+              
+              )
 
     fig.update_traces(textposition='top center')
     fig.update_traces(marker=dict(size=8))
+    fig.update_yaxes(matches=None)
+    fig.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
+
     for annotation in fig.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
@@ -2256,51 +2312,93 @@ elif position == 'CAM':
     
 
     # Create radar chart for selected players
-    df_position2=df_filtered.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
+    df_position2=df_filtered2.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
                         'Matches played', 'Minutes played','Age',
-                       'CF Score(0-100)', 'Player Rank', 'CF zscore'])
+                       'CF Score(0-100)', 'Player Rank', 'CF zscore','Goals', 'Aerial duels per 90', 'Aerial duels won, %',
+       'Shots per 90','Shots on target, %', 'Dribbles per 90',
+       'Successful dribbles, %', 
+       'Received passes per 90', 'Received long passes per 90',
+       'Fouls suffered per 90'
+                                          ])
                               
-    radar_fig =create_radar_chart(df_position2, players_CAM, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
+    radar_fig =create_radar_chart(df_position2.set_index('Player'), players_CF, id_column='Player', title=f'Radar Chart for Selected {position} (Default: League Average)')
+    st.plotly_chart(radar_fig)
     
-    columns_to_display = ['Player','Team','Age', 'Matches played', 'Minutes played', 'CAM Score(0-100)', 'Player Rank']
-    df_filtered_display=df_filtered.reset_index()
-    df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
-      'CAM Score(0-100)': 'Rating (0-100)',
-      'Matches played': 'Matches played (2023/24)'
-         })
-    df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
+    # Create Gauge chart for selected players
+    st.write("Player Ratings Gauge Chart")
+    df_filtered_guage=df_filtered2
+    league_average_rating = df_filtered_new.loc[df_filtered_new['Player'] == 'League Two Average', 'CF Score(0-100)'].values[0]
+    players = df_filtered_guage['Player'].tolist()
+    ratings = df_filtered_guage['CF Score(0-100)'].tolist()
+    ranks = df_filtered_guage['Player Rank'].tolist()
+    Age = df_filtered_guage['Age'].tolist()
+    Team = df_filtered_guage['Team'].tolist()
+    Matches=df_filtered_guage['Matches played'].tolist()
+    Minutes=df_filtered_guage['Minutes played'].tolist()
 
-# Style the DataFrame
-    def style_dataframe(df):
-        return df.style.set_table_styles(
-        [
-            {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
-            {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-            {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-        ]
-          ).hide(axis="index")
+    for i in range(0, len(players), 3):  # 3 charts per row
+        cols = st.columns(3)
+        for j in range(3):
+            if i + j < len(players):
+                with cols[j]:
+                    fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j],Age[i + j], Team[i + j], Matches[i + j], Minutes[i + j],league_average_rating)
+                    st.plotly_chart(fig)
 
-    styled_df = style_dataframe(df_filtered_display)
 
-# Display styled DataFrame in Streamlit
-    # st.write("Players Info:")
-    # st.dataframe(styled_df, use_container_width=True)
-    col1, col2 = st.columns(2)
-    with col1:
-        st.pyplot(radar_fig)
-    with col2:
-        st.write("Players Info:")
-        st.dataframe(styled_df, use_container_width=True)
-    
 
+    league_avg_values2 = {
+    'Goal threat per 90': league_avg_row['Goal threat per 90'].values[0],
+    'xG per 90': league_avg_row['xG per 90'].values[0],
+    'Goals per 90': league_avg_row['Goals per 90'].values[0],
+    'Fouls suffered per 90': league_avg_row['Fouls suffered per 90'].values[0],
+      }
+# get max value for X and Y to create quadrants
+    x_max2 = df_filtered_new['Goal threat per 90'].max()
+    y_max_values2 = {
+    'xG per 90': df_filtered_new['xG per 90'].max(),
+    'Goals per 90': df_filtered_new['Goals per 90'].max(),
+    'Fouls suffered per 90': df_filtered_new['Fouls suffered per 90'].max()
+           }
     
     
-    
-    fig2 = px.scatter(df_filtered2, x='Touches in box per 90', y=['xG per 90','Goals per 90','Fouls suffered per 90'],facet_col='variable',
-                  color='Player',title=f'{position} Touches in box vs Goal threat vs Foul suffered')
+    fig2 = px.scatter(df_filtered2, x='Goal threat per 90', y=['xG per 90','Goals per 90','Fouls suffered per 90'],facet_col='variable',
+                  facet_col_spacing=0.08,color='Player',title=f'{position} Goal Threat vs Goal/xGoal vs Foul suffered')
   
+    for i, facet_name in enumerate(['xG per 90','Goals per 90','Fouls suffered per 90']):
+        # Add horizontal line
+        fig2.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=0,
+            y0=league_avg_values2[facet_name],
+            x1=x_max2,
+            y1=league_avg_values2[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='red', width=1, dash='dash')
+              )
+          
+           )
+
+    # Add vertical line
+        fig2.add_shape(
+        go.layout.Shape(
+            type='line',
+            x0=league_avg_values2['Goal threat per 90'],
+            y0=0,
+            x1=league_avg_values2['Goal threat per 90'],
+            y1=y_max_values2[facet_name],
+            xref=f'x{i+1}',
+            yref=f'y{i+1}',
+            line=dict(color='blue', width=1, dash='dash')
+             )
+              
+              )
+
     fig2.update_traces(textposition='top center')
     fig2.update_traces(marker=dict(size=8))
+    fig2.update_yaxes(matches=None)
+    fig2.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
     for annotation in fig2.layout.annotations:
              if 'variable=' in annotation.text:
                         annotation.text = annotation.text.split('=')[1]
@@ -2308,10 +2406,10 @@ elif position == 'CAM':
 
     
 
-    df_filtered2['Overall Goal Threat'] = df_filtered2['Goals per 90'] + df_filtered2['xG per 90'] + df_filtered2['Successful attacking actions per 90']
+    df_filtered2['Overall Threat built'] = df_filtered2['xG per 90'] + df_filtered2['Goals per 90'] + df_filtered2['Successful attacking actions per 90']
 
 # Sorting the DataFrame by 'Goals + Assists per 90', 'Goals per 90', and 'Assists per 90' in descending order
-    df_filtered3 = df_filtered2.sort_values(by=['Overall Goal Threat'], ascending=False)
+    df_filtered3 = df_filtered2.sort_values(by=['Overall Threat built'], ascending=False)
 
     # Melt the dataframe to long format for stacking
     df_melted = df_filtered3.melt(id_vars='Player', value_vars=['Successful attacking actions per 90', 'xG per 90','Goals per 90'], var_name='Metric', value_name='Value')
@@ -2319,6 +2417,8 @@ elif position == 'CAM':
     # Create stacked bar chart
     fig3 = px.bar(df_melted, x='Value', y='Player', color='Metric', orientation='h', title=f'{position} Attacking threats')
     st.plotly_chart(fig3)
+
+    
 
     
     # Input field for user prompt
@@ -2384,13 +2484,15 @@ elif position == 'CAM':
         # st.success("Chroma vector store initialized successfully.")
         except Exception as e:
                 logging.error(f"Error: {str(e)}")
-# players = st.selectbox('Select a player:', options=pivot_df.index.tolist())
 
-# # Filter data for selected player
-# #selected_data = pivot_df.loc[[player_selected]]
-# st.subheader('Radar Chart for Selected Player and League Average')
-# # Create radar chart for selected player
-# create_radar_chart(pivot_df, [players, 'League Two Average'], id_column='Player', title=f'Radar Chart for {players} and League Average')
+df_position = pvt_df_CF
+    # Dropdown menu for player selection based on position
 
-
+    original_metrics =[
+       'Aerial duels won per 90',
+       'Successful attacking actions per 90', 'Goals per 90', 'xG per 90',
+       'Shots on Target per 90', 'Successful dribbles per 90', 'Touches in box per 90',
+       'Recieve long pass, %','Goal threat per 90',
+       'Fouls suffered per 90']
+   
 
