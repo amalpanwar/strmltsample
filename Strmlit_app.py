@@ -2274,8 +2274,8 @@ elif position == 'CAM':
     df_filtered2 = df_filtered2.rename(columns={'Accurate forward passes, %': 'Forward passes,%',
                                                 'Accurate progressive passes, %': 'Progressive passes,%',
                                                 'Accurate passes to penalty area, %': 'pass to penalty area,%',
-                                                'Accurate passes to final third, %': 'pass to final third,%'
-                                      )
+                                                'Accurate passes to final third, %': 'pass to final third,%'})
+                                      
 
    
     fig = px.scatter(df_filtered2, x='Accurate passes, %', y=['Forward passes,%','Progressive passes,%','pass to penalty area,%','pass to final third,%'], facet_col='variable',
@@ -2325,7 +2325,7 @@ elif position == 'CAM':
 
     # Create radar chart for selected players
     df_position2=df_filtered2.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
-                        'Matches played', 'Minutes played','Age',
+                        'Matches played\n(23/24)', 'Minutes played','Age',
                        'CAM Score(0-100)', 'Player Rank', 'CAM zscore','Assists', 'Defensive duels per 90',
        'Defensive duels won, %', 'Shots per 90', 'Shots on target, %', 'Successful dribbles, %',
        'Passes per 90', 'Accurate passes, %',
@@ -2345,7 +2345,7 @@ elif position == 'CAM':
     ranks = df_filtered_guage['Player Rank'].tolist()
     Age = df_filtered_guage['Age'].tolist()
     Team = df_filtered_guage['Team'].tolist()
-    Matches=df_filtered_guage['Matches played'].tolist()
+    Matches=df_filtered_guage['Matches played\n(23/24)'].tolist()
     Minutes=df_filtered_guage['Minutes played'].tolist()
 
     for i in range(0, len(players), 3):  # 3 charts per row
