@@ -2256,7 +2256,7 @@ elif position == 'CAM':
     'Accurate passes, %': league_avg_row['Accurate passes, %'].values[0],
     'Accurate forward passes, %': league_avg_row['Accurate forward passes, %'].values[0],
     'Accurate passes to final third, %': league_avg_row['Accurate passes to final third, %'].values[0],
-    'Accurate passes to penalty area, %': league_avg_row['Accurate passes to penalty area, %'].values[0]
+    'Accurate passes to penalty area, %': league_avg_row['Accurate passes to penalty area, %'].values[0],
     'Accurate progressive passes, %': league_avg_row['Accurate progressive passes, %'].values[0]
       }
 # get max value for X and Y to create quadrants
@@ -2264,8 +2264,8 @@ elif position == 'CAM':
     y_max_values = {
     'Accurate passes, %': df_filtered_new['Accurate passes, %'].max(),
     'Accurate forward passes, %': df_filtered_new['Accurate forward passes, %'].max(),
-    'Accurate passes to final third, %': df_filtered_new['Accurate passes to final third, %'].max()
-    'Accurate passes to penalty area, %': df_filtered_new['Accurate passes to penalty area, %'].max()
+    'Accurate passes to final third, %': df_filtered_new['Accurate passes to final third, %'].max(),
+    'Accurate passes to penalty area, %': df_filtered_new['Accurate passes to penalty area, %'].max(),
     'Accurate progressive passes, %': df_filtered_new['Accurate progressive passes, %'].max()
            }
     
