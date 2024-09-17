@@ -2262,7 +2262,7 @@ elif position == 'CAM':
     'Accurate progressive passes, %': league_avg_row['Accurate progressive passes, %'].values[0]
       }
 # get max value for X and Y to create quadrants
-    x_max = df_filtered_new['Shots per 90'].max()
+    x_max = df_filtered_new['Accurate passes, %'].max()
     y_max_values = {
     'Accurate passes, %': df_filtered_new['Accurate passes, %'].max(),
     'Accurate forward passes, %': df_filtered_new['Accurate forward passes, %'].max(),
@@ -2271,12 +2271,17 @@ elif position == 'CAM':
     'Accurate progressive passes, %': df_filtered_new['Accurate progressive passes, %'].max()
            }
     
+    df_filtered2 = df_filtered2.rename(columns={'Accurate forward passes, %': 'Forward passes,%',
+                                                'Accurate progressive passes, %': 'Progressive passes,%',
+                                                'Accurate passes to penalty area, %': 'pass to penalty area,%',
+                                                'Accurate passes to final third, %': 'pass to final third,%'
+                                      )
 
    
-    fig = px.scatter(df_filtered2, x='Accurate passes, %', y=['Accurate forward passes, %','Accurate progressive passes, %','Accurate passes to penalty area, %','Accurate passes to final third, %'], facet_col='variable',
-                 facet_col_spacing=0.08,color='Player', title='CF Attacking Skills')
+    fig = px.scatter(df_filtered2, x='Accurate passes, %', y=['Forward passes,%','Progressive passes,%','pass to penalty area,%','pass to final third,%'], facet_col='variable',
+                 facet_col_spacing=0.08,color='Player', title='CAM Passing Skills')
 
-    for i, facet_name in enumerate(['Accurate forward passes, %','Accurate progressive passes, %','Accurate passes to penalty area, %','Accurate passes to final third, %']):
+    for i, facet_name in enumerate(['Forward passes,%','Progressive passes,%','pass to penalty area,%','pass to final third,%']):
         # Add horizontal line
         fig.add_shape(
         go.layout.Shape(
