@@ -2101,7 +2101,7 @@ elif position == 'FB':
 
     df_filtered2 = df_filtered2.sort_values(by='Accurate crosses per 90', ascending=False)
 
-   fig3 = px.bar(
+    fig3 = px.bar(
     df_filtered2, 
     x='Accurate crosses per 90', 
     y='Player', 
