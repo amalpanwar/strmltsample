@@ -1744,10 +1744,7 @@ elif position == 'GK':
   
     fig2.update_traces(textposition='top center')
     fig2.update_traces(marker=dict(size=8))
-    # for annotation in fig2.layout.annotations:
-    #          if 'variable=' in annotation.text:
-    #                     annotation.text = annotation.text.split('=')[1]
-    
+ 
     
     fig3 = px.scatter(df_filtered.reset_index(), x='Matches played', y='Clean sheets',
                      color='Player', title=f'{position} Clean sheets vs Matches Played')
@@ -1781,9 +1778,6 @@ elif position == 'GK':
            )
     fig3.update_traces(textposition='top center')
     fig3.update_traces(marker=dict(size=8))
-    # for annotation in fig3.layout.annotations:
-    #          if 'variable=' in annotation.text:
-    #                     annotation.text = annotation.text.split('=')[1]
     
     col1, col2 = st.columns(2)
     with col1:
@@ -1876,13 +1870,18 @@ elif position == 'FB':
     df_position = pvt_df_FB
 
     original_metrics =[
-       'Successful defensive actions per 90', 'Defensive duels per 90',
-       'Defensive duels won, %', 'Aerial duels per 90', 'Aerial duels won, %',
-       'Interceptions per 90', 'Crosses per 90', 'Accurate crosses, %',
+       'Successful defensive actions per 90', 'Defensive duels won per 90','Aerial duels won per 90',
+       'Interceptions per 90',  'Accurate crosses per 90',
        'Accurate forward passes, %', 'Accurate long passes, %',
-       'Passes to final third per 90', 'Accurate passes to final third, %']
-    weights=[1,1,1,0.8,0.8,1,0.9,1,0.9,1,0.9,1]
+       'Accurate passes to final third/90']
+    weights=[1,1.1,1.1,1.1,0.9,0.9,0.9,0.9]
     weighted_metrics = pd.DataFrame()
+    
+    df_position['Aerial duels won per 90'] = df_position['Aerial duels per 90'] * (df_position['Aerial duels won, %'] / 100)
+    df_position['Defensive duels won per 90'] = df_position['Defensive duels per 90'] * (df_position['Defensive duels won, %'] / 100)
+    df_position['Accurate passes to final third/90'] = df_position['Passes to final third per 90'] * (df_position['Accurate passes to final third, %'] / 100)
+    df_position['Accurate crosses per 90'] = df_position['Crosses per 90'] * (df_position['Accurate crosses, %'] / 100)
+    
     for metric, weight in zip(original_metrics, weights):
         weighted_metrics[metric] = df_position[metric] * weight
     
@@ -1903,13 +1902,6 @@ elif position == 'FB':
     df_position["FB Score(0-100)"] = (norm.cdf(df_position["FB zscore"]) * 100).round(2)
     df_position['Player Rank'] = df_position['FB Score(0-100)'].rank(ascending=False)
 
-    # df_position["defensive zscore"] = np.dot(df_position[original_metrics], weights)
-    # original_mean = df_position["defensive zscore"].mean()
-    # original_std = df_position["defensive zscore"].std()
-    # df_position["defensive zscore"] = (df_position["defensive zscore"] - original_mean) / original_std
-    # df_position["Defender Score(0-100)"] = (norm.cdf(df_position["defensive zscore"]) * 100).round(2)
-    # df_position['Player Rank'] = df_position['Defender Score(0-100)'].rank(ascending=False)
-    # Dropdown menu for player selection based on position
     if st.sidebar.button('Show Top 5 Players'):
         df_position_reset = df_position.reset_index()
         df_position_sorted = df_position_reset.sort_values(by='FB Score(0-100)', ascending=False)  # Assuming higher score is better
@@ -1940,8 +1932,6 @@ elif position == 'FB':
     # players_CB = st.sidebar.multiselect('Select players:', options=df_position.index.tolist(), default=['League Two Average'])
     # df_filtered = df_position.loc[players_FB]
     df_filtered_new=df_position.reset_index()
-    df_filtered_new['Defensive duels won per 90'] = df_filtered_new['Defensive duels per 90'] * (df_filtered_new['Defensive duels won, %'] / 100)
-    df_filtered_new['Aerial duels won per 90'] = df_filtered_new['Aerial duels per 90'] * (df_filtered_new['Aerial duels won, %'] / 100)
     league_avg_row = df_filtered_new[df_filtered_new['Player'] == 'League Two Average']
 
 # Extract league average values
@@ -1969,9 +1959,6 @@ elif position == 'FB':
 
     df_filtered2 = df_filtered2.rename(columns={'Successful defensive actions per 90': 'Successful def. Action/90'})
    
-
-    df_filtered2['Defensive duels won per 90'] = df_filtered2['Defensive duels per 90'] * (df_filtered2['Defensive duels won, %'] / 100)
-    df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
     # df_filtered2 = df_filtered2.rename(columns={'Successful defensive actions per 90': 'Successful def. Action/90'})
 
    
@@ -2021,39 +2008,33 @@ elif position == 'FB':
 
     # Create radar chart for selected players
     df_position2=df_filtered2.drop(columns=[ 'FB zscore','FB Score(0-100)','Player Rank','Team','Contract Expiry \n(Trnsfmkt)','Age',
-                        'Matches played','Minutes played'])
+                        'Matches played','Minutes played',
+                        'Accurate crosses passes/90', 'Accurate passes to final third/90',
+                        'Defensive duels per 90','Defensive duels won, %', 'Aerial duels per 90', 'Aerial duels won, %',
+        'Crosses per 90','Passes to final third per 90'])
                               
     radar_fig =create_radar_chart(df_position2.set_index('Player'), players_FB, id_column='Player', title=f'Radar Chart for Selected {position} Players and League Average')
-    # st.pyplot(radar_fig)
-    columns_to_display = ['Player','Team','Age', 'Matches played', 'Minutes played', 'FB Score(0-100)', 'Player Rank']
-    df_filtered_display=df_filtered2
-    df_filtered_display = df_filtered_display[columns_to_display].rename(columns={
-      'FB Score(0-100)': 'Rating (0-100)',
-      'Matches played': 'Matches played (2023/24)'
-         })
-    df_filtered_display = df_filtered_display.applymap(lambda x: f"{x:.2f}" if isinstance(x, (int, float)) else x)
+    st.plotly_chart(radar_fig)
+    
+    # Create Gauge chart for selected players
+    st.write("Player Ratings Gauge Chart")
+    df_filtered_guage=df_filtered2
+    league_average_rating = df_filtered_new.loc[df_filtered_new['Player'] == 'League Two Average', 'FB Score(0-100)'].values[0]
+    players = df_filtered_guage['Player'].tolist()
+    ratings = df_filtered_guage['FB Score(0-100)'].tolist()
+    ranks = df_filtered_guage['Player Rank'].tolist()
+    Age = df_filtered_guage['Age'].tolist()
+    Team = df_filtered_guage['Team'].tolist()
+    Matches=df_filtered_guage['Matches played'].tolist()
+    Minutes=df_filtered_guage['Minutes played'].tolist()
 
-# Style the DataFrame
-    def style_dataframe(df):
-        return df.style.set_table_styles(
-        [
-            {"selector": "thead th", "props": [("font-weight", "bold"), ("background-color", "#4CAF50"), ("color", "white")]},
-            {"selector": "td", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-            {"selector": "table", "props": [("background-color", "#f2f2f2"), ("color", "black")]},
-        ]
-          ).hide(axis="index")
-
-    styled_df = style_dataframe(df_filtered_display)
-
-# Display styled DataFrame in Streamlit
-    # st.write("Players Info:")
-    # st.dataframe(styled_df, use_container_width=True)
-    col1, col2 = st.columns(2)
-    with col1:
-        st.plotly_chart(radar_fig)
-    with col2:
-        st.write("Players Info:")
-        st.dataframe(styled_df, use_container_width=True)
+    for i in range(0, len(players), 3):  # 3 charts per row
+        cols = st.columns(3)
+        for j in range(3):
+            if i + j < len(players):
+                with cols[j]:
+                    fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j],Age[i + j], Team[i + j], Matches[i + j], Minutes[i + j],league_average_rating)
+                    st.plotly_chart(fig)
 
     league_avg_values = {
     'Accurate forward passes, %': league_avg_row['Accurate forward passes, %'].values[0],
@@ -2118,23 +2099,24 @@ elif position == 'FB':
 
     # df_filtered2['Aerial duels won per 90'] = df_filtered2['Aerial duels per 90'] * (df_filtered2['Aerial duels won, %'] / 100)
 
-    df_filtered2 = df_filtered2.sort_values(by='Accurate crosses, %', ascending=False)
+    df_filtered2 = df_filtered2.sort_values(by='Accurate crosses per 90', ascending=False)
 
-    # Melt the dataframe to long format for stacking
-    df_melted = df_filtered2.melt(id_vars='Player', value_vars=['Accurate crosses, %'], var_name='Metric', value_name='Value')
+   fig3 = px.bar(
+    df_filtered2, 
+    x='Accurate crosses per 90', 
+    y='Player', 
+    orientation='h', 
+    title=f'{position} Crossing Skills',
+    color='Accurate crosses per 90',  # Color based on 'Aerial duels won per 90'
+    color_continuous_scale='oranges'  # Color scale from dark to light
+    # range_color=[0, max_aerial_duels_won]    
+         )
 
-    # Create stacked bar chart
-    fig3 = px.bar(df_melted, x='Value', y='Player', color='Metric', orientation='h', title=f'{position} Crossing Skills')
+# Reverse the color scale so that higher values are darker
+    fig3.update_layout(coloraxis_colorbar=dict(title="Accurate crosses per 90"))
     st.plotly_chart(fig3)
     
-
-    # col1, col2 = st.columns([1.5, 1])
-    # with col1:
-    #     st.plotly_chart(fig2)
-    # with col2:
-    #     st.plotly_chart(fig3)
-    # Input field for user prompt
-    # user_prompt = st.text_input("Enter your query:")
+# AI model
     if not AI21_api_key or not api_token:
         st.error("Please provide both the TOGETHER API Key and the API Key.")
     else:
