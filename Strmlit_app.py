@@ -2198,8 +2198,10 @@ elif position == 'CAM':
     df_position['Assists per 90'] = ((df_position['Assists'] / df_position['Minutes played']) * 90).round(2)
     df_position['Defensive duels won per 90'] = df_position['Defensive duels per 90'] * (df_position['Defensive duels won, %'] / 100)
     df_position['Shots on Target per 90'] = df_position['Shots per 90'] * (df_position['Shots on target, %'] / 100)
-    df_position['Overall Passing Skills, %'] = (df_position['Accurate forward passes, %'] * 0.2) + (df_position['Accurate passes to final third, %'] * 0.3)
-    + (df_position['Accurate passes to penalty area, %'] * 0.3) + (df_position['Accurate progressive passes, %'] * 0.2)
+    df_position['Overall Passing Skills, %'] = (df_position['Accurate forward passes, %'] * 0.2 + 
+                                                df_position['Accurate passes to final third, %'] * 0.3
+                                                + df_position['Accurate passes to penalty area, %'] * 0.3
+                                                + df_position['Accurate progressive passes, %'] * 0.2)
     
     for metric, weight in zip(original_metrics, weights):
         weighted_metrics[metric] = df_position[metric] * weight
