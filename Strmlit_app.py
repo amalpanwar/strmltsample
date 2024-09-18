@@ -2256,7 +2256,7 @@ elif position == 'CAM':
 
     league_avg_values = {
     'Accurate passes, %': league_avg_row['Accurate passes, %'].values[0],
-    'Accurate forward passes, %': league_avg_row['Accurate forward passes, %'].values[0],
+    # 'Accurate forward passes, %': league_avg_row['Accurate forward passes, %'].values[0],
     'Accurate passes to final third, %': league_avg_row['Accurate passes to final third, %'].values[0],
     'Accurate passes to penalty area, %': league_avg_row['Accurate passes to penalty area, %'].values[0],
     'Accurate progressive passes, %': league_avg_row['Accurate progressive passes, %'].values[0]
@@ -2264,24 +2264,24 @@ elif position == 'CAM':
 # get max value for X and Y to create quadrants
     x_max = df_filtered_new['Accurate passes, %'].max()
     y_max_values = {
-    'Accurate passes, %': df_filtered_new['Accurate passes, %'].max(),
-    'Accurate forward passes, %': df_filtered_new['Accurate forward passes, %'].max(),
+    # 'Accurate passes, %': df_filtered_new['Accurate passes, %'].max(),
+    # 'Accurate forward passes, %': df_filtered_new['Accurate forward passes, %'].max(),
     'Accurate passes to final third, %': df_filtered_new['Accurate passes to final third, %'].max(),
     'Accurate passes to penalty area, %': df_filtered_new['Accurate passes to penalty area, %'].max(),
     'Accurate progressive passes, %': df_filtered_new['Accurate progressive passes, %'].max()
            }
     
-    df_filtered2 = df_filtered2.rename(columns={'Accurate forward passes, %': 'Forward passes,%',
+    df_filtered2 = df_filtered2.rename(columns={
                                                 'Accurate progressive passes, %': 'Progressive passes,%',
                                                 'Accurate passes to penalty area, %': 'pass to penalty area,%',
                                                 'Accurate passes to final third, %': 'pass to final third,%'})
                                       
 
    
-    fig = px.scatter(df_filtered2, x='Accurate passes, %', y=['Forward passes,%','Progressive passes,%','pass to penalty area,%','pass to final third,%'], facet_col='variable',
+    fig = px.scatter(df_filtered2, x='Accurate passes, %', y=['Progressive passes,%','pass to penalty area,%','pass to final third,%'], facet_col='variable',
                  facet_col_spacing=0.08,color='Player', title='CAM Passing Skills')
 
-    for i, facet_name in enumerate(['Accurate forward passes, %','Accurate progressive passes, %','Accurate passes to penalty area, %','Accurate passes to final third, %']):
+    for i, facet_name in enumerate(['Accurate progressive passes, %','Accurate passes to penalty area, %','Accurate passes to final third, %']):
         # Add horizontal line
         fig.add_shape(
         go.layout.Shape(
