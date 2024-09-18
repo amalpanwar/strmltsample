@@ -115,7 +115,7 @@ st.markdown(
     )
 
 #Logo
-logo_url = "https://your-logo-url.com/logo.png"  # Replace with your logo URL
+logo_url = "image/Elgin_City_FC_Badge.png"  # Replace with your logo URL
 
 # Inject CSS to place the logo in the top-right corner
 st.markdown(
