@@ -114,6 +114,25 @@ st.markdown(
     unsafe_allow_html=True
     )
 
+#Logo
+logo_url = "https://your-logo-url.com/logo.png"  # Replace with your logo URL
+
+# Inject CSS to place the logo in the top-right corner
+st.markdown(
+    f"""
+    <style>
+    .logo {{
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        width: 120px;  /* Adjust the size */
+    }}
+    </style>
+    <img src="{logo_url}" class="logo">
+    """,
+    unsafe_allow_html=True
+)
+
 ##*********************** Radar Chart ***************************************************************************************
 def create_radar_chart(df, players, id_column, title=None, max_values=None, padding=1.25):
     # Select data for the chosen players
