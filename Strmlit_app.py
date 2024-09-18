@@ -2122,7 +2122,7 @@ elif position == 'FB':
     
 # AI model
     if not AI21_api_key or not api_token:
-        st.error("Please provide both the TOGETHER API Key and the API Key.")
+        st.error("Please provide both the AI21 API Key and the API Key.")
     else:
         try:
             # Initialize the LLM model
@@ -2256,7 +2256,6 @@ elif position == 'CAM':
 
     league_avg_values = {
     'Accurate passes, %': league_avg_row['Accurate passes, %'].values[0],
-    # 'Accurate forward passes, %': league_avg_row['Accurate forward passes, %'].values[0],
     'Accurate passes to final third, %': league_avg_row['Accurate passes to final third, %'].values[0],
     'Accurate passes to penalty area, %': league_avg_row['Accurate passes to penalty area, %'].values[0],
     'Accurate progressive passes, %': league_avg_row['Accurate progressive passes, %'].values[0]
@@ -2264,8 +2263,6 @@ elif position == 'CAM':
 # get max value for X and Y to create quadrants
     x_min, x_max = df_filtered_new['Accurate passes, %'].min(),df_filtered_new['Accurate passes, %'].max()
     y_max_values = {
-    # 'Accurate passes, %': df_filtered_new['Accurate passes, %'].max(),
-    # 'Accurate forward passes, %': df_filtered_new['Accurate forward passes, %'].max(),
     'Accurate passes to final third, %': df_filtered_new['Accurate passes to final third, %'].max(),
     'Accurate passes to penalty area, %': df_filtered_new['Accurate passes to penalty area, %'].max(),
     'Accurate progressive passes, %': df_filtered_new['Accurate progressive passes, %'].max()
@@ -2278,12 +2275,12 @@ elif position == 'CAM':
     
     df_filtered2 = df_filtered2.rename(columns={
                                                 'Accurate progressive passes, %': 'Progressive passes,%',
-                                                'Accurate passes to penalty area, %': 'pass to penalty area,%',
-                                                'Accurate passes to final third, %': 'pass to final third,%'})
+                                                'Accurate passes to penalty area, %': 'pass into penalty area,%',
+                                                'Accurate passes to final third, %': 'pass into final third,%'})
                                       
 
    
-    fig = px.scatter(df_filtered2, x='Accurate passes, %', y=['Progressive passes,%','pass to penalty area,%','pass to final third,%'], facet_col='variable',
+    fig = px.scatter(df_filtered2, x='Accurate passes, %', y=['Progressive passes,%','pass into penalty area,%','pass into final third,%'], facet_col='variable',
                  facet_col_spacing=0.08,color='Player', title='CAM Passing Skills')
 
     for i, facet_name in enumerate(['Accurate progressive passes, %','Accurate passes to penalty area, %','Accurate passes to final third, %']):
@@ -2332,7 +2329,7 @@ elif position == 'CAM':
     df_position2=df_filtered2.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)','Matches played\n(23/24)','Minutes played','Age',
                        'CAM Score(0-100)', 'Player Rank', 'CAM zscore','Assists', 'Defensive duels per 90',
        'Defensive duels won, %', 'Shots per 90', 'Shots on target, %', 'Successful dribbles, %',
-       'Passes per 90', 'Accurate passes, %','Forward passes,%','Progressive passes,%','pass to penalty area,%','pass to final third,%'
+       'Passes per 90', 'Accurate passes, %','Accurate forward passes, %'','Progressive passes,%','pass into penalty area,%','pass into final third,%'
                                           ])
                               
     radar_fig =create_radar_chart(df_position2.set_index('Player'), players_CAM, id_column='Player', title=f'Radar Chart for Selected {position} (Default: League Average)')
