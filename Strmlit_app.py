@@ -2324,13 +2324,10 @@ elif position == 'CAM':
     
 
     # Create radar chart for selected players
-    df_position2=df_filtered2.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)',
-                        'Matches played\n(23/24)', 'Minutes played','Age',
+    df_position2=df_filtered2.drop(columns=[ 'Team','Contract Expiry \n(Trnsfmkt)','Matches played\n(23/24)','Minutes played','Age',
                        'CAM Score(0-100)', 'Player Rank', 'CAM zscore','Assists', 'Defensive duels per 90',
        'Defensive duels won, %', 'Shots per 90', 'Shots on target, %', 'Successful dribbles, %',
-       'Passes per 90', 'Accurate passes, %',
-       'Accurate forward passes, %', 'Accurate passes to final third, %',
-       'Accurate passes to penalty area, %', 'Accurate progressive passes, %'
+       'Passes per 90', 'Accurate passes, %','Forward passes,%','Progressive passes,%','pass to penalty area,%','pass to final third,%'
                                           ])
                               
     radar_fig =create_radar_chart(df_position2.set_index('Player'), players_CAM, id_column='Player', title=f'Radar Chart for Selected {position} (Default: League Average)')
