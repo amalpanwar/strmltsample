@@ -2281,7 +2281,7 @@ elif position == 'CAM':
     fig = px.scatter(df_filtered2, x='Accurate passes, %', y=['Forward passes,%','Progressive passes,%','pass to penalty area,%','pass to final third,%'], facet_col='variable',
                  facet_col_spacing=0.08,color='Player', title='CAM Passing Skills')
 
-    for i, facet_name in enumerate(['Forward passes,%','Progressive passes,%','pass to penalty area,%','pass to final third,%']):
+    for i, facet_name in enumerate(['Accurate forward passes, %','Accurate progressive passes, %','Accurate passes to penalty area, %','Accurate passes to final third, %']):
         # Add horizontal line
         fig.add_shape(
         go.layout.Shape(
