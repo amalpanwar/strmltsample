@@ -124,7 +124,7 @@ st.markdown(
     <style>
     .logo {{
         position: fixed;
-        top: 80px;
+        top: 70px;
         right: 10px;
         width: 120px;  /* Adjust the size */
     }}
