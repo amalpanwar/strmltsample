@@ -2262,13 +2262,18 @@ elif position == 'CAM':
     'Accurate progressive passes, %': league_avg_row['Accurate progressive passes, %'].values[0]
       }
 # get max value for X and Y to create quadrants
-    x_max = df_filtered_new['Accurate passes, %'].max()
+    x_min, x_max = df_filtered_new['Accurate passes, %'].min(),df_filtered_new['Accurate passes, %'].max()
     y_max_values = {
     # 'Accurate passes, %': df_filtered_new['Accurate passes, %'].max(),
     # 'Accurate forward passes, %': df_filtered_new['Accurate forward passes, %'].max(),
     'Accurate passes to final third, %': df_filtered_new['Accurate passes to final third, %'].max(),
     'Accurate passes to penalty area, %': df_filtered_new['Accurate passes to penalty area, %'].max(),
     'Accurate progressive passes, %': df_filtered_new['Accurate progressive passes, %'].max()
+           }
+    y_min_values= {
+    'Accurate passes to final third, %': df_filtered_new['Accurate passes to final third, %'].min(),
+    'Accurate passes to penalty area, %': df_filtered_new['Accurate passes to penalty area, %'].min(),
+    'Accurate progressive passes, %': df_filtered_new['Accurate progressive passes, %'].min()
            }
     
     df_filtered2 = df_filtered2.rename(columns={
@@ -2286,7 +2291,7 @@ elif position == 'CAM':
         fig.add_shape(
         go.layout.Shape(
             type='line',
-            x0=0,
+            x0=x_min,
             y0=league_avg_values[facet_name],
             x1=x_max,
             y1=league_avg_values[facet_name],
@@ -2302,7 +2307,7 @@ elif position == 'CAM':
         go.layout.Shape(
             type='line',
             x0=league_avg_values['Accurate passes, %'],
-            y0=0,
+            y0=y_min_values[facet_name],
             x1=league_avg_values['Accurate passes, %'],
             y1=y_max_values[facet_name],
             xref=f'x{i+1}',
