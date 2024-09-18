@@ -129,7 +129,7 @@ st.markdown(
         width: 120px;  /* Adjust the size */
     }}
     </style>
-    <img src="{image_logo}" class="logo">
+    <img src="data:image/png;base64,{image_logo}" class="logo">
     """,
     unsafe_allow_html=True
 )
