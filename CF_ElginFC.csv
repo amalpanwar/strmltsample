@@ -1,0 +1,19 @@
+Player,Team,Position,Age,Matches played,Minutes played,Goals,xG,Aerial duels per 90,"Aerial duels won, %",Successful attacking actions per 90,Goals per 90,xG per 90,Shots per 90,"Shots on target, %","Successful dribbles, %",Touches in box per 90,Received passes per 90,Received long passes per 90,Fouls suffered per 90
+D. Gavin,Elgin City,"CF, AMF, RWF",21,5,352,0,0.58,12.27,35.42,1.28,0,0.15,2.05,37.5,14.29,2.81,10.48,1.53,1.02
+R. Sargent,Elgin City,"RCMF, LWF, CF",23,4,109,1,0.14,4.95,33.33,2.48,0.83,0.12,1.65,50,0,3.3,14.86,4.95,0.83
+O. McDonald,Elgin City,CF,24,5,264,2,1.27,1.36,0,2.05,0.68,0.43,3.41,40,25,2.39,14.66,0.68,0.68
+,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,
+Kieran Offord,Crusaders,CF,20,5,463,4,2.68,4.67,29.17,5.05,0.78,0.52,3.5,38.89,48.57,5.64,11.66,2.72,1.56
+Jordan Allan,Clyde,CF,25,3,174,0,0.58,9.31,22.22,2.59,0,0.3,3.1,16.67,50,5.17,11.38,4.14,1.55
+Ryan Shanley,Falkirk,CF,23,5,61,0,0.77,4.43,33.33,5.9,0,1.13,4.43,66.67,100,7.38,7.38,2.95,0
+Aidan Smith,Annan Athletic,CF,27,5,470,1,0.49,3.64,52.63,2.87,0.19,0.09,0.96,40,40.74,1.72,19.15,2.3,1.72
+Ethan Cairns,Inverness CT,CF,19,3,40,1,0.51,2.25,0,4.5,2.25,1.16,4.5,100,0,4.5,11.25,0,0
+Harry Franklin,Connah's Quay,CF,24,5,452,0,1.07,9.96,26,1.99,0,0.21,1.39,28.57,29.63,2.99,17.72,1.99,1.59
+Connor Young,Edinburgh City,CF,20,4,372,3,0.71,6.53,7.41,1.69,0.73,0.17,1.94,62.5,16.67,1.94,12.58,1.94,1.45
+Matty Yates,Stenhousemuir,CF,22,5,211,0,0.48,3.84,11.11,2.56,0,0.21,1.71,50,75,1.71,13.22,1.28,2.99
+Ben Armour,Peterhead,CF,26,3,66,1,0.36,8.18,16.67,1.36,1.36,0.49,1.36,100,0,1.36,6.82,2.73,0
+Matty Aitken,Stenhousemuir,CF,27,5,306,0,0.6,15.59,39.62,2.06,0,0.18,1.18,75,36.36,3.53,10.59,1.76,2.65
+Nathan Cannon,Forfar,CF,18,5,462,0,0.39,6.04,19.35,5.06,0,0.08,0.78,25,59.38,2.53,7.99,1.75,1.75
+Alfie Bavidge,Aberdeen U,CF,18,,,,,,,,,,,,,,,,
+League Two Average,,,25.86,3.18,204.37,0.5,0.49,7.79,23.17,2.22,0.2,0.2,1.69,37.55,40.18,2.84,12.5,2.6,0.98

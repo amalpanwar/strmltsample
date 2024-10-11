@@ -1,0 +1,9 @@
+Player,Team,Position,Age,Matches played,Minutes played,Passes per 90,"Accurate forward passes, %","Accurate passes to final third, %",Conceded goals,Conceded goals per 90,Shots against,Shots against per 90,"Save rate, %",xG against per 90,Prevented goals,Prevented goals per 90,Exits per 90,Aerial duels per 90
+O. Kelly,Elgin City,GK,23,1,14,,,,1,,1,,0,,-0.41,,,
+T. McHale,Elgin City,GK,28,5,466,20.28,73.53,80,7,1.35,20,3.86,65,1.31,-0.2,-0.039,2.9,0.77
+Cammy Gill,Montrose,GK,26,5,475,19.71,75.31,56.52,2,0.38,21,3.98,90.48,0.65,1.44,0.273,1.71,1.14
+Lewis Budinauckas,Rangers B,GK,22,5,478,19.58,68.42,55.56,2,0.38,21,3.95,90.48,1.05,3.56,0.67,1.69,1.13
+Dean Lyness,Hamilton,GK,33,5,491,14.66,79.63,63.16,7,1.28,22,4.03,68.18,1.26,-0.11,-0.02,1.65,0.55
+Blair Carswell,Spartans,GK,29,5,460,21.13,67.01,64.44,7,1.37,17,3.33,58.82,0.94,-2.22,-0.434,0.59,0.39
+Paddy Martin,Bonnyrigg Rose,GK,25,5,477,13.21,54.69,57.14,6,1.13,19,3.58,68.42,0.77,-1.91,-0.36,1.7,0.38
+League Two Average,,,27.00,3.56,320.56,17.68,69.40,59.90,4.61,1.36,14.34,4.20,65.03,1.22,-0.48,-0.15,1.78,0.58
