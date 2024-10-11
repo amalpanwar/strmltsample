@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import numpy as np
+import distutils.core
 import matplotlib.pyplot as plt
 import mplcursors
 import seaborn as sns
