@@ -21,3 +21,4 @@ langchain-ai21
 mplcursors
 setuptools==58.1.0
 distutils
+python-3.10
