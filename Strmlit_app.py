@@ -242,13 +242,14 @@ def create_radar_chart(df, players, id_column, title=None, max_values=None, padd
     return fig
 
 ##*********************** Guage Chart ***************************************************************************************
-def create_gauge_chart(player_name, rating, rank, age, team, matches_played, minutes_played,league_average_rating):
+def create_gauge_chart(player_name, rating, rank, age, team, matches_played, minutes_played,Position,league_average_rating):
     # Format the title text with HTML to include additional information
     title_text = f"""
     <span style="font-size:16px"><b>{player_name}</b></span><br>
     <span style="font-size:12px">Rank: {rank}</span><br>
     <span style="font-size:10px">Team: {team}</span><br>
-    <span style="font-size:10px">Age: {age} | Matches: {matches_played} | Minutes: {minutes_played}</span>
+    <span style="font-size:10px">Age: {age} | Matches: {matches_played} | Minutes: {minutes_played}</span><br>
+    <span style="font-size:10px"><b>{Position}</b></span>
     """
     
     fig = go.Figure(go.Indicator(
@@ -292,17 +293,16 @@ if position == 'CM':
     original_metrics =[
        'Assists per 90',
        'Successful defensive actions per 90', 'Aerial duels won per 90', 'Interceptions per 90', 'Fouls per 90',
-       'Shots per 90', 'Recieved Passes P/90', 'Accurate passes per 90',
-       'Accurate forward passes per 90', 'Key passes per 90', 'Accurate passes to final third per 90', 
-       'Accurate progressive passes per 90']
-    weights=[1,1,0.9,1,-1.25,0.9,0.8,0.9,1,1.25,1,1]
+       'Shots on target per 90', 'Accurate passes per 90',
+       'Accurate forward passes per 90', 'Key passes per 90']
+    weights=[1,1,0.9,1,-1.25,1,0.9,1,1.25]
     weighted_metrics = pd.DataFrame()
     df_position['Assists per 90'] = ((df_position['Assists'] / df_position['Minutes played']) * 90).round(2)
     df_position['Aerial duels won per 90'] = df_position['Aerial duels per 90'] * (df_position['Aerial duels won, %'] / 100)
     df_position['Accurate passes per 90'] = df_position['Passes per 90'] * (df_position['Accurate passes, %'] / 100)
     df_position['Accurate forward passes per 90'] = df_position['Forward passes per 90'] * (df_position['Accurate forward passes, %'] / 100)
-    df_position['Accurate progressive passes per 90'] = df_position['Progressive passes per 90'] * (df_position['Accurate progressive passes, %'] / 100)
-    df_position['Accurate passes to final third per 90'] = df_position['Passes to final third per 90'] * (df_position['Accurate passes to final third, %'] / 100)
+    df_position['Shots on target per 90'] = df_position['Shots per 90'] * (df_position['Shots on target, %'] / 100)
+    #df_position['Accurate passes to final third per 90'] = df_position['Passes to final third per 90'] * (df_position['Accurate passes to final third, %'] / 100)
    
     for metric, weight in zip(original_metrics, weights):
         weighted_metrics[metric] = df_position[metric] * weight
@@ -344,27 +344,27 @@ if position == 'CM':
     league_avg_values = {
     'Passes per 90': league_avg_row['Passes per 90'].values[0],
     'Forward passes per 90': league_avg_row['Forward passes per 90'].values[0],
-    'Progressive passes per 90': league_avg_row['Progressive passes per 90'].values[0],
-    'Passes to final third per 90': league_avg_row['Passes to final third per 90'].values[0]
+    'Key passes per 90': league_avg_row['Key passes per 90'].values[0],
+    #'Passes to final third per 90': league_avg_row['Passes to final third per 90'].values[0]
       }
 # get max value for X and Y to create quadrants
     x_max = df_filtered_new['Passes per 90'].max()
     y_max_values = {
     'Forward passes per 90': df_filtered_new['Forward passes per 90'].max(),
-    'Progressive passes per 90': df_filtered_new['Progressive passes per 90'].max(),
-    'Passes to final third per 90': df_filtered_new['Passes to final third per 90'].max()
+    'Key passes per 90': df_filtered_new['Key passes per 90'].max(),
+    #'Passes to final third per 90': df_filtered_new['Passes to final third per 90'].max()
            }
     # y_max = max(y_max_values.values())
    
     # create Scatter plot
-    fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Forward passes per 90','Progressive passes per 90', 'Passes to final third per 90'], facet_col='variable',
+    fig = px.scatter(df_filtered.reset_index(), x='Passes per 90', y=[ 'Forward passes per 90','Key passes per 90'], facet_col='variable',
                                 facet_col_spacing=0.08, color='Player',title='Passing threats')
     
     
 
 # Add horizontal and vertical lines for each facet, this will provide the quadrant inside scatter plot
     
-    for i, facet_name in enumerate(['Forward passes per 90', 'Progressive passes per 90', 'Passes to final third per 90']):
+    for i, facet_name in enumerate(['Forward passes per 90', 'Key passes per 90']):
         # Add horizontal line
         fig.add_shape(
         go.layout.Shape(
@@ -405,10 +405,9 @@ if position == 'CM':
     st.plotly_chart(fig)
     
    # Dropping unnecessary column not require for radar chart
-    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'Contract Expiry \n(Trnsfmkt)','CM zscore','Player Rank','Age','Team', 'Matches played', 'Minutes played',
+    df_position2=df_filtered.drop(columns=['CM Score(0-100)', 'Position','CM zscore','Player Rank','Age','Team', 'Matches played', 'Minutes played',
                                           'Assists','Aerial duels per 90','Aerial duels won, %', 'Passes per 90','Accurate passes, %', 'Forward passes per 90',
-                                          'Accurate forward passes, %','Passes to final third per 90', 'Accurate passes to final third, %',
-                                          'Progressive passes per 90', 'Accurate progressive passes, %'])
+                                          'Accurate forward passes, %','Shots on target per 90', 'Shots per 90'])
 
     # Radar chart
     radar_fig =create_radar_chart(df_position2, players_CM, id_column='Player', title=f'Radar Chart for {position} (Default: League Average)')
@@ -425,13 +424,14 @@ if position == 'CM':
     Team = df_filtered_guage['Team'].tolist()
     Matches=df_filtered_guage['Matches played'].tolist()
     Minutes=df_filtered_guage['Minutes played'].tolist()
+    Position=df_filtered_guage['Position'].tolist()
 
     for i in range(0, len(players), 3):  # 3 charts per row
         cols = st.columns(3)
         for j in range(3):
             if i + j < len(players):
                 with cols[j]:
-                    fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j],Age[i + j], Team[i + j], Matches[i + j], Minutes[i + j],league_average_rating)
+                    fig = create_gauge_chart(players[i + j], ratings[i + j], ranks[i + j],Age[i + j], Team[i + j], Matches[i + j], Minutes[i + j],Position[i + j],league_average_rating)
                     st.plotly_chart(fig)
 
 
