@@ -19,5 +19,5 @@ scipy
 seaborn
 langchain-ai21
 mplcursors
-setuptools>=65.0.0
-wheel
+setuptools==58.1.0
+distutils
