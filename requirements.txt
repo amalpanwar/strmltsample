@@ -19,4 +19,3 @@ scipy
 seaborn
 langchain-ai21
 mplcursors
-setuptools>=65.0
