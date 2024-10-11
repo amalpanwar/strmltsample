@@ -3,7 +3,7 @@ name: Streamlit App Deployment
 on:
   push:
     branches:
-      - 2024-25
+      - amalpanwar-patch-1
 
 jobs:
   build:
