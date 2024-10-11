@@ -25,4 +25,4 @@ jobs:
 
     - name: Run Streamlit
       run: |
-        streamlit run strmlit_app.py  # Adjust to your main Streamlit file
+        streamlit run strmlit_app.py
