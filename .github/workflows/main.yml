@@ -32,4 +32,4 @@ jobs:
 
     - name: Run Streamlit
       run: |
-        streamlit run strmlit_app.py
+        streamlit run player_app.py
